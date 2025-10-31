@@ -621,23 +621,23 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
 @api_router.get("/dex/new-listings")
 async def get_new_dex_listings(chain: Optional[str] = Query(None)):
     """
-    Get new DEX listings from Dexscreener
-    Uses latest pairs from trending with age filter
+    Get newest DEX listings from Dexscreener
+    Uses latest profile endpoint with age filter
     """
     cache_key = f"new_listings_{chain or 'all'}"
     current_time = datetime.now(timezone.utc).timestamp()
     
-    # Check cache (2 min for new listings)
+    # Check cache (5 min for new listings)
     if cache_key in discovery_cache:
         cached_data, cached_time = discovery_cache[cache_key]
-        if current_time - cached_time < 120:
+        if current_time - cached_time < 300:
             return cached_data
     
     try:
         async with httpx.AsyncClient(timeout=15.0) as http_client:
-            # Use boosted/trending endpoint which includes newer tokens
+            # Use Dexscreener latest profile endpoint - shows newest tokens
             response = await http_client.get(
-                "https://api.dexscreener.com/latest/dex/tokens/trending",
+                "https://api.dexscreener.com/token-profiles/latest/v1",
                 headers={"Accept": "application/json"}
             )
             
@@ -647,54 +647,62 @@ async def get_new_dex_listings(chain: Optional[str] = Query(None)):
             
             if response.status_code != 200:
                 logger.warning(f"Dexscreener API error: {response.status_code}")
-                return {"pairs": [], "note": "DEX data temporarily unavailable"}
-            
-            data = response.json()
-            
-            # Dexscreener trending returns array of trending token info
-            if not data or not isinstance(data, list):
-                return {"pairs": [], "note": "No new listings available"}
-            
-            pairs = []
-            for item in data:
-                # Extract pair data from trending response
-                token_data = item if isinstance(item, dict) else {}
+                # Fallback to search for recent listings
+                try:
+                    fallback_response = await http_client.get(
+                        "https://api.dexscreener.com/latest/dex/search?q=",
+                        headers={"Accept": "application/json"}
+                    )
+                    if fallback_response.status_code == 200:
+                        fallback_data = fallback_response.json()
+                        pairs = fallback_data.get("pairs", [])[:20]
+                    else:
+                        return {"pairs": [], "note": "DEX data temporarily unavailable"}
+                except:
+                    return {"pairs": [], "note": "DEX data temporarily unavailable"}
+            else:
+                # Process profile response
+                profiles = response.json() if isinstance(response.json(), list) else []
                 
-                # Build simplified pair info
-                base_token = {
-                    "address": token_data.get("tokenAddress") or token_data.get("address"),
-                    "name": token_data.get("name"),
-                    "symbol": token_data.get("symbol")
-                }
-                
-                pair_info = {
-                    "chainId": token_data.get("chainId", "unknown"),
-                    "dexId": token_data.get("dexId", "unknown"),
-                    "pairAddress": token_data.get("pairAddress", ""),
-                    "baseToken": base_token,
-                    "priceUsd": token_data.get("priceUsd"),
-                    "volume24h": token_data.get("volume", {}).get("h24") if isinstance(token_data.get("volume"), dict) else None,
-                    "liquidity": token_data.get("liquidity", {}).get("usd") if isinstance(token_data.get("liquidity"), dict) else None,
-                    "priceChange24h": token_data.get("priceChange", {}).get("h24") if isinstance(token_data.get("priceChange"), dict) else None
-                }
-                
-                # Filter by chain if specified
-                if chain:
-                    chain_map = {
-                        "ethereum": "ethereum",
-                        "bsc": "bsc",
-                        "polygon": "polygon",
-                        "solana": "solana"
+                # Convert profiles to pair format
+                pairs = []
+                for profile in profiles[:30]:
+                    if not isinstance(profile, dict):
+                        continue
+                    
+                    pair_info = {
+                        "chainId": profile.get("chainId", "unknown"),
+                        "dexId": "dexscreener",
+                        "pairAddress": profile.get("tokenAddress", ""),
+                        "baseToken": {
+                            "address": profile.get("tokenAddress"),
+                            "name": profile.get("description", "")[:50] if profile.get("description") else profile.get("url", "")[:50],
+                            "symbol": profile.get("tokenAddress", "")[:8] if profile.get("tokenAddress") else "NEW"
+                        },
+                        "priceUsd": None,
+                        "volume24h": None,
+                        "liquidity": None,
+                        "priceChange24h": None,
+                        "imageUrl": profile.get("icon"),
+                        "url": profile.get("url")
                     }
-                    chain_id = chain_map.get(chain.lower())
-                    if chain_id and pair_info["chainId"] == chain_id:
-                        pairs.append(pair_info)
-                else:
                     pairs.append(pair_info)
             
+            # Filter by chain if specified
+            if chain and pairs:
+                chain_map = {
+                    "ethereum": "ethereum",
+                    "bsc": "bsc",
+                    "polygon": "polygon",
+                    "solana": "solana"
+                }
+                chain_id = chain_map.get(chain.lower())
+                if chain_id:
+                    pairs = [p for p in pairs if p.get("chainId") == chain_id]
+            
             result = {
-                "pairs": pairs[:20],  # Top 20
-                "count": len(pairs[:20])
+                "pairs": pairs[:15],  # Top 15
+                "count": len(pairs[:15])
             }
             
             discovery_cache[cache_key] = (result, current_time)
