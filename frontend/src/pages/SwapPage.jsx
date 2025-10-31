@@ -62,7 +62,7 @@ const SwapPage = () => {
                   Swap Tokens
                 </h2>
                 <p className="text-gray-600 text-sm">
-                  Trade crypto across 4 blockchains with the best rates
+                  Trade crypto across multiple blockchains with advanced token search & security
                 </p>
               </div>
 
