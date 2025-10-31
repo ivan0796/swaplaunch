@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAccount, useChainId } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import SwapFormEnhanced from '../components/SwapFormEnhanced';
+import SwapFormV2 from '../components/SwapFormV2';
 import NetworkSelector from '../components/NetworkSelector';
 import TrendingTokens from '../components/TrendingTokens';
 import SwapHistoryModal from '../components/SwapHistoryModal';
