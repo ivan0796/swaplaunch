@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getTokenSecurity, parseSecurityRisks, getRiskColor, getRiskBadgeColor } from '../services/tokenSecurity';
+import { getTokenSecurity, parseSecurityRisks, getRiskColor, getRiskBadgeColor, getSecurityLabel } from '../services/tokenSecurity';
 import { Shield, AlertTriangle, Info, ExternalLink, RefreshCw } from 'lucide-react';
 
 const TokenSecurityPanel = ({ tokenAddress, chainId, tokenSymbol }) => {
