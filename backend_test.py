@@ -184,6 +184,66 @@ class SwapLaunchAPITester:
             self.log_test("GET Swaps Endpoint", False, "", str(e))
             return False
 
+    def test_solana_token_resolve(self):
+        """Test Solana token resolution for specific contract address"""
+        try:
+            # Test the specific Solana contract address mentioned in the review request
+            contract_address = "DZpa4peCErsNzsYJ69XYYTSjZGDQhuexnzj7EiZ1pump"
+            
+            response = requests.get(
+                f"{self.api_url}/token/resolve",
+                params={"query": contract_address},
+                timeout=15
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                
+                # Check response structure
+                expected_keys = ["query", "results", "count"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if not has_expected_structure:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+                else:
+                    results = data.get("results", [])
+                    count = data.get("count", 0)
+                    
+                    # Check if we got results
+                    if count > 0 and len(results) > 0:
+                        # Verify first result has proper structure
+                        first_result = results[0]
+                        token_keys = ["chain", "name", "symbol", "address", "source"]
+                        has_token_structure = all(key in first_result for key in token_keys)
+                        
+                        if has_token_structure:
+                            # Check if it's a Solana token
+                            is_solana = first_result.get("chain") == "solana"
+                            has_address = first_result.get("address") == contract_address
+                            
+                            success = is_solana and has_address
+                            details = f"Found {count} results. First result: {first_result.get('name')} ({first_result.get('symbol')}) on {first_result.get('chain')} from {first_result.get('source')}"
+                        else:
+                            success = False
+                            details = f"Token result missing required fields. Got: {list(first_result.keys())}"
+                    else:
+                        success = False
+                        details = f"No results found for contract address {contract_address}"
+                        
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("Solana Token Resolution", success, details,
+                         "" if success else f"Failed to resolve Solana contract {contract_address}")
+            return success
+            
+        except Exception as e:
+            self.log_test("Solana Token Resolution", False, "", str(e))
+            return False
+
     def run_all_tests(self):
         """Run all backend API tests"""
         print("🚀 Starting SwapLaunch Backend API Tests")
