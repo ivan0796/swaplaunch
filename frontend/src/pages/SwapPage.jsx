@@ -53,7 +53,11 @@ const SwapPage = () => {
             </Link>
             <SwapHistoryModal />
             {isConnected && <ReferralWidget walletAddress={walletAddress} />}
-            <ConnectButton data-testid="connect-wallet-button" />
+            {selectedChain === 0 ? (
+              <WalletMultiButton />
+            ) : (
+              <ConnectButton data-testid="connect-wallet-button" />
+            )}
           </div>
         </div>
       </header>
