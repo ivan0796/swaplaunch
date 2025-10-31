@@ -41,7 +41,7 @@ const SolanaSwapForm = () => {
     }, 800);
 
     return () => clearTimeout(timer);
-  }, [sellToken, buyToken, sellAmount, wallet.publicKey]);
+  }, [sellToken, buyToken, sellAmount]); // wallet.publicKey entfernt
 
   const fetchQuote = async () => {
     if (!sellToken || !buyToken || !sellAmount || parseFloat(sellAmount) <= 0) {
