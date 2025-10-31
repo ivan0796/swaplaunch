@@ -12,34 +12,17 @@ import { Button } from '../components/ui/button';
 
 const SwapPage = () => {
   const { address: evmAddress, isConnected: evmConnected } = useAccount();
-  const { publicKey: solanaPublicKey, connected: solanaConnected } = useSolanaWallet();
   const chainId = useChainId();
   const [selectedChain, setSelectedChain] = useState(1);
-  const [walletType, setWalletType] = useState('evm'); // 'evm' or 'solana'
 
   useEffect(() => {
     if (evmConnected && chainId) {
       setSelectedChain(chainId);
-      setWalletType('evm');
-    } else if (solanaConnected) {
-      setSelectedChain('solana');
-      setWalletType('solana');
     }
-  }, [chainId, evmConnected, solanaConnected]);
+  }, [chainId, evmConnected]);
 
-  const handleChainChange = (chain) => {
-    setSelectedChain(chain);
-    if (chain === 'solana') {
-      setWalletType('solana');
-    } else {
-      setWalletType('evm');
-    }
-  };
-
-  const isConnected = evmConnected || solanaConnected;
-  const walletAddress = walletType === 'solana' 
-    ? solanaPublicKey?.toBase58() 
-    : evmAddress;
+  const isConnected = evmConnected;
+  const walletAddress = evmAddress;
 
   return (
     <div className="min-h-screen" style={{
