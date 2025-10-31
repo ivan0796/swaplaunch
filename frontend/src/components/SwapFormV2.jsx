@@ -693,6 +693,14 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
           {error}
         </div>
       )}
+      
+      {/* Combined Security Warning - placed above button */}
+      <CombinedSecurityWarning
+        sellToken={sellToken}
+        buyToken={buyToken}
+        chainId={chainId}
+        onWarningChange={setCombinedSecurityWarning}
+      />
 
       {/* Loading indicator during auto-fetch */}
       {loading && (
