@@ -81,45 +81,13 @@ const SwapPageV2 = () => {
 
               {/* Swap Form */}
               <div className="mt-6">
-                {isConnected ? (
-                  selectedChain === 0 ? (
-                    <SolanaSwapForm />
-                  ) : (
-                    <SwapFormV2
-                      chainId={selectedChain}
-                      walletAddress={walletAddress}
-                    />
-                  )
+                {selectedChain === 0 ? (
+                  <SolanaSwapForm />
                 ) : (
-                  <div className="text-center py-12 bg-gray-50/60 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 dark:bg-gray-800/50">
-                    <svg
-                      className="mx-auto h-16 w-16 text-gray-400 mb-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"
-                      />
-                    </svg>
-                    <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100 mb-2">
-                      Connect Your Wallet
-                    </h3>
-                    <p className="text-gray-500 dark:text-gray-400 mb-4">
-                      {selectedChain === 0 
-                        ? 'Connect Solana wallet to start swapping'
-                        : 'Connect EVM wallet to start swapping'
-                      }
-                    </p>
-                    {selectedChain === 0 ? (
-                      <WalletMultiButton />
-                    ) : (
-                      <ConnectButton />
-                    )}
-                  </div>
+                  <SwapFormV2
+                    chainId={selectedChain}
+                    walletAddress={walletAddress}
+                  />
                 )}
               </div>
             </div>
