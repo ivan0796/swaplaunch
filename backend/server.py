@@ -528,8 +528,8 @@ DISCOVERY_CACHE_TTL = 60  # 60 seconds for trending/discovery data
 @api_router.get("/trending/categories")
 async def get_trending_categories(category: str = Query("top", regex="^(top|gainers|losers)$")):
     """
-    Get trending tokens in categories: top (volume), gainers, losers
-    Uses Dexscreener as primary source (better availability)
+    Get trending tokens using Dexscreener boosted tokens
+    Shows tokens that are currently boosted/promoted on DEXs
     """
     cache_key = f"trending_{category}"
     current_time = datetime.now(timezone.utc).timestamp()
@@ -543,9 +543,9 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
     
     try:
         async with httpx.AsyncClient(timeout=15.0) as http_client:
-            # Use Dexscreener boosted/trending endpoint
+            # Use Dexscreener boosted tokens endpoint
             response = await http_client.get(
-                "https://api.dexscreener.com/latest/dex/tokens/trending",
+                "https://api.dexscreener.com/token-boosts/latest/v1",
                 headers={"Accept": "application/json"}
             )
             
@@ -559,7 +559,9 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
             
             data = response.json()
             
+            # Dexscreener returns array of boosted tokens
             if not data or not isinstance(data, list):
+                logger.warning(f"Unexpected data format from Dexscreener: {type(data)}")
                 return {"category": category, "tokens": [], "error": "No data"}
             
             # Process tokens
@@ -567,21 +569,44 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
             for item in data[:50]:  # Top 50
                 if not isinstance(item, dict):
                     continue
-                    
-                # Extract price change
-                price_change = None
-                if isinstance(item.get('priceChange'), dict):
-                    price_change = item['priceChange'].get('h24', 0)
+                
+                # Get token info
+                token_address = item.get('tokenAddress', '')
+                chain_id = item.get('chainId', 'unknown')
+                
+                # Fetch price data from search API if available
+                price_usd = 0
+                price_change = 0
+                volume = 0
+                
+                try:
+                    # Quick lookup for price data
+                    if token_address:
+                        search_resp = await http_client.get(
+                            f"https://api.dexscreener.com/latest/dex/tokens/{token_address}",
+                            timeout=5.0
+                        )
+                        if search_resp.status_code == 200:
+                            search_data = search_resp.json()
+                            pairs = search_data.get('pairs', [])
+                            if pairs and len(pairs) > 0:
+                                first_pair = pairs[0]
+                                price_usd = float(first_pair.get('priceUsd', 0)) if first_pair.get('priceUsd') else 0
+                                price_change = float(first_pair.get('priceChange', {}).get('h24', 0)) if isinstance(first_pair.get('priceChange'), dict) else 0
+                                volume = float(first_pair.get('volume', {}).get('h24', 0)) if isinstance(first_pair.get('volume'), dict) else 0
+                except:
+                    pass  # Continue without price data
                 
                 token_info = {
-                    "id": item.get('tokenAddress', '')[:8],
-                    "symbol": item.get('symbol', '').upper(),
-                    "name": item.get('name', ''),
-                    "image": item.get('image'),
-                    "current_price": float(item.get('priceUsd', 0)) if item.get('priceUsd') else 0,
-                    "price_change_24h": float(price_change) if price_change else 0,
+                    "id": token_address[:8] if token_address else "",
+                    "symbol": item.get('icon', {}).get('description', 'TOKEN')[:10] if isinstance(item.get('icon'), dict) else 'TOKEN',
+                    "name": item.get('description', 'Unknown')[:50] if item.get('description') else 'Unknown',
+                    "image": item.get('icon', {}).get('url') if isinstance(item.get('icon'), dict) else None,
+                    "current_price": price_usd,
+                    "price_change_24h": price_change,
                     "market_cap": None,
-                    "total_volume": float(item.get('volume', {}).get('h24', 0)) if isinstance(item.get('volume'), dict) else 0
+                    "total_volume": volume,
+                    "chainId": chain_id
                 }
                 processed_tokens.append(token_info)
             
@@ -591,18 +616,14 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
                     [t for t in processed_tokens if t['price_change_24h'] > 0],
                     key=lambda x: x['price_change_24h'],
                     reverse=True
-                )[:20]
+                )[:15]
             elif category == "losers":
                 processed_tokens = sorted(
                     [t for t in processed_tokens if t['price_change_24h'] < 0],
                     key=lambda x: x['price_change_24h']
-                )[:20]
-            else:  # top by volume
-                processed_tokens = sorted(
-                    processed_tokens,
-                    key=lambda x: x['total_volume'],
-                    reverse=True
-                )[:20]
+                )[:15]
+            else:  # top by volume or just show boosted
+                processed_tokens = processed_tokens[:15]
             
             result = {
                 "category": category,
