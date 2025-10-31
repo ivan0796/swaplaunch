@@ -717,8 +717,7 @@ async def resolve_token(query: str = Query(..., min_length=1)):
     
     results = []
     
-    # Check if query is an address (EVM: 0x..., Solana: base58)
-    is_evm_address = query.startswith("0x") and len(query) == 42
+    # Check if query is a Solana mint address
     is_solana_mint = len(query) >= 32 and not query.startswith("0x")
     
     try:
