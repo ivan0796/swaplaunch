@@ -707,13 +707,14 @@ async def resolve_token(query: str = Query(..., min_length=1)):
     
     results = []
     
-    # Check if query is a Solana mint address
+    # Check if query is a Solana mint address or EVM contract address
     is_solana_mint = len(query) >= 32 and not query.startswith("0x")
+    is_contract_address = query.startswith("0x") and len(query) == 42
     
     try:
         async with httpx.AsyncClient(timeout=10.0) as http_client:
             
-            # Search Dexscreener (EVM + Solana)
+            # Search Dexscreener (EVM + Solana) - prioritize if it's a contract address
             try:
                 dex_response = await http_client.get(
                     f"https://api.dexscreener.com/latest/dex/search?q={query}",
@@ -724,30 +725,48 @@ async def resolve_token(query: str = Query(..., min_length=1)):
                     dex_data = dex_response.json()
                     pairs = dex_data.get("pairs", [])
                     
-                    # Extract unique tokens
+                    # Extract unique tokens with better data
                     seen = set()
-                    for pair in pairs[:10]:  # Top 10 pairs
+                    for pair in pairs[:20]:  # Top 20 pairs for better results
                         base_token = pair.get("baseToken", {})
-                        address = base_token.get("address", "").lower()
+                        address = base_token.get("address", "")
                         
-                        if address and address not in seen:
-                            seen.add(address)
+                        if not address:
+                            continue
+                            
+                        address_lower = address.lower()
+                        
+                        if address_lower not in seen:
+                            seen.add(address_lower)
+                            
+                            # Map chainId from Dexscreener format
+                            chain_id = pair.get("chainId", "unknown")
+                            chain_map = {
+                                "ethereum": "ethereum",
+                                "bsc": "bsc", 
+                                "polygon": "polygon",
+                                "solana": "solana"
+                            }
+                            chain = chain_map.get(chain_id, chain_id)
+                            
                             results.append({
-                                "chain": pair.get("chainId", "unknown"),
+                                "chain": chain,
                                 "name": base_token.get("name"),
                                 "symbol": base_token.get("symbol"),
                                 "address": address,
-                                "decimals": 18,  # Default, should be fetched
-                                "logoURL": None,
+                                "decimals": 18,  # Default for EVM, Solana varies
+                                "logoURL": pair.get("info", {}).get("imageUrl"),  # Get logo from pair info
                                 "source": "dexscreener",
                                 "priceUsd": pair.get("priceUsd"),
-                                "liquidity": pair.get("liquidity", {}).get("usd")
+                                "liquidity": pair.get("liquidity", {}).get("usd"),
+                                "pairAddress": pair.get("pairAddress"),
+                                "dexId": pair.get("dexId")
                             })
             except Exception as e:
                 logger.warning(f"Dexscreener search failed: {str(e)}")
             
             # For Solana, also check Jupiter Token Registry
-            if is_solana_mint or not results:
+            if is_solana_mint or (not results and len(query) >= 32):
                 try:
                     # Fetch Jupiter token list (should be cached)
                     jupiter_response = await http_client.get("https://token.jup.ag/all")
@@ -763,28 +782,30 @@ async def resolve_token(query: str = Query(..., min_length=1)):
                                 token.get("symbol", "").lower() == query_lower or
                                 query_lower in token.get("name", "").lower()
                             ):
-                                results.append({
-                                    "chain": "solana",
-                                    "name": token.get("name"),
-                                    "symbol": token.get("symbol"),
-                                    "address": token.get("address"),
-                                    "decimals": token.get("decimals", 9),
-                                    "logoURL": token.get("logoURI"),
-                                    "source": "jupiter",
-                                    "priceUsd": None,
-                                    "liquidity": None
-                                })
+                                # Avoid duplicates from Dexscreener
+                                if token.get("address", "").lower() not in seen:
+                                    results.append({
+                                        "chain": "solana",
+                                        "name": token.get("name"),
+                                        "symbol": token.get("symbol"),
+                                        "address": token.get("address"),
+                                        "decimals": token.get("decimals", 9),
+                                        "logoURL": token.get("logoURI"),
+                                        "source": "jupiter",
+                                        "priceUsd": None,
+                                        "liquidity": None
+                                    })
                                 
-                                if len(results) >= 10:
+                                if len(results) >= 15:
                                     break
                 except Exception as e:
                     logger.warning(f"Jupiter search failed: {str(e)}")
             
-            # Return top 10 results
+            # Return top 15 results
             result = {
                 "query": query,
-                "results": results[:10],
-                "count": len(results[:10])
+                "results": results[:15],
+                "count": len(results[:15])
             }
             
             discovery_cache[cache_key] = (result, current_time)
@@ -793,6 +814,78 @@ async def resolve_token(query: str = Query(..., min_length=1)):
     except Exception as e:
         logger.error(f"Error resolving token: {str(e)}")
         return {"query": query, "results": [], "count": 0, "error": str(e)}
+
+
+@api_router.get("/dex/pairs")
+async def get_dex_pairs(query: str = Query(..., min_length=1)):
+    """
+    Get trading pairs from Dexscreener
+    Returns pairs with both base and quote tokens for quick selection
+    """
+    cache_key = f"pairs_{query.lower()}"
+    current_time = datetime.now(timezone.utc).timestamp()
+    
+    # Check cache
+    if cache_key in discovery_cache:
+        cached_data, cached_time = discovery_cache[cache_key]
+        if current_time - cached_time < DISCOVERY_CACHE_TTL:
+            return cached_data
+    
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as http_client:
+            dex_response = await http_client.get(
+                f"https://api.dexscreener.com/latest/dex/search?q={query}",
+                headers={"Accept": "application/json"}
+            )
+            
+            if dex_response.status_code == 200:
+                dex_data = dex_response.json()
+                pairs = dex_data.get("pairs", [])
+                
+                # Format pairs with both tokens
+                formatted_pairs = []
+                for pair in pairs[:10]:
+                    base_token = pair.get("baseToken", {})
+                    quote_token = pair.get("quoteToken", {})
+                    
+                    chain_id = pair.get("chainId", "unknown")
+                    
+                    formatted_pairs.append({
+                        "pairAddress": pair.get("pairAddress"),
+                        "chainId": chain_id,
+                        "dexId": pair.get("dexId"),
+                        "url": pair.get("url"),
+                        "baseToken": {
+                            "address": base_token.get("address"),
+                            "name": base_token.get("name"),
+                            "symbol": base_token.get("symbol")
+                        },
+                        "quoteToken": {
+                            "address": quote_token.get("address"),
+                            "name": quote_token.get("name"),
+                            "symbol": quote_token.get("symbol")
+                        },
+                        "priceUsd": pair.get("priceUsd"),
+                        "liquidity": pair.get("liquidity", {}).get("usd"),
+                        "volume24h": pair.get("volume", {}).get("h24"),
+                        "priceChange24h": pair.get("priceChange", {}).get("h24"),
+                        "logoUrl": pair.get("info", {}).get("imageUrl")
+                    })
+                
+                result = {
+                    "query": query,
+                    "pairs": formatted_pairs,
+                    "count": len(formatted_pairs)
+                }
+                
+                discovery_cache[cache_key] = (result, current_time)
+                return result
+            else:
+                return {"query": query, "pairs": [], "count": 0}
+                
+    except Exception as e:
+        logger.error(f"Error fetching pairs: {str(e)}")
+        return {"query": query, "pairs": [], "count": 0, "error": str(e)}
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
