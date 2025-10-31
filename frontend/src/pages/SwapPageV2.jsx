@@ -59,8 +59,7 @@ const SwapPageV2 = () => {
             <div className="text-sm font-semibold tracking-tight">SwapLaunch v2.0</div>
           </div>
           <nav className="hidden items-center gap-6 text-sm md:flex">
-            <a className="opacity-80 hover:opacity-100 cursor-pointer" href="#">Trade</a>
-            <a className="opacity-80 hover:opacity-100 cursor-pointer" href="#">Earn</a>
+            <Link className="opacity-80 hover:opacity-100" to="/">Trade</Link>
             <Link className="opacity-80 hover:opacity-100" to="/bridge">Bridge</Link>
             <Link className="opacity-80 hover:opacity-100" to="/risk-disclosure">Info</Link>
           </nav>
