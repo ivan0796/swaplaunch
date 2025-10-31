@@ -101,6 +101,9 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
   // Price tracking
   const [sellTokenCoinId, setSellTokenCoinId] = useState(null);
   const [buyTokenCoinId, setBuyTokenCoinId] = useState(null);
+  
+  // Combined security state
+  const [combinedSecurityWarning, setCombinedSecurityWarning] = useState(null);
 
   // Initialize with default tokens when chain changes
   useEffect(() => {
