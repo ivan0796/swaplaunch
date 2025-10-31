@@ -50,17 +50,25 @@ const SwapForm = ({ chainId, walletAddress, walletType = 'evm' }) => {
   useEffect(() => {
     const tokens = POPULAR_TOKENS[chainId] || [];
     if (tokens.length >= 2) {
-      setSellToken(tokens[0].address);
-      setBuyToken(tokens[1].address);
+      if (walletType === 'solana') {
+        setSellToken(tokens[0].mint);
+        setBuyToken(tokens[1].mint);
+      } else {
+        setSellToken(tokens[0].address);
+        setBuyToken(tokens[1].address);
+      }
     }
     setQuote(null);
     setSellAmount('');
-  }, [chainId]);
+  }, [chainId, walletType]);
 
   const getTokenDecimals = (tokenAddress) => {
     const tokens = POPULAR_TOKENS[chainId] || [];
-    const token = tokens.find(t => t.address.toLowerCase() === tokenAddress.toLowerCase());
-    return token ? token.decimals : 18;
+    const token = tokens.find(t => {
+      const addr = walletType === 'solana' ? t.mint : t.address;
+      return addr?.toLowerCase() === tokenAddress?.toLowerCase();
+    });
+    return token ? token.decimals : (walletType === 'solana' ? 9 : 18);
   };
 
   const fetchQuote = async () => {
@@ -74,21 +82,40 @@ const SwapForm = ({ chainId, walletAddress, walletType = 'evm' }) => {
     setQuote(null);
 
     try {
-      const decimals = getTokenDecimals(sellToken);
-      const sellAmountInBaseUnits = ethers.parseUnits(sellAmount, decimals).toString();
+      if (walletType === 'solana') {
+        // Solana quote via Jupiter
+        const decimals = getTokenDecimals(sellToken);
+        const amount = Math.floor(parseFloat(sellAmount) * Math.pow(10, decimals)).toString();
 
-      const response = await axios.get(`${API}/quote`, {
-        params: {
-          chainId,
+        const response = await axios.post(`${API}/solana/quote`, {
+          inputMint: sellToken,
+          outputMint: buyToken,
+          amount: amount,
+          slippageBps: 50,
+          takerPublicKey: walletAddress
+        });
+
+        setQuote({ ...response.data, isSolana: true });
+        toast.success('Solana quote fetched successfully!');
+      } else {
+        // EVM quote via 0x
+        const decimals = getTokenDecimals(sellToken);
+        const sellAmountInBaseUnits = ethers.parseUnits(sellAmount, decimals).toString();
+
+        const chainNames = { 1: 'ethereum', 56: 'bsc', 137: 'polygon' };
+        const chainName = chainNames[chainId] || 'ethereum';
+
+        const response = await axios.post(`${API}/evm/quote`, {
           sellToken,
           buyToken,
           sellAmount: sellAmountInBaseUnits,
-          takerAddress: walletAddress
-        }
-      });
+          takerAddress: walletAddress,
+          chain: chainName
+        });
 
-      setQuote(response.data);
-      toast.success('Quote fetched successfully!');
+        setQuote(response.data);
+        toast.success('Quote fetched successfully!');
+      }
     } catch (err) {
       console.error('Error fetching quote:', err);
       const errorMsg = err.response?.data?.detail || err.message || 'Failed to fetch quote';
@@ -100,47 +127,81 @@ const SwapForm = ({ chainId, walletAddress, walletType = 'evm' }) => {
   };
 
   const executeSwap = async () => {
-    if (!quote || !walletClient) {
-      toast.error('Missing quote or wallet connection');
+    if (!quote) {
+      toast.error('Missing quote');
       return;
     }
 
     setSwapping(true);
 
     try {
-      // Send transaction via wallet
-      const txHash = await walletClient.sendTransaction({
-        to: quote.to,
-        data: quote.data,
-        value: BigInt(quote.value || '0'),
-        gas: BigInt(quote.gas || '500000'),
-        gasPrice: BigInt(quote.gasPrice || '0')
-      });
+      if (walletType === 'solana' && quote.isSolana) {
+        // Solana swap execution
+        toast.info('Solana swap - Preparing transaction...');
+        
+        // Note: Full Jupiter swap integration requires additional steps
+        // This is a simplified version - production should use Jupiter SDK
+        toast.warning('Solana swap integration in progress. Use Jupiter directly for now.');
+        
+        // Log the swap attempt
+        try {
+          await axios.post(`${API}/swaps`, {
+            wallet_address: walletAddress,
+            chain: 'solana',
+            chain_id: 0,
+            token_in: sellToken,
+            token_out: buyToken,
+            amount_in: sellAmount,
+            amount_out: (parseInt(quote.netOutputAmount) / Math.pow(10, getTokenDecimals(buyToken))).toString(),
+            fee_amount: (parseInt(quote.platformFee.amount) / Math.pow(10, getTokenDecimals(buyToken))).toString(),
+            status: 'pending'
+          });
+        } catch (logError) {
+          console.error('Failed to log swap:', logError);
+        }
+      } else {
+        // EVM swap via wallet
+        if (!walletClient) {
+          toast.error('Wallet not connected');
+          return;
+        }
 
-      toast.success('Transaction submitted!', {
-        description: `TX: ${txHash.slice(0, 10)}...${txHash.slice(-8)}`
-      });
-
-      // Log swap to backend
-      try {
-        await axios.post(`${API}/swaps`, {
-          wallet_address: walletAddress,
-          chain_id: chainId,
-          token_in: sellToken,
-          token_out: buyToken,
-          amount_in: sellAmount,
-          amount_out: ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken)),
-          fee_amount: (parseFloat(ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken))) * 0.002).toFixed(6),
-          tx_hash: txHash
+        const txHash = await walletClient.sendTransaction({
+          to: quote.to,
+          data: quote.data,
+          value: BigInt(quote.value || '0'),
+          gas: BigInt(quote.gas || '500000'),
+          gasPrice: BigInt(quote.gasPrice || '0')
         });
-      } catch (logError) {
-        console.error('Failed to log swap:', logError);
-      }
 
-      // Reset form
-      setQuote(null);
-      setSellAmount('');
-      toast.success('Swap completed successfully!');
+        toast.success('Transaction submitted!', {
+          description: `TX: ${txHash.slice(0, 10)}...${txHash.slice(-8)}`
+        });
+
+        // Log swap to backend
+        try {
+          const chainNames = { 1: 'ethereum', 56: 'bsc', 137: 'polygon' };
+          await axios.post(`${API}/swaps`, {
+            wallet_address: walletAddress,
+            chain: chainNames[chainId],
+            chain_id: chainId,
+            token_in: sellToken,
+            token_out: buyToken,
+            amount_in: sellAmount,
+            amount_out: ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken)),
+            fee_amount: (parseFloat(ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken))) * 0.002).toFixed(6),
+            tx_hash: txHash,
+            status: 'completed'
+          });
+        } catch (logError) {
+          console.error('Failed to log swap:', logError);
+        }
+
+        // Reset form
+        setQuote(null);
+        setSellAmount('');
+        toast.success('Swap completed successfully!');
+      }
     } catch (err) {
       console.error('Swap failed:', err);
       const errorMsg = err.message || 'Swap transaction failed';
