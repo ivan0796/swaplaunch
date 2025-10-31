@@ -508,25 +508,6 @@ async def get_coin_price(coin_id: str):
         logger.error(f"Error fetching coin price: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# Include the router in the main app
-app.include_router(api_router)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
-
 # ==============================================
 # TOKEN DISCOVERY ENDPOINTS
 # ==============================================
@@ -825,4 +806,22 @@ async def clean_cache():
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(clean_cache())
-    logger.info(f"SwapLaunch API v2.0 started - Chains: {list(CHAIN_CONFIG.keys())}")
+
+# Include the router in the main app
+app.include_router(api_router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
