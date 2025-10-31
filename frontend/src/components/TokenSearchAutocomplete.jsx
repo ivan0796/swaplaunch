@@ -4,7 +4,7 @@ import { Search, Loader2, AlertCircle } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const TokenSearchAutocomplete = ({ onSelect, placeholder = "Search token name, symbol or address", excludeAddress }) => {
+const TokenSearchAutocomplete = ({ onSelect, placeholder = "Search token name, symbol or address", excludeAddress, chainId }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
