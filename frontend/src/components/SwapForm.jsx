@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ethers } from 'ethers';
 import { useWalletClient } from 'wagmi';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { Transaction, SystemProgram, PublicKey } from '@solana/web3.js';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ArrowDown, RefreshCw, Info } from 'lucide-react';
 import { toast } from 'sonner';
+import { SOLANA_TOKENS } from '../utils/solanaTokens';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -27,11 +30,14 @@ const POPULAR_TOKENS = {
     { symbol: 'MATIC', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18 },
     { symbol: 'USDC', address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', decimals: 6 },
     { symbol: 'USDT', address: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', decimals: 6 },
-  ]
+  ],
+  solana: SOLANA_TOKENS
 };
 
-const SwapForm = ({ chainId, walletAddress }) => {
+const SwapForm = ({ chainId, walletAddress, walletType = 'evm' }) => {
   const { data: walletClient } = useWalletClient();
+  const { connection } = useConnection();
+  const { publicKey: solanaPublicKey, sendTransaction: sendSolanaTransaction } = useWallet();
   const [sellToken, setSellToken] = useState('');
   const [buyToken, setBuyToken] = useState('');
   const [sellAmount, setSellAmount] = useState('');
