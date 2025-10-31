@@ -331,6 +331,97 @@ async def get_supported_chains():
         })
     return {"chains": chains, "count": len(chains)}
 
+@api_router.post("/referrals", response_model=ReferralLog)
+async def log_referral(referral_data: ReferralLogCreate):
+    """
+    Log a referral swap for tracking
+    """
+    referral_obj = ReferralLog(**referral_data.model_dump())
+    
+    # Convert to dict and serialize datetime to ISO string for MongoDB
+    doc = referral_obj.model_dump()
+    doc['timestamp'] = doc['timestamp'].isoformat()
+    
+    _ = await db.swap_referrals.insert_one(doc)
+    logger.info(f"Referral logged: {referral_obj.referrer_wallet} -> {referral_obj.trader_wallet}")
+    return referral_obj
+
+@api_router.get("/referrals/{wallet_address}")
+async def get_referral_stats(wallet_address: str):
+    """
+    Get referral statistics for a wallet
+    """
+    referrals = await db.swap_referrals.find(
+        {"referrer_wallet": wallet_address},
+        {"_id": 0}
+    ).to_list(1000)
+    
+    total_referrals = len(referrals)
+    chains_used = {}
+    
+    for ref in referrals:
+        chain = ref.get('chain', 'unknown')
+        chains_used[chain] = chains_used.get(chain, 0) + 1
+    
+    return {
+        "wallet": wallet_address,
+        "total_referrals": total_referrals,
+        "chains_breakdown": chains_used,
+        "referrals": referrals[:50]  # Last 50
+    }
+
+@api_router.get("/coingecko/trending")
+async def get_trending_tokens():
+    """
+    Proxy to CoinGecko trending tokens API
+    """
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as http_client:
+            response = await http_client.get(
+                "https://api.coingecko.com/api/v3/search/trending"
+            )
+            if response.status_code == 200:
+                return response.json()
+            else:
+                raise HTTPException(status_code=response.status_code, detail="CoinGecko API error")
+    except Exception as e:
+        logger.error(f"Error fetching trending tokens: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/coingecko/price/{coin_id}")
+async def get_coin_price(coin_id: str):
+    """
+    Proxy to CoinGecko coin price API with sparkline
+    """
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as http_client:
+            response = await http_client.get(
+                f"https://api.coingecko.com/api/v3/coins/{coin_id}",
+                params={
+                    "localization": "false",
+                    "tickers": "false",
+                    "market_data": "true",
+                    "community_data": "false",
+                    "developer_data": "false",
+                    "sparkline": "true"
+                }
+            )
+            if response.status_code == 200:
+                data = response.json()
+                return {
+                    "id": data.get("id"),
+                    "symbol": data.get("symbol"),
+                    "name": data.get("name"),
+                    "current_price": data.get("market_data", {}).get("current_price", {}).get("usd"),
+                    "price_change_24h": data.get("market_data", {}).get("price_change_percentage_24h"),
+                    "sparkline_7d": data.get("market_data", {}).get("sparkline_7d", {}).get("price", [])
+                }
+            else:
+                raise HTTPException(status_code=response.status_code, detail="CoinGecko API error")
+    except Exception as e:
+        logger.error(f"Error fetching coin price: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 
