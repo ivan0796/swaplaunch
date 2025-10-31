@@ -99,14 +99,12 @@ const SwapFormEnhanced = ({ chainId, walletAddress }) => {
   };
 
   const fetchQuote = async () => {
-    if (!sellToken || !buyToken || !sellAmount || parseFloat(sellAmount) <= 0) {
-      setError('Please fill all fields with valid values');
+    if (!sellToken || !buyToken || !sellAmount || parseFloat(sellAmount) <= 0 || !walletAddress) {
       return;
     }
 
     setLoading(true);
     setError(null);
-    setQuote(null);
     setPriceImpact(0);
 
     try {
@@ -131,12 +129,11 @@ const SwapFormEnhanced = ({ chainId, walletAddress }) => {
       setPriceImpact(impact);
 
       setQuote(response.data);
-      toast.success('Quote fetched successfully!');
     } catch (err) {
       console.error('Error fetching quote:', err);
       const errorMsg = err.response?.data?.detail || err.message || 'Failed to fetch quote';
       setError(errorMsg);
-      toast.error(errorMsg);
+      setQuote(null);
     } finally {
       setLoading(false);
     }
