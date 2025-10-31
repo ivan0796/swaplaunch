@@ -40,23 +40,71 @@ export const loadTokenLists = async () => {
     const allTokens = [];
     const seenAddresses = new Set();
 
-    lists.forEach(result => {
-      if (result.status === 'fulfilled' && result.value.data.tokens) {
-        result.value.data.tokens.forEach(token => {
+    lists.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        let tokens = [];
+        
+        // Handle different response formats
+        if (result.value.data.tokens) {
+          // Standard token list format (Uniswap, PancakeSwap, etc.)
+          tokens = result.value.data.tokens;
+        } else if (Array.isArray(result.value.data)) {
+          // 1inch format - returns array directly
+          tokens = result.value.data;
+        } else if (typeof result.value.data === 'object') {
+          // Handle object format from 1inch (key-value pairs)
+          tokens = Object.values(result.value.data);
+        }
+
+        tokens.forEach(token => {
+          // Ensure token has required fields
+          if (!token.address || !token.symbol || !token.chainId) return;
+          
           const key = `${token.chainId}-${token.address.toLowerCase()}`;
           if (!seenAddresses.has(key)) {
             seenAddresses.add(key);
             allTokens.push({
-              ...token,
+              name: token.name || token.symbol,
+              symbol: token.symbol,
               address: token.address.toLowerCase(),
-              searchKey: `${token.name} ${token.symbol} ${token.address}`.toLowerCase()
+              decimals: token.decimals || 18,
+              chainId: token.chainId,
+              logoURI: token.logoURI || token.logoUri || null,
+              searchKey: `${token.name || token.symbol} ${token.symbol} ${token.address}`.toLowerCase()
             });
           }
         });
       }
     });
 
+    // Add popular/common tokens that might be missing
+    const commonTokens = [
+      // Ethereum
+      { symbol: 'ETH', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, chainId: 1, name: 'Ethereum' },
+      { symbol: 'WETH', address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', decimals: 18, chainId: 1, name: 'Wrapped Ether' },
+      // BSC
+      { symbol: 'BNB', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, chainId: 56, name: 'BNB' },
+      { symbol: 'WBNB', address: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', decimals: 18, chainId: 56, name: 'Wrapped BNB' },
+      // Polygon
+      { symbol: 'MATIC', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, chainId: 137, name: 'Polygon' },
+      { symbol: 'WMATIC', address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', decimals: 18, chainId: 137, name: 'Wrapped Matic' }
+    ];
+
+    commonTokens.forEach(token => {
+      const key = `${token.chainId}-${token.address.toLowerCase()}`;
+      if (!seenAddresses.has(key)) {
+        seenAddresses.add(key);
+        allTokens.push({
+          ...token,
+          address: token.address.toLowerCase(),
+          searchKey: `${token.name} ${token.symbol} ${token.address}`.toLowerCase()
+        });
+      }
+    });
+
     cachedTokens = allTokens;
+    cacheTimestamp = Date.now();
+    console.log(`Loaded ${allTokens.length} tokens from ${lists.length} sources`);
     return allTokens;
   } catch (error) {
     console.error('Error loading token lists:', error);
