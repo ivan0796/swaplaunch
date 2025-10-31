@@ -24,7 +24,7 @@ const TokenSearchAutocomplete = ({ onSelect, placeholder = "Search token name, s
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Debounced search
+  // Debounced search - faster for better UX
   useEffect(() => {
     if (!query || query.length < 2) {
       setResults([]);
@@ -34,7 +34,7 @@ const TokenSearchAutocomplete = ({ onSelect, placeholder = "Search token name, s
 
     const timer = setTimeout(() => {
       searchTokens();
-    }, 400);
+    }, 250); // Reduced from 400ms to 250ms for faster response
 
     return () => clearTimeout(timer);
   }, [query]);
