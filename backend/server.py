@@ -241,7 +241,7 @@ async def get_solana_quote(request: SolanaQuoteRequest):
     if cache_key in quote_cache:
         cached_data, cached_time = quote_cache[cache_key]
         if (datetime.now(timezone.utc).timestamp() - cached_time) < CACHE_TTL:
-            logger.info(f"Returning cached Solana quote")
+            logger.info("Returning cached Solana quote")
             return cached_data
     
     jupiter_api = os.environ.get('JUPITER_API_URL')
