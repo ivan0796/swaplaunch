@@ -526,6 +526,285 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
+# ==============================================
+# TOKEN DISCOVERY ENDPOINTS
+# ==============================================
+
+# Cache for token discovery data
+discovery_cache = {}
+DISCOVERY_CACHE_TTL = 60  # 60 seconds for trending/discovery data
+
+@api_router.get("/trending/categories")
+async def get_trending_categories(category: str = Query("top", regex="^(top|gainers|losers)$")):
+    """
+    Get trending tokens in categories: top (volume), gainers, losers
+    Uses CoinGecko /coins/markets endpoint
+    """
+    cache_key = f"trending_{category}"
+    current_time = datetime.now(timezone.utc).timestamp()
+    
+    # Check cache
+    if cache_key in discovery_cache:
+        cached_data, cached_time = discovery_cache[cache_key]
+        if current_time - cached_time < DISCOVERY_CACHE_TTL:
+            logger.info(f"Returning cached trending {category}")
+            return cached_data
+    
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as http_client:
+            # Determine order parameter based on category
+            if category == "top":
+                order_param = "volume_desc"
+            elif category == "gainers":
+                order_param = "market_cap_desc"  # Will sort by % later
+            else:  # losers
+                order_param = "market_cap_desc"
+            
+            params = {
+                "vs_currency": "usd",
+                "order": order_param,
+                "per_page": 50,
+                "page": 1,
+                "sparkline": False,
+                "price_change_percentage": "24h"
+            }
+            
+            response = await http_client.get(
+                "https://api.coingecko.com/api/v3/coins/markets",
+                params=params
+            )
+            
+            if response.status_code != 200:
+                raise HTTPException(status_code=response.status_code, detail="CoinGecko API error")
+            
+            data = response.json()
+            
+            # Process based on category
+            if category == "gainers":
+                # Sort by highest price change percentage
+                data = sorted(data, key=lambda x: x.get('price_change_percentage_24h', 0) or 0, reverse=True)[:20]
+            elif category == "losers":
+                # Sort by lowest price change percentage
+                data = sorted(data, key=lambda x: x.get('price_change_percentage_24h', 0) or 0)[:20]
+            else:  # top by volume
+                data = data[:20]
+            
+            result = {
+                "category": category,
+                "tokens": [
+                    {
+                        "id": token.get("id"),
+                        "symbol": token.get("symbol", "").upper(),
+                        "name": token.get("name"),
+                        "image": token.get("image"),
+                        "current_price": token.get("current_price"),
+                        "price_change_24h": token.get("price_change_percentage_24h"),
+                        "market_cap": token.get("market_cap"),
+                        "total_volume": token.get("total_volume")
+                    }
+                    for token in data
+                ]
+            }
+            
+            # Cache the result
+            discovery_cache[cache_key] = (result, current_time)
+            return result
+            
+    except httpx.TimeoutException:
+        raise HTTPException(status_code=504, detail="CoinGecko API timeout")
+    except Exception as e:
+        logger.error(f"Error fetching trending {category}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch trending tokens: {str(e)}")
+
+
+@api_router.get("/dex/new-listings")
+async def get_new_dex_listings(chain: Optional[str] = Query(None)):
+    """
+    Get new DEX listings from Dexscreener
+    Filtered by age (newest first)
+    """
+    cache_key = f"new_listings_{chain or 'all'}"
+    current_time = datetime.now(timezone.utc).timestamp()
+    
+    # Check cache (30s for new listings)
+    if cache_key in discovery_cache:
+        cached_data, cached_time = discovery_cache[cache_key]
+        if current_time - cached_time < 30:
+            return cached_data
+    
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as http_client:
+            # Dexscreener trending/new tokens endpoint
+            # Note: Public API has rate limits, adjust as needed
+            response = await http_client.get(
+                "https://api.dexscreener.com/latest/dex/search?q=NEW",
+                headers={"Accept": "application/json"}
+            )
+            
+            if response.status_code == 429:
+                raise HTTPException(status_code=429, detail="Dexscreener rate limit reached")
+            
+            if response.status_code != 200:
+                # Graceful degradation
+                logger.warning(f"Dexscreener API error: {response.status_code}")
+                return {"pairs": [], "note": "DEX data temporarily unavailable"}
+            
+            data = response.json()
+            pairs = data.get("pairs", [])
+            
+            # Filter by chain if specified
+            if chain:
+                chain_map = {
+                    "ethereum": "ethereum",
+                    "bsc": "bsc",
+                    "polygon": "polygon",
+                    "solana": "solana"
+                }
+                chain_id = chain_map.get(chain.lower())
+                if chain_id:
+                    pairs = [p for p in pairs if p.get("chainId") == chain_id]
+            
+            # Sort by age (newest first) if pairCreatedAt exists
+            pairs_with_age = [p for p in pairs if p.get("pairCreatedAt")]
+            pairs_with_age.sort(key=lambda x: x.get("pairCreatedAt", 0), reverse=True)
+            
+            result = {
+                "pairs": [
+                    {
+                        "chainId": pair.get("chainId"),
+                        "dexId": pair.get("dexId"),
+                        "pairAddress": pair.get("pairAddress"),
+                        "baseToken": {
+                            "address": pair.get("baseToken", {}).get("address"),
+                            "name": pair.get("baseToken", {}).get("name"),
+                            "symbol": pair.get("baseToken", {}).get("symbol")
+                        },
+                        "priceUsd": pair.get("priceUsd"),
+                        "volume24h": pair.get("volume", {}).get("h24"),
+                        "liquidity": pair.get("liquidity", {}).get("usd"),
+                        "pairCreatedAt": pair.get("pairCreatedAt")
+                    }
+                    for pair in pairs_with_age[:30]  # Top 30 newest
+                ],
+                "count": len(pairs_with_age[:30])
+            }
+            
+            discovery_cache[cache_key] = (result, current_time)
+            return result
+            
+    except httpx.TimeoutException:
+        return {"pairs": [], "note": "DEX data timeout"}
+    except Exception as e:
+        logger.error(f"Error fetching new DEX listings: {str(e)}")
+        return {"pairs": [], "note": "DEX data unavailable"}
+
+
+@api_router.get("/token/resolve")
+async def resolve_token(query: str = Query(..., min_length=1)):
+    """
+    Resolve token by name, symbol, or contract address
+    Supports EVM (Dexscreener) and Solana (Jupiter Registry)
+    """
+    cache_key = f"resolve_{query.lower()}"
+    current_time = datetime.now(timezone.utc).timestamp()
+    
+    # Check cache
+    if cache_key in discovery_cache:
+        cached_data, cached_time = discovery_cache[cache_key]
+        if current_time - cached_time < DISCOVERY_CACHE_TTL:
+            return cached_data
+    
+    results = []
+    
+    # Check if query is an address (EVM: 0x..., Solana: base58)
+    is_evm_address = query.startswith("0x") and len(query) == 42
+    is_solana_mint = len(query) >= 32 and not query.startswith("0x")
+    
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as http_client:
+            
+            # Search Dexscreener (EVM + Solana)
+            try:
+                dex_response = await http_client.get(
+                    f"https://api.dexscreener.com/latest/dex/search?q={query}",
+                    headers={"Accept": "application/json"}
+                )
+                
+                if dex_response.status_code == 200:
+                    dex_data = dex_response.json()
+                    pairs = dex_data.get("pairs", [])
+                    
+                    # Extract unique tokens
+                    seen = set()
+                    for pair in pairs[:10]:  # Top 10 pairs
+                        base_token = pair.get("baseToken", {})
+                        address = base_token.get("address", "").lower()
+                        
+                        if address and address not in seen:
+                            seen.add(address)
+                            results.append({
+                                "chain": pair.get("chainId", "unknown"),
+                                "name": base_token.get("name"),
+                                "symbol": base_token.get("symbol"),
+                                "address": address,
+                                "decimals": 18,  # Default, should be fetched
+                                "logoURL": None,
+                                "source": "dexscreener",
+                                "priceUsd": pair.get("priceUsd"),
+                                "liquidity": pair.get("liquidity", {}).get("usd")
+                            })
+            except Exception as e:
+                logger.warning(f"Dexscreener search failed: {str(e)}")
+            
+            # For Solana, also check Jupiter Token Registry
+            if is_solana_mint or not results:
+                try:
+                    # Fetch Jupiter token list (should be cached)
+                    jupiter_response = await http_client.get("https://token.jup.ag/all")
+                    
+                    if jupiter_response.status_code == 200:
+                        jupiter_tokens = jupiter_response.json()
+                        
+                        # Search in Jupiter tokens
+                        query_lower = query.lower()
+                        for token in jupiter_tokens:
+                            if (
+                                token.get("address", "").lower() == query_lower or
+                                token.get("symbol", "").lower() == query_lower or
+                                query_lower in token.get("name", "").lower()
+                            ):
+                                results.append({
+                                    "chain": "solana",
+                                    "name": token.get("name"),
+                                    "symbol": token.get("symbol"),
+                                    "address": token.get("address"),
+                                    "decimals": token.get("decimals", 9),
+                                    "logoURL": token.get("logoURI"),
+                                    "source": "jupiter",
+                                    "priceUsd": None,
+                                    "liquidity": None
+                                })
+                                
+                                if len(results) >= 10:
+                                    break
+                except Exception as e:
+                    logger.warning(f"Jupiter search failed: {str(e)}")
+            
+            # Return top 10 results
+            result = {
+                "query": query,
+                "results": results[:10],
+                "count": len(results[:10])
+            }
+            
+            discovery_cache[cache_key] = (result, current_time)
+            return result
+            
+    except Exception as e:
+        logger.error(f"Error resolving token: {str(e)}")
+        return {"query": query, "results": [], "count": 0, "error": str(e)}
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
