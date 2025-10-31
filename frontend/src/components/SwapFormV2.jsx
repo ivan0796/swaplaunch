@@ -8,7 +8,7 @@ import { ArrowDown, RefreshCw, Info, Zap, Settings, Search } from 'lucide-react'
 import { toast } from 'sonner';
 import TokenPriceWidget from './TokenPriceWidget';
 import { getCoinGeckoId } from '../services/coingecko';
-import { calculateAutoSlippage, formatSlippage } from '../utils/slippage';
+import { calculateAutoSlippage, formatSlippage, shouldShowSlippageWarning } from '../utils/slippage';
 import { saveSwapToHistory } from '../utils/localHistory';
 import { getExplorerUrl, getExplorerName } from '../utils/explorer';
 import { getReferrerFromStorage } from '../utils/referral';
