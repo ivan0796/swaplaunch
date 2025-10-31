@@ -28,24 +28,35 @@ SwapLaunch is a decentralized token swap platform that aggregates liquidity from
 - 0x Swap API for multi-DEX aggregation
 - Supports Ethereum mainnet, BSC, and Polygon
 
-## Setup Instructions
+## Quick Start
 
-### Environment Variables
+### Prerequisites
+- Node.js 16+ and Yarn
+- Python 3.11+
+- MongoDB running
+- WalletConnect Project ID (get from https://cloud.walletconnect.com)
 
-**Backend (.env):**
-```env
-FEE_RECIPIENT="0xYourFeeRecipientAddress"
-ZEROX_API_KEY=""  # Optional for better rate limits
-```
+### Configuration Steps
 
-**Frontend (wagmiConfig.js):**
-- Update `projectId` with your WalletConnect Project ID from https://cloud.walletconnect.com
+1. **Update WalletConnect Project ID** (Required for wallet connectivity)
+   - Edit `/app/frontend/src/wagmiConfig.js`
+   - Replace `YOUR_PROJECT_ID_HERE` with your actual Project ID
 
-### Start Services
+2. **Configure Fee Recipient** (Optional - placeholder provided)
+   - Edit `/app/backend/.env`
+   - Update `FEE_RECIPIENT` with your Ethereum address
+
+3. **Add 0x API Key** (Optional - improves rate limits)
+   - Edit `/app/backend/.env`
+   - Add your `ZEROX_API_KEY`
+
+4. **Start Services**
 ```bash
 sudo supervisorctl restart backend
 sudo supervisorctl restart frontend
 ```
+
+📖 **For detailed setup instructions, see [SETUP_GUIDE.md](SETUP_GUIDE.md)**
 
 ## API Endpoints
 
