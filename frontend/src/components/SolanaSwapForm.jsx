@@ -3,9 +3,10 @@ import axios from 'axios';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { Transaction, VersionedTransaction } from '@solana/web3.js';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { ArrowDown, RefreshCw, Info, AlertCircle } from 'lucide-react';
+import { ArrowDown, RefreshCw, Info, Search } from 'lucide-react';
 import { toast } from 'sonner';
+import TokenSearchModal from './TokenSearchModal';
+import CombinedSecurityWarning from './CombinedSecurityWarning';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -14,6 +15,7 @@ const API = `${BACKEND_URL}/api`;
 const SOLANA_TOKENS = [
   { 
     symbol: 'SOL', 
+    address: 'So11111111111111111111111111111111111111112',
     mint: 'So11111111111111111111111111111111111111112', 
     decimals: 9, 
     name: 'Solana',
@@ -21,107 +23,73 @@ const SOLANA_TOKENS = [
   },
   { 
     symbol: 'USDC', 
+    address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
     mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', 
     decimals: 6, 
     name: 'USD Coin',
     logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-  },
-  { 
-    symbol: 'USDT', 
-    mint: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', 
-    decimals: 6, 
-    name: 'Tether USD',
-    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.png'
-  },
-  { 
-    symbol: 'RAY', 
-    mint: '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R', 
-    decimals: 6, 
-    name: 'Raydium',
-    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R/logo.png'
-  },
-  { 
-    symbol: 'BONK', 
-    mint: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', 
-    decimals: 5, 
-    name: 'Bonk',
-    logoURI: 'https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I'
-  },
-  { 
-    symbol: 'JTO', 
-    mint: 'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL', 
-    decimals: 9, 
-    name: 'Jito',
-    logoURI: 'https://metadata.jito.network/token/jto/image'
-  },
-  { 
-    symbol: 'WIF', 
-    mint: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', 
-    decimals: 6, 
-    name: 'dogwifhat',
-    logoURI: 'https://bafkreibk3covs5ltyqxa272uodhculbr6kea6betidfwy3ajsav2vjzyum.ipfs.nftstorage.link'
-  },
-  { 
-    symbol: 'JUP', 
-    mint: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', 
-    decimals: 6, 
-    name: 'Jupiter',
-    logoURI: 'https://static.jup.ag/jup/icon.png'
   },
 ];
 
 const SolanaSwapForm = () => {
   const wallet = useWallet();
   const { connection } = useConnection();
+
+  // Token selection states
   const [sellToken, setSellToken] = useState(SOLANA_TOKENS[0]);
   const [buyToken, setBuyToken] = useState(SOLANA_TOKENS[1]);
   const [sellAmount, setSellAmount] = useState('');
+
+  // Modal states
+  const [showSellTokenSearch, setShowSellTokenSearch] = useState(false);
+  const [showBuyTokenSearch, setShowBuyTokenSearch] = useState(false);
+  const [showWalletConfirm, setShowWalletConfirm] = useState(false);
+
+  // Swap states
   const [quote, setQuote] = useState(null);
   const [loading, setLoading] = useState(false);
   const [swapping, setSwapping] = useState(false);
   const [error, setError] = useState(null);
 
-  // Auto-fetch quote when inputs change
+  // Combined security state
+  const [combinedSecurityWarning, setCombinedSecurityWarning] = useState(null);
+
+  // Auto-fetch quote when amount changes
   useEffect(() => {
     if (!sellToken || !buyToken || !sellAmount || parseFloat(sellAmount) <= 0) {
       setQuote(null);
-      setError(null);
       return;
     }
 
     const timer = setTimeout(() => {
       fetchQuote();
-    }, 800);
+    }, 500);
 
     return () => clearTimeout(timer);
-  }, [sellToken, buyToken, sellAmount]); // wallet.publicKey entfernt
+  }, [sellAmount, sellToken, buyToken]);
 
   const fetchQuote = async () => {
-    if (!sellToken || !buyToken || !sellAmount || parseFloat(sellAmount) <= 0) {
-      return;
-    }
+    if (!sellToken || !buyToken || !sellAmount) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      const sellAmountLamports = Math.floor(parseFloat(sellAmount) * Math.pow(10, sellToken.decimals));
+      const amountInSmallestUnit = Math.floor(parseFloat(sellAmount) * Math.pow(10, sellToken.decimals));
 
-      // Verwende eine Dummy-Adresse wenn nicht connected (nur für Quote)
-      const userPublicKey = wallet.publicKey?.toString() || 'DummyAddressForQuoteOnly11111111111111111111';
-
-      const response = await axios.post(`${API}/solana/quote`, {
-        inputMint: sellToken.mint,
-        outputMint: buyToken.mint,
-        amount: sellAmountLamports,
-        userPublicKey: userPublicKey
+      const response = await axios.get(`${API}/solana/quote`, {
+        params: {
+          inputMint: sellToken.mint || sellToken.address,
+          outputMint: buyToken.mint || buyToken.address,
+          amount: amountInSmallestUnit,
+          slippageBps: 50
+        }
       });
 
       setQuote(response.data);
     } catch (err) {
-      console.error('Error fetching Solana quote:', err);
-      const errorMsg = err.response?.data?.detail || err.message || 'Failed to fetch quote';
-      setError(errorMsg);
+      console.error('Quote failed:', err);
+      setError(err.response?.data?.detail || 'Failed to get quote');
       setQuote(null);
     } finally {
       setLoading(false);
@@ -134,23 +102,23 @@ const SolanaSwapForm = () => {
       return;
     }
 
+    setShowWalletConfirm(true);
     setSwapping(true);
 
     try {
-      // Deserialize the transaction
       const swapTransactionBuf = Buffer.from(quote.swapTransaction, 'base64');
       let transaction;
-      
+
       try {
-        // Try as versioned transaction first
         transaction = VersionedTransaction.deserialize(swapTransactionBuf);
       } catch (e) {
-        // Fallback to legacy transaction
         transaction = Transaction.from(swapTransactionBuf);
       }
 
-      // Sign and send transaction
       const signed = await wallet.signTransaction(transaction);
+      
+      setShowWalletConfirm(false);
+
       const txid = await connection.sendRawTransaction(signed.serialize(), {
         skipPreflight: true,
         maxRetries: 2
@@ -160,7 +128,6 @@ const SolanaSwapForm = () => {
         description: `TX: ${txid.slice(0, 10)}...${txid.slice(-8)}`
       });
 
-      // Wait for confirmation
       await connection.confirmTransaction(txid, 'confirmed');
 
       toast.success(
@@ -178,11 +145,11 @@ const SolanaSwapForm = () => {
         { duration: 10000 }
       );
 
-      // Reset form
       setQuote(null);
       setSellAmount('');
     } catch (err) {
       console.error('Swap failed:', err);
+      setShowWalletConfirm(false);
       const errorMsg = err.message || 'Swap transaction failed';
       toast.error(errorMsg);
     } finally {
@@ -191,7 +158,7 @@ const SolanaSwapForm = () => {
   };
 
   const handleSelectSellToken = (token) => {
-    if (buyToken && token.mint === buyToken.mint) {
+    if (buyToken && (token.mint || token.address) === (buyToken.mint || buyToken.address)) {
       toast.error('Cannot select the same token for both sides');
       return;
     }
@@ -199,7 +166,7 @@ const SolanaSwapForm = () => {
   };
 
   const handleSelectBuyToken = (token) => {
-    if (sellToken && token.mint === sellToken.mint) {
+    if (sellToken && (token.mint || token.address) === (sellToken.mint || sellToken.address)) {
       toast.error('Cannot select the same token for both sides');
       return;
     }
@@ -208,84 +175,145 @@ const SolanaSwapForm = () => {
 
   return (
     <div data-testid="solana-swap-form" className="space-y-4">
-      {/* Wallet Connection Notice */}
-      {!wallet.connected && (
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-2">
-          <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5" />
-          <div className="text-sm text-blue-900">
-            <p className="font-medium">Solana Wallet Required</p>
-            <p className="text-blue-700 mt-1">Connect your Phantom or Solflare wallet to swap on Solana</p>
-          </div>
-        </div>
-      )}
+      {/* Token Search Modals */}
+      <TokenSearchModal
+        isOpen={showSellTokenSearch}
+        onClose={() => setShowSellTokenSearch(false)}
+        onSelectToken={handleSelectSellToken}
+        chainId={0}
+        excludeToken={buyToken?.mint || buyToken?.address}
+      />
+      <TokenSearchModal
+        isOpen={showBuyTokenSearch}
+        onClose={() => setShowBuyTokenSearch(false)}
+        onSelectToken={handleSelectBuyToken}
+        chainId={0}
+        excludeToken={sellToken?.mint || sellToken?.address}
+      />
 
-      {/* Sell Token */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700">You Pay</label>
-        <div className="flex gap-2">
-          <select
-            data-testid="sell-token-select"
-            value={sellToken?.mint}
-            onChange={(e) => {
-              const token = SOLANA_TOKENS.find(t => t.mint === e.target.value);
-              handleSelectSellToken(token);
-            }}
-            className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      {/* You Pay */}
+      <div className="rounded-2xl border border-black/5 bg-white/70 p-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
+        <div className="mb-2 text-sm text-gray-500">You Pay</div>
+        
+        <div className="space-y-3">
+          {/* Token Selector */}
+          <button
+            onClick={() => setShowSellTokenSearch(true)}
+            className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-900"
           >
-            {SOLANA_TOKENS.map(token => (
-              <option key={token.mint} value={token.mint}>
-                {token.symbol}
-              </option>
-            ))}
-          </select>
-          <Input
-            data-testid="sell-amount-input"
+            <div className="flex items-center gap-2">
+              {sellToken ? (
+                <>
+                  {sellToken.logoURI ? (
+                    <img 
+                      src={sellToken.logoURI} 
+                      alt={sellToken.symbol} 
+                      className="w-6 h-6 rounded-full"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold"
+                    style={{ display: sellToken.logoURI ? 'none' : 'flex' }}
+                  >
+                    {sellToken.symbol?.charAt(0) || '?'}
+                  </div>
+                  <div className="text-left">
+                    <div className="font-semibold">{sellToken.symbol}</div>
+                    <div className="text-xs text-gray-500">{sellToken.name}</div>
+                  </div>
+                </>
+              ) : (
+                <span className="text-gray-500">Select Token</span>
+              )}
+            </div>
+            <Search className="w-5 h-5 text-gray-400" />
+          </button>
+
+          {/* Amount Input */}
+          <input
             type="number"
-            placeholder="0.0"
             value={sellAmount}
             onChange={(e) => setSellAmount(e.target.value)}
-            className="flex-1 px-4 py-3 text-lg"
-            step="any"
-            min="0"
+            placeholder="0.0"
+            className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none dark:border-gray-700 dark:bg-gray-900"
           />
         </div>
       </div>
 
       {/* Swap Direction */}
       <div className="flex justify-center">
-        <div className="bg-gray-100 rounded-full p-2">
+        <button 
+          onClick={() => {
+            const tempToken = sellToken;
+            setSellToken(buyToken);
+            setBuyToken(tempToken);
+            setSellAmount('');
+            setQuote(null);
+            toast.success('Tokens swapped!');
+          }}
+          className="bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors cursor-pointer"
+          title="Swap token positions"
+        >
           <ArrowDown className="w-5 h-5 text-gray-600" />
-        </div>
+        </button>
       </div>
 
-      {/* Buy Token */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700">You Receive</label>
-        <div className="flex gap-2">
-          <select
-            data-testid="buy-token-select"
-            value={buyToken?.mint}
-            onChange={(e) => {
-              const token = SOLANA_TOKENS.find(t => t.mint === e.target.value);
-              handleSelectBuyToken(token);
-            }}
-            className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      {/* You Receive */}
+      <div className="rounded-2xl border border-black/5 bg-white/70 p-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
+        <div className="mb-2 text-sm text-gray-500">You Receive</div>
+        
+        <div className="space-y-3">
+          {/* Token Selector */}
+          <button
+            onClick={() => setShowBuyTokenSearch(true)}
+            className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-900"
           >
-            {SOLANA_TOKENS.map(token => (
-              <option key={token.mint} value={token.mint}>
-                {token.symbol}
-              </option>
-            ))}
-          </select>
-          <div className="flex-1 px-4 py-3 bg-gray-50 rounded-xl border border-gray-300 text-lg text-gray-900 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {buyToken ? (
+                <>
+                  {buyToken.logoURI ? (
+                    <img 
+                      src={buyToken.logoURI} 
+                      alt={buyToken.symbol} 
+                      className="w-6 h-6 rounded-full"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold"
+                    style={{ display: buyToken.logoURI ? 'none' : 'flex' }}
+                  >
+                    {buyToken.symbol?.charAt(0) || '?'}
+                  </div>
+                  <div className="text-left">
+                    <div className="font-semibold">{buyToken.symbol}</div>
+                    <div className="text-xs text-gray-500">{buyToken.name}</div>
+                  </div>
+                </>
+              ) : (
+                <span className="text-gray-500">Select Token</span>
+              )}
+            </div>
+            <Search className="w-5 h-5 text-gray-400" />
+          </button>
+
+          {/* Amount Display */}
+          <div className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-300 text-lg text-gray-900 flex items-center justify-between">
             {loading ? (
               <span className="text-gray-500 flex items-center">
                 <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
                 Loading...
               </span>
-            ) : quote ? (
+            ) : quote && buyToken ? (
               <span className="font-medium">
-                {(quote.outAmount / Math.pow(10, buyToken.decimals)).toFixed(6)}
+                {(parseInt(quote.outAmount) / Math.pow(10, buyToken.decimals)).toFixed(6)}
               </span>
             ) : (
               <span className="text-gray-400">0.0</span>
@@ -294,45 +322,51 @@ const SolanaSwapForm = () => {
         </div>
       </div>
 
+      {/* Combined Security Warning */}
+      <CombinedSecurityWarning
+        sellToken={sellToken}
+        buyToken={buyToken}
+        chainId={0}
+        onWarningChange={setCombinedSecurityWarning}
+      />
+
       {/* Quote Details */}
-      {quote && (
-        <div data-testid="quote-details" className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-2">
+      {quote && sellToken && buyToken && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-2">
           <div className="flex items-start">
             <Info className="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
             <div className="flex-1 space-y-1 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Rate:</span>
+                <span className="text-gray-600">Rate</span>
                 <span className="font-medium">
-                  1 {sellToken.symbol} = {((quote.outAmount / Math.pow(10, buyToken.decimals)) / parseFloat(sellAmount)).toFixed(6)} {buyToken.symbol}
+                  1 {sellToken.symbol} ≈ {(parseInt(quote.outAmount) / parseInt(quote.inAmount) * Math.pow(10, sellToken.decimals - buyToken.decimals)).toFixed(6)} {buyToken.symbol}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Platform Fee (0.2%):</span>
-                <span className="font-medium">
-                  {((quote.outAmount / Math.pow(10, buyToken.decimals)) * 0.002).toFixed(6)} {buyToken.symbol}
-                </span>
+                <span className="text-gray-600">Price Impact</span>
+                <span className="font-medium">{quote.priceImpactPct ? `${quote.priceImpactPct}%` : 'N/A'}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Price Impact:</span>
-                <span className="font-medium">{quote.priceImpactPct}%</span>
+                <span className="text-gray-600">Route</span>
+                <span className="font-medium text-xs">Jupiter</span>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Error */}
+      {/* Error Message */}
       {error && (
-        <div data-testid="error-message" className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      {/* Loading indicator */}
+      {/* Loading indicator during auto-fetch */}
       {loading && (
         <div className="flex items-center justify-center py-3 text-sm text-gray-600">
           <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-          Fetching best price via Jupiter...
+          Fetching best price from Jupiter...
         </div>
       )}
 
@@ -340,27 +374,67 @@ const SolanaSwapForm = () => {
       <Button
         data-testid="execute-swap-button"
         onClick={executeSwap}
-        disabled={!wallet.connected || !quote || swapping || loading}
-        className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed"
+        disabled={
+          !wallet.publicKey || 
+          !sellToken || 
+          !buyToken || 
+          !sellAmount || 
+          parseFloat(sellAmount) <= 0 ||
+          !quote || 
+          swapping || 
+          loading
+        }
+        className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed"
       >
         {swapping ? (
           <>
             <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
             Swapping...
           </>
-        ) : !wallet.connected ? (
+        ) : !wallet.publicKey ? (
           'Connect Wallet'
+        ) : !sellToken || !buyToken ? (
+          'Select tokens'
+        ) : !sellAmount || parseFloat(sellAmount) <= 0 ? (
+          'Enter amount'
+        ) : loading ? (
+          'Loading...'
         ) : !quote ? (
-          'Enter amount to swap'
+          'Swap not available for this pair'
         ) : (
-          'Confirm Swap'
+          'Start Swapping'
         )}
       </Button>
 
       {/* Security Notice */}
       <div className="text-xs text-center text-gray-500 mt-4">
-        🔒 Powered by Jupiter - Always verify transaction details
+        🔒 Always verify transaction details in your wallet before signing
       </div>
+
+      {/* Wallet Confirmation Modal */}
+      {showWalletConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 max-w-md mx-4 shadow-2xl border border-gray-200 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <svg className="w-8 h-8 text-blue-600 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">Bitte in der Wallet bestätigen</h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Überprüfen Sie die Transaktionsdetails in Ihrer Wallet und bestätigen Sie den Swap.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                <span>Warte auf Bestätigung...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
