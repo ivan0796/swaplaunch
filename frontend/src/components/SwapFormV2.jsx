@@ -22,16 +22,52 @@ const API = `${BACKEND_URL}/api`;
 // Popular default tokens by chain
 const DEFAULT_TOKENS = {
   1: [
-    { symbol: 'ETH', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'Ethereum' },
-    { symbol: 'USDC', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', decimals: 6, name: 'USD Coin' },
+    { 
+      symbol: 'ETH', 
+      address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 
+      decimals: 18, 
+      name: 'Ethereum',
+      logoURI: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png'
+    },
+    { 
+      symbol: 'USDC', 
+      address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', 
+      decimals: 6, 
+      name: 'USD Coin',
+      logoURI: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png'
+    },
   ],
   56: [
-    { symbol: 'BNB', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'BNB' },
-    { symbol: 'USDT', address: '0x55d398326f99059ff775485246999027b3197955', decimals: 18, name: 'Tether USD' },
+    { 
+      symbol: 'BNB', 
+      address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 
+      decimals: 18, 
+      name: 'BNB',
+      logoURI: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png'
+    },
+    { 
+      symbol: 'USDT', 
+      address: '0x55d398326f99059ff775485246999027b3197955', 
+      decimals: 18, 
+      name: 'Tether USD',
+      logoURI: 'https://assets.coingecko.com/coins/images/325/large/Tether.png'
+    },
   ],
   137: [
-    { symbol: 'MATIC', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'Polygon' },
-    { symbol: 'USDC', address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', decimals: 6, name: 'USD Coin' },
+    { 
+      symbol: 'MATIC', 
+      address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 
+      decimals: 18, 
+      name: 'Polygon',
+      logoURI: 'https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png'
+    },
+    { 
+      symbol: 'USDC', 
+      address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', 
+      decimals: 6, 
+      name: 'USD Coin',
+      logoURI: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png'
+    },
   ]
 };
 
