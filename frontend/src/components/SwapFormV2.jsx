@@ -208,6 +208,9 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       return;
     }
 
+    // Show wallet confirmation modal
+    setShowWalletConfirm(true);
+
     setSwapping(true);
 
     try {
@@ -216,6 +219,7 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       
       // Validate transaction data exists
       if (!txData.to || !txData.data) {
+        setShowWalletConfirm(false);
         throw new Error('Invalid quote data - missing transaction details');
       }
 
@@ -226,6 +230,9 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
         gas: txData.gas ? BigInt(txData.gas) : undefined,
         gasPrice: txData.gasPrice ? BigInt(txData.gasPrice) : undefined,
       });
+
+      // Hide confirmation modal after signing
+      setShowWalletConfirm(false);
 
       toast.success('Transaction submitted!', {
         description: `TX: ${txHash.slice(0, 10)}...${txHash.slice(-8)}`
