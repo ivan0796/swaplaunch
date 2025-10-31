@@ -636,14 +636,14 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
           </div>
         </div>
 
-        {/* Security Panel for Buy Token */}
-        {buyToken && buyToken.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' && (
+        {/* Security Panel for Buy Token - Hidden, using combined warning instead */}
+        {/* {buyToken && buyToken.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' && (
           <TokenSecurityPanel
             tokenAddress={buyToken.address}
             chainId={chainId}
             tokenSymbol={buyToken.symbol}
           />
-        )}
+        )} */}
       </div>
 
         {/* Price Widget for Buy Token */}
