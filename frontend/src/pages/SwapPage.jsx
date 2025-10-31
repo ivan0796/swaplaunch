@@ -35,7 +35,7 @@ const SwapPage = () => {
             <h1 className="text-3xl font-bold text-white" style={{ fontFamily: 'Space Grotesk' }}>
               SwapLaunch v2.0
             </h1>
-            <p className="text-sm text-white/80 mt-1">Multi-Chain DEX Aggregator (ETH • BSC • Polygon • Solana)</p>
+            <p className="text-sm text-white/80 mt-1">Multi-Chain DEX Aggregator</p>
           </div>
           <div className="flex items-center gap-4">
             <Link to="/risk-disclosure">
@@ -44,11 +44,9 @@ const SwapPage = () => {
                 Risk & Transparency
               </Button>
             </Link>
-            {walletType === 'solana' ? (
-              <WalletMultiButton data-testid="solana-connect-button" />
-            ) : (
-              <ConnectButton data-testid="connect-wallet-button" />
-            )}
+            <SwapHistoryModal />
+            {isConnected && <ReferralWidget walletAddress={walletAddress} />}
+            <ConnectButton data-testid="connect-wallet-button" />
           </div>
         </div>
       </header>
