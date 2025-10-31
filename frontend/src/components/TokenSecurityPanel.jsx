@@ -59,7 +59,7 @@ const TokenSecurityPanel = ({ tokenAddress, chainId, tokenSymbol }) => {
           <Shield className="w-5 h-5" />
           <span className="font-semibold">Token Security</span>
           <span className={`px-2 py-0.5 rounded-full text-xs font-medium text-white ${getRiskBadgeColor(level)}`}>
-            {level.toUpperCase()}
+            {getSecurityLabel(level)}
           </span>
         </div>
         <button className="text-sm text-blue-600 hover:text-blue-700">
