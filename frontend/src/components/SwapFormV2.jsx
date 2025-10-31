@@ -495,7 +495,7 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       <Button
         data-testid="execute-swap-button"
         onClick={executeSwap}
-        disabled={!quote || swapping || loading}
+        disabled={!walletAddress || !quote || swapping || loading}
         className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed"
       >
         {swapping ? (
@@ -503,6 +503,8 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
             <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
             Swapping...
           </>
+        ) : !walletAddress ? (
+          'Connect Wallet'
         ) : !quote ? (
           'Enter amount to swap'
         ) : (
