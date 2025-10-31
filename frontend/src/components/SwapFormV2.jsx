@@ -560,14 +560,14 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
           />
         </div>
 
-        {/* Security Panel for Sell Token */}
-        {sellToken && sellToken.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' && (
+        {/* Security Panel for Sell Token - Hidden, using combined warning instead */}
+        {/* {sellToken && sellToken.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' && (
           <TokenSecurityPanel
             tokenAddress={sellToken.address}
             chainId={chainId}
             tokenSymbol={sellToken.symbol}
           />
-        )}
+        )} */}
       </div>
 
       {/* Swap Direction */}
