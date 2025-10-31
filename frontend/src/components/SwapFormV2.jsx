@@ -738,6 +738,31 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       <div className="text-xs text-center text-gray-500 mt-4">
         🔒 Always verify transaction details in your wallet before signing
       </div>
+
+      {/* Wallet Confirmation Modal */}
+      {showWalletConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 max-w-md mx-4 shadow-2xl border border-gray-200 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <svg className="w-8 h-8 text-blue-600 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">Bitte in der Wallet bestätigen</h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Überprüfen Sie die Transaktionsdetails in Ihrer Wallet und bestätigen Sie den Swap.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                <span>Warte auf Bestätigung...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
