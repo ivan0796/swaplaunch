@@ -74,7 +74,7 @@ const SwapPageV2 = () => {
             {selectedChain === 0 ? (
               <WalletMultiButton />
             ) : (
-              <ConnectButton />
+              <WalletButtonWithHistory />
             )}
           </div>
         </div>
