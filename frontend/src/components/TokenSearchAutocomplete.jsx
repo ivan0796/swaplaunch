@@ -57,6 +57,25 @@ const TokenSearchAutocomplete = ({ onSelect, placeholder = "Search token name, s
         );
       }
 
+      // Priorisiere Tokens der aktuellen Chain
+      if (chainId !== undefined) {
+        const chainMap = { 1: 'ethereum', 56: 'bsc', 137: 'polygon', 0: 'solana' };
+        const currentChain = chainMap[chainId];
+        
+        tokenResults.sort((a, b) => {
+          const aIsCurrentChain = a.chain === currentChain;
+          const bIsCurrentChain = b.chain === currentChain;
+          
+          if (aIsCurrentChain && !bIsCurrentChain) return -1;
+          if (!aIsCurrentChain && bIsCurrentChain) return 1;
+          
+          // Sekundär nach Liquidität sortieren
+          const aLiq = a.liquidity || 0;
+          const bLiq = b.liquidity || 0;
+          return bLiq - aLiq;
+        });
+      }
+
       setResults(tokenResults);
       setShowResults(true);
     } catch (err) {
