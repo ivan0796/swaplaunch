@@ -61,6 +61,7 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
   
   // Price tracking
   const [sellTokenCoinId, setSellTokenCoinId] = useState(null);
+  const [buyTokenCoinId, setBuyTokenCoinId] = useState(null);
 
   // Initialize with default tokens when chain changes
   useEffect(() => {
@@ -84,6 +85,14 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       setSellTokenCoinId(coinId);
     }
   }, [sellToken]);
+
+  // Update CoinGecko ID when buy token changes
+  useEffect(() => {
+    if (buyToken?.address) {
+      const coinId = getCoinGeckoId(buyToken.address);
+      setBuyTokenCoinId(coinId);
+    }
+  }, [buyToken]);
 
   // Auto-fetch quote when inputs change (with debouncing)
   useEffect(() => {
