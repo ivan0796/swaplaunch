@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '@/App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import SwapPage from './pages/SwapPage';
+import SwapPageV2 from './pages/SwapPageV2';
 import RiskDisclosure from './pages/RiskDisclosure';
 import { Toaster } from './components/ui/sonner';
 
@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SwapPage />} />
+          <Route path="/" element={<SwapPageV2 />} />
           <Route path="/risk-disclosure" element={<RiskDisclosure />} />
         </Routes>
       </BrowserRouter>
