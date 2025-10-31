@@ -116,11 +116,6 @@ const TokenSearchModal = ({ isOpen, onClose, onSelectToken, chainId, excludeToke
               autoFocus
             />
           </div>
-          {isValidAddress(searchQuery) && (
-            <div className="mt-2 text-xs text-blue-600">
-              ℹ️ Contract address detected
-            </div>
-          )}
         </div>
 
         {/* Results */}
