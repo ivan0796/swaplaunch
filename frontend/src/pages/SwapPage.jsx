@@ -69,30 +69,16 @@ const SwapPage = () => {
               {/* Network Selector */}
               <NetworkSelector
                 selectedChain={selectedChain}
-                onChainChange={handleChainChange}
+                onChainChange={setSelectedChain}
                 disabled={!isConnected}
-                walletType={walletType}
               />
-
-              {/* Wallet Type Switch Hint */}
-              {selectedChain === 'solana' && !solanaConnected && evmConnected && (
-                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
-                  ⚠️ Solana requires Phantom wallet. Please connect Phantom to swap on Solana.
-                </div>
-              )}
-              {selectedChain !== 'solana' && solanaConnected && !evmConnected && (
-                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
-                  ⚠️ EVM chains require MetaMask or WalletConnect. Please connect an EVM wallet.
-                </div>
-              )}
 
               {/* Swap Form */}
               <div className="mt-6">
                 {isConnected ? (
-                  <SwapForm
+                  <SwapFormEnhanced
                     chainId={selectedChain}
                     walletAddress={walletAddress}
-                    walletType={walletType}
                   />
                 ) : (
                   <div data-testid="connect-wallet-prompt" className="text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
@@ -110,11 +96,8 @@ const SwapPage = () => {
                       />
                     </svg>
                     <h3 className="text-xl font-medium text-gray-900 mb-2">Connect Your Wallet</h3>
-                    <p className="text-gray-500 mb-4">Choose your blockchain and connect wallet to start swapping</p>
-                    <div className="flex gap-3 justify-center">
-                      <ConnectButton />
-                      <WalletMultiButton />
-                    </div>
+                    <p className="text-gray-500 mb-4">Connect wallet to start swapping tokens</p>
+                    <ConnectButton />
                   </div>
                 )}
               </div>
