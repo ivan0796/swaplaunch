@@ -19,7 +19,7 @@ import TokenSearchAutocomplete from './TokenSearchAutocomplete';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-// Popular default tokens by chain
+// Popular default tokens by chain with correct TrustWallet logos
 const DEFAULT_TOKENS = {
   1: [
     { 
@@ -27,14 +27,14 @@ const DEFAULT_TOKENS = {
       address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 
       decimals: 18, 
       name: 'Ethereum',
-      logoURI: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png'
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
     },
     { 
       symbol: 'USDC', 
-      address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', 
+      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 
       decimals: 6, 
       name: 'USD Coin',
-      logoURI: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png'
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png'
     },
   ],
   56: [
@@ -43,14 +43,14 @@ const DEFAULT_TOKENS = {
       address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 
       decimals: 18, 
       name: 'BNB',
-      logoURI: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png'
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png'
     },
     { 
       symbol: 'USDT', 
-      address: '0x55d398326f99059ff775485246999027b3197955', 
+      address: '0x55d398326f99059fF775485246999027B3197955', 
       decimals: 18, 
       name: 'Tether USD',
-      logoURI: 'https://assets.coingecko.com/coins/images/325/large/Tether.png'
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png'
     },
   ],
   137: [
@@ -59,14 +59,14 @@ const DEFAULT_TOKENS = {
       address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 
       decimals: 18, 
       name: 'Polygon',
-      logoURI: 'https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png'
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png'
     },
     { 
       symbol: 'USDC', 
-      address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', 
+      address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', 
       decimals: 6, 
       name: 'USD Coin',
-      logoURI: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png'
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/assets/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/logo.png'
     },
   ]
 };
