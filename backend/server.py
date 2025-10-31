@@ -619,75 +619,87 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
 async def get_new_dex_listings(chain: Optional[str] = Query(None)):
     """
     Get new DEX listings from Dexscreener
-    Filtered by age (newest first)
+    Uses latest pairs from trending with age filter
     """
     cache_key = f"new_listings_{chain or 'all'}"
     current_time = datetime.now(timezone.utc).timestamp()
     
-    # Check cache (30s for new listings)
+    # Check cache (2 min for new listings)
     if cache_key in discovery_cache:
         cached_data, cached_time = discovery_cache[cache_key]
-        if current_time - cached_time < 30:
+        if current_time - cached_time < 120:
             return cached_data
     
     try:
         async with httpx.AsyncClient(timeout=15.0) as http_client:
-            # Dexscreener trending/new tokens endpoint
-            # Note: Public API has rate limits, adjust as needed
+            # Use boosted/trending endpoint which includes newer tokens
             response = await http_client.get(
-                "https://api.dexscreener.com/latest/dex/search?q=NEW",
+                "https://api.dexscreener.com/latest/dex/tokens/trending",
                 headers={"Accept": "application/json"}
             )
             
             if response.status_code == 429:
-                raise HTTPException(status_code=429, detail="Dexscreener rate limit reached")
+                logger.warning("Dexscreener rate limit for new listings")
+                return {"pairs": [], "note": "Rate limited, try again later"}
             
             if response.status_code != 200:
-                # Graceful degradation
                 logger.warning(f"Dexscreener API error: {response.status_code}")
                 return {"pairs": [], "note": "DEX data temporarily unavailable"}
             
             data = response.json()
-            pairs = data.get("pairs", [])
             
-            # Filter by chain if specified
-            if chain:
-                chain_map = {
-                    "ethereum": "ethereum",
-                    "bsc": "bsc",
-                    "polygon": "polygon",
-                    "solana": "solana"
+            # Dexscreener trending returns array of trending token info
+            if not data or not isinstance(data, list):
+                return {"pairs": [], "note": "No new listings available"}
+            
+            pairs = []
+            for item in data:
+                # Extract pair data from trending response
+                token_data = item if isinstance(item, dict) else {}
+                
+                # Build simplified pair info
+                base_token = {
+                    "address": token_data.get("tokenAddress") or token_data.get("address"),
+                    "name": token_data.get("name"),
+                    "symbol": token_data.get("symbol")
                 }
-                chain_id = chain_map.get(chain.lower())
-                if chain_id:
-                    pairs = [p for p in pairs if p.get("chainId") == chain_id]
-            
-            # Sort by age (newest first) if pairCreatedAt exists
-            pairs_with_age = [p for p in pairs if p.get("pairCreatedAt")]
-            pairs_with_age.sort(key=lambda x: x.get("pairCreatedAt", 0), reverse=True)
+                
+                pair_info = {
+                    "chainId": token_data.get("chainId", "unknown"),
+                    "dexId": token_data.get("dexId", "unknown"),
+                    "pairAddress": token_data.get("pairAddress", ""),
+                    "baseToken": base_token,
+                    "priceUsd": token_data.get("priceUsd"),
+                    "volume24h": token_data.get("volume", {}).get("h24") if isinstance(token_data.get("volume"), dict) else None,
+                    "liquidity": token_data.get("liquidity", {}).get("usd") if isinstance(token_data.get("liquidity"), dict) else None,
+                    "priceChange24h": token_data.get("priceChange", {}).get("h24") if isinstance(token_data.get("priceChange"), dict) else None
+                }
+                
+                # Filter by chain if specified
+                if chain:
+                    chain_map = {
+                        "ethereum": "ethereum",
+                        "bsc": "bsc",
+                        "polygon": "polygon",
+                        "solana": "solana"
+                    }
+                    chain_id = chain_map.get(chain.lower())
+                    if chain_id and pair_info["chainId"] == chain_id:
+                        pairs.append(pair_info)
+                else:
+                    pairs.append(pair_info)
             
             result = {
-                "pairs": [
-                    {
-                        "chainId": pair.get("chainId"),
-                        "dexId": pair.get("dexId"),
-                        "pairAddress": pair.get("pairAddress"),
-                        "baseToken": {
-                            "address": pair.get("baseToken", {}).get("address"),
-                            "name": pair.get("baseToken", {}).get("name"),
-                            "symbol": pair.get("baseToken", {}).get("symbol")
-                        },
-                        "priceUsd": pair.get("priceUsd"),
-                        "volume24h": pair.get("volume", {}).get("h24"),
-                        "liquidity": pair.get("liquidity", {}).get("usd"),
-                        "pairCreatedAt": pair.get("pairCreatedAt")
-                    }
-                    for pair in pairs_with_age[:30]  # Top 30 newest
-                ],
-                "count": len(pairs_with_age[:30])
+                "pairs": pairs[:20],  # Top 20
+                "count": len(pairs[:20])
             }
             
             discovery_cache[cache_key] = (result, current_time)
+            return result
+            
+    except Exception as e:
+        logger.error(f"Error fetching new listings: {str(e)}")
+        return {"pairs": [], "note": "DEX data unavailable"}
             return result
             
     except httpx.TimeoutException:
