@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useAccount, useChainId, useSwitchChain } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
+import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import SwapForm from '../components/SwapForm';
 import NetworkSelector from '../components/NetworkSelector';
@@ -9,15 +11,35 @@ import { Info } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
 const SwapPage = () => {
-  const { address, isConnected } = useAccount();
+  const { address: evmAddress, isConnected: evmConnected } = useAccount();
+  const { publicKey: solanaPublicKey, connected: solanaConnected } = useSolanaWallet();
   const chainId = useChainId();
   const [selectedChain, setSelectedChain] = useState(1);
+  const [walletType, setWalletType] = useState('evm'); // 'evm' or 'solana'
 
   useEffect(() => {
-    if (isConnected && chainId) {
+    if (evmConnected && chainId) {
       setSelectedChain(chainId);
+      setWalletType('evm');
+    } else if (solanaConnected) {
+      setSelectedChain('solana');
+      setWalletType('solana');
     }
-  }, [chainId, isConnected]);
+  }, [chainId, evmConnected, solanaConnected]);
+
+  const handleChainChange = (chain) => {
+    setSelectedChain(chain);
+    if (chain === 'solana') {
+      setWalletType('solana');
+    } else {
+      setWalletType('evm');
+    }
+  };
+
+  const isConnected = evmConnected || solanaConnected;
+  const walletAddress = walletType === 'solana' 
+    ? solanaPublicKey?.toBase58() 
+    : evmAddress;
 
   return (
     <div className="min-h-screen" style={{
@@ -28,9 +50,9 @@ const SwapPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-white" style={{ fontFamily: 'Space Grotesk' }}>
-              SwapLaunch
+              SwapLaunch v2.0
             </h1>
-            <p className="text-sm text-white/80 mt-1">Non-Custodial Multi-DEX Aggregator</p>
+            <p className="text-sm text-white/80 mt-1">Multi-Chain DEX Aggregator (ETH • BSC • Polygon • Solana)</p>
           </div>
           <div className="flex items-center gap-4">
             <Link to="/risk-disclosure">
@@ -39,7 +61,11 @@ const SwapPage = () => {
                 Risk & Transparency
               </Button>
             </Link>
-            <ConnectButton data-testid="connect-wallet-button" />
+            {walletType === 'solana' ? (
+              <WalletMultiButton data-testid="solana-connect-button" />
+            ) : (
+              <ConnectButton data-testid="connect-wallet-button" />
+            )}
           </div>
         </div>
       </header>
@@ -55,23 +81,37 @@ const SwapPage = () => {
                   Swap Tokens
                 </h2>
                 <p className="text-gray-600 text-sm">
-                  Trade crypto across multiple blockchains with the best rates
+                  Trade crypto across 4 blockchains with the best rates
                 </p>
               </div>
 
               {/* Network Selector */}
               <NetworkSelector
                 selectedChain={selectedChain}
-                onChainChange={setSelectedChain}
+                onChainChange={handleChainChange}
                 disabled={!isConnected}
+                walletType={walletType}
               />
+
+              {/* Wallet Type Switch Hint */}
+              {selectedChain === 'solana' && !solanaConnected && evmConnected && (
+                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
+                  ⚠️ Solana requires Phantom wallet. Please connect Phantom to swap on Solana.
+                </div>
+              )}
+              {selectedChain !== 'solana' && solanaConnected && !evmConnected && (
+                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
+                  ⚠️ EVM chains require MetaMask or WalletConnect. Please connect an EVM wallet.
+                </div>
+              )}
 
               {/* Swap Form */}
               <div className="mt-6">
                 {isConnected ? (
                   <SwapForm
                     chainId={selectedChain}
-                    walletAddress={address}
+                    walletAddress={walletAddress}
+                    walletType={walletType}
                   />
                 ) : (
                   <div data-testid="connect-wallet-prompt" className="text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
@@ -89,8 +129,11 @@ const SwapPage = () => {
                       />
                     </svg>
                     <h3 className="text-xl font-medium text-gray-900 mb-2">Connect Your Wallet</h3>
-                    <p className="text-gray-500 mb-4">Connect your wallet to start swapping tokens</p>
-                    <ConnectButton />
+                    <p className="text-gray-500 mb-4">Choose your blockchain and connect wallet to start swapping</p>
+                    <div className="flex gap-3 justify-center">
+                      <ConnectButton />
+                      <WalletMultiButton />
+                    </div>
                   </div>
                 )}
               </div>
@@ -102,7 +145,7 @@ const SwapPage = () => {
             {/* Features Card */}
             <div className="glass-card rounded-2xl p-6 shadow-xl">
               <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: 'Space Grotesk' }}>
-                Why SwapLaunch?
+                Why SwapLaunch v2.0?
               </h3>
               <ul className="space-y-3 text-sm">
                 <li className="flex items-start">
@@ -121,7 +164,7 @@ const SwapPage = () => {
                   <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span>Multi-chain support (Ethereum, BSC, Polygon)</span>
+                  <span>4-Chain support: ETH, BSC, Polygon, Solana</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -133,8 +176,11 @@ const SwapPage = () => {
             </div>
 
             {/* Swap History */}
-            {isConnected && address && (
-              <SwapHistory walletAddress={address} />
+            {isConnected && walletAddress && (
+              <SwapHistory 
+                walletAddress={walletAddress} 
+                chain={selectedChain === 'solana' ? 'solana' : undefined}
+              />
             )}
           </div>
         </div>
@@ -144,10 +190,10 @@ const SwapPage = () => {
       <footer className="mt-16 py-8 border-t border-white/20 backdrop-blur-md bg-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-white/80 text-sm">
-            SwapLaunch is a non-custodial platform. Always verify transactions before signing.
+            SwapLaunch v2.0 is a non-custodial platform. Always verify transactions before signing.
           </p>
           <p className="text-white/60 text-xs mt-2">
-            © 2025 SwapLaunch. Powered by 0x Protocol.
+            © 2025 SwapLaunch. Powered by 0x Protocol & Jupiter.
           </p>
         </div>
       </footer>
