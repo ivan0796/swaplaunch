@@ -126,15 +126,18 @@ backend:
 
   - task: "Solana Token Search Resolution"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Backend has /api/token/resolve endpoint that searches Dexscreener and Jupiter Token Registry for Solana tokens. Need to test if specific contract 'DZpa4peCErsNzsYJ69XYYTSjZGDQhuexnzj7EiZ1pump' resolves correctly."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED SUCCESSFULLY: GET /api/token/resolve?query=DZpa4peCErsNzsYJ69XYYTSjZGDQhuexnzj7EiZ1pump returns correct results. Found token 'KOMI' (KOMI) on Solana chain from Dexscreener with price $0.0005432 and liquidity $90,119.37. Backend searches both Dexscreener API and Jupiter Token Registry as expected. Token resolution working correctly for Solana contract addresses."
 
 frontend:
   - task: "Trade Navigation Link"
