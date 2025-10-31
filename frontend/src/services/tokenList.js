@@ -4,21 +4,37 @@ import axios from 'axios';
 const TOKEN_LISTS = {
   uniswap: 'https://tokens.uniswap.org',
   pancakeswap: 'https://tokens.pancakeswap.finance/pancakeswap-extended.json',
-  coingecko: 'https://tokens.coingecko.com/uniswap/all.json'
+  sushiswap: 'https://token-list.sushi.com',
+  coingecko: 'https://tokens.coingecko.com/uniswap/all.json',
+  quickswap: 'https://unpkg.com/quickswap-default-token-list@1.2.25/build/quickswap-default.tokenlist.json',
+  // 1inch token list
+  oneinch_eth: 'https://tokens.1inch.io/v1.1/1',
+  oneinch_bsc: 'https://tokens.1inch.io/v1.1/56',
+  oneinch_polygon: 'https://tokens.1inch.io/v1.1/137'
 };
 
 let cachedTokens = null;
+let cacheTimestamp = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 /**
  * Load and merge token lists from multiple sources
  */
 export const loadTokenLists = async () => {
-  if (cachedTokens) return cachedTokens;
+  // Return cached tokens if still valid
+  if (cachedTokens && cacheTimestamp && (Date.now() - cacheTimestamp < CACHE_DURATION)) {
+    return cachedTokens;
+  }
 
   try {
     const lists = await Promise.allSettled([
       axios.get(TOKEN_LISTS.pancakeswap),
-      axios.get(TOKEN_LISTS.coingecko)
+      axios.get(TOKEN_LISTS.sushiswap),
+      axios.get(TOKEN_LISTS.coingecko),
+      axios.get(TOKEN_LISTS.quickswap),
+      axios.get(TOKEN_LISTS.oneinch_eth),
+      axios.get(TOKEN_LISTS.oneinch_bsc),
+      axios.get(TOKEN_LISTS.oneinch_polygon)
     ]);
 
     const allTokens = [];
