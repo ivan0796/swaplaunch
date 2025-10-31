@@ -351,8 +351,19 @@ const SwapFormEnhanced = ({ chainId, walletAddress }) => {
               </option>
             ))}
           </select>
-          <div className="flex-1 px-4 py-3 bg-gray-50 rounded-xl border border-gray-300 text-lg text-gray-900">
-            {quote ? ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken)) : '0.0'}
+          <div className="flex-1 px-4 py-3 bg-gray-50 rounded-xl border border-gray-300 text-lg text-gray-900 flex items-center justify-between">
+            {loading ? (
+              <span className="text-gray-500 flex items-center">
+                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                Loading...
+              </span>
+            ) : quote ? (
+              <span className="font-medium">
+                {ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken))}
+              </span>
+            ) : (
+              <span className="text-gray-400">0.0</span>
+            )}
           </div>
         </div>
       </div>
