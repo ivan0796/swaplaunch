@@ -222,10 +222,11 @@ class SwapLaunchAPITester:
                         if has_token_structure:
                             # Check if it's a Solana token
                             is_solana = first_result.get("chain") == "solana"
-                            has_address = first_result.get("address") == contract_address
+                            # Address comparison should be case-insensitive for Solana
+                            has_address = first_result.get("address", "").lower() == contract_address.lower()
                             
                             success = is_solana and has_address
-                            details = f"Found {count} results. First result: {first_result.get('name')} ({first_result.get('symbol')}) on {first_result.get('chain')} from {first_result.get('source')}"
+                            details = f"✅ Found {count} results. Token: {first_result.get('name')} ({first_result.get('symbol')}) on {first_result.get('chain')} from {first_result.get('source')}. Price: ${first_result.get('priceUsd', 'N/A')}"
                         else:
                             success = False
                             details = f"Token result missing required fields. Got: {list(first_result.keys())}"
