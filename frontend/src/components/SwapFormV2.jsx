@@ -389,9 +389,9 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
         </div>
       )}
 
-      {effectiveSlippage.warning && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
-          ⚠️ {effectiveSlippage.warning}
+      {showWarning && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-700 dark:text-yellow-200">
+          {effectiveSlippage.warning}
         </div>
       )}
 
