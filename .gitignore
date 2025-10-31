@@ -16,3 +16,4 @@ deployments/*.json
 !deployments/.gitkeepfrontend/node_modules/.cache/default-development/4.pack_
 frontend/node_modules/.cache/default-development/0.pack
 frontend/node_modules/.cache/default-development/2.pack
+frontend/node_modules/.cache/default-development/4.pack_
