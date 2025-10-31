@@ -52,8 +52,11 @@ const webpackConfig = {
         tls: false,
       };
 
-      // Add Buffer and process plugins
-      const webpack = require('webpack');
+      // Add Buffer and process plugins - Filter out existing ProvidePlugin first
+      webpackConfig.plugins = webpackConfig.plugins.filter(
+        plugin => !(plugin instanceof webpack.ProvidePlugin)
+      );
+      
       webpackConfig.plugins.push(
         new webpack.ProvidePlugin({
           Buffer: ['buffer', 'Buffer'],
