@@ -70,6 +70,22 @@ const SwapFormEnhanced = ({ chainId, walletAddress }) => {
     }
   }, [sellToken]);
 
+  // Auto-fetch quote when inputs change (with debouncing)
+  useEffect(() => {
+    if (!sellToken || !buyToken || !sellAmount || parseFloat(sellAmount) <= 0) {
+      setQuote(null);
+      setError(null);
+      return;
+    }
+
+    // Debounce: Wait 800ms after user stops typing
+    const timer = setTimeout(() => {
+      fetchQuote();
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [sellToken, buyToken, sellAmount, walletAddress]);
+
   const getTokenDecimals = (tokenAddress) => {
     const tokens = POPULAR_TOKENS[chainId] || [];
     const token = tokens.find(t => t.address?.toLowerCase() === tokenAddress?.toLowerCase());
