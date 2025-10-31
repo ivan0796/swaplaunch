@@ -111,8 +111,17 @@ const SwapPage = () => {
                       />
                     </svg>
                     <h3 className="text-xl font-medium text-gray-900 mb-2">Connect Your Wallet</h3>
-                    <p className="text-gray-500 mb-4">Connect wallet to start swapping tokens</p>
-                    <ConnectButton />
+                    <p className="text-gray-500 mb-4">
+                      {selectedChain === 0 
+                        ? 'Connect Solana wallet to start swapping'
+                        : 'Connect EVM wallet to start swapping'
+                      }
+                    </p>
+                    {selectedChain === 0 ? (
+                      <WalletMultiButton />
+                    ) : (
+                      <ConnectButton />
+                    )}
                   </div>
                 )}
               </div>
