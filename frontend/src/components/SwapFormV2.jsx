@@ -286,10 +286,14 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
     setBuyToken(token);
   };
 
-  // Calculate slippage
+  // Calculate slippage intelligently based on token types
   const effectiveSlippage = autoSlippage 
-    ? calculateAutoSlippage(priceImpact)
+    ? calculateAutoSlippage(priceImpact, sellToken?.symbol, buyToken?.symbol)
     : { slippage: manualSlippage, warning: null };
+
+  // Prüfe ob Warning angezeigt werden soll (nicht bei renommierten Coins)
+  const showWarning = effectiveSlippage.warning && 
+    shouldShowSlippageWarning(effectiveSlippage.slippage, sellToken?.symbol, buyToken?.symbol);
 
   return (
     <div data-testid="swap-form" className="space-y-4">
