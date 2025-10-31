@@ -159,12 +159,20 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
     setSwapping(true);
 
     try {
+      // 0x v2 API returns transaction data in a nested structure
+      const txData = quote.transaction || quote;
+      
+      // Validate transaction data exists
+      if (!txData.to || !txData.data) {
+        throw new Error('Invalid quote data - missing transaction details');
+      }
+
       const txHash = await walletClient.sendTransaction({
-        to: quote.to,
-        data: quote.data,
-        value: BigInt(quote.value || '0'),
-        gas: BigInt(quote.gas || '500000'),
-        gasPrice: BigInt(quote.gasPrice || '0')
+        to: txData.to,
+        data: txData.data,
+        value: BigInt(txData.value || '0'),
+        gas: txData.gas ? BigInt(txData.gas) : undefined,
+        gasPrice: txData.gasPrice ? BigInt(txData.gasPrice) : undefined,
       });
 
       toast.success('Transaction submitted!', {
