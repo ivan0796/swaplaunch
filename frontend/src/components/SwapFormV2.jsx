@@ -365,7 +365,10 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
           <Button
             size="sm"
             variant={!autoSlippage ? "default" : "outline"}
-            onClick={() => setShowSlippageSettings(!showSlippageSettings)}
+            onClick={() => {
+              setAutoSlippage(false);
+              setShowSlippageSettings(!showSlippageSettings);
+            }}
             className="h-8 px-3"
           >
             <Settings className="w-3 h-3 mr-1" />
