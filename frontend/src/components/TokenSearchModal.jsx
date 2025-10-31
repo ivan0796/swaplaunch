@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { searchTokens, isValidAddress } from '../services/tokenList';
-import { Search, X } from 'lucide-react';
+import { Search, X, TrendingUp } from 'lucide-react';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
+import { getPopularTokens } from '../utils/popularTokens';
 
 const TokenSearchModal = ({ isOpen, onClose, onSelectToken, chainId, excludeToken }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showPopular, setShowPopular] = useState(true);
+
+  const popularTokens = getPopularTokens(chainId);
 
   useEffect(() => {
     if (!isOpen) {
       setSearchQuery('');
       setSearchResults([]);
+      setShowPopular(true);
       return;
     }
   }, [isOpen]);
@@ -20,9 +25,11 @@ const TokenSearchModal = ({ isOpen, onClose, onSelectToken, chainId, excludeToke
   useEffect(() => {
     if (!searchQuery || searchQuery.length < 2) {
       setSearchResults([]);
+      setShowPopular(true);
       return;
     }
 
+    setShowPopular(false);
     const timer = setTimeout(async () => {
       setLoading(true);
       const results = await searchTokens(searchQuery, chainId);
