@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { useWalletClient } from 'wagmi';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { ArrowDown, RefreshCw, Info, Zap, Settings, Search } from 'lucide-react';
+import { ArrowDown, RefreshCw, Info, Zap, Settings, Search, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 import TokenPriceWidget from './TokenPriceWidget';
 import { getCoinGeckoId } from '../services/coingecko';
@@ -15,6 +15,7 @@ import { getReferrerFromStorage } from '../utils/referral';
 import TokenSearchModal from './TokenSearchModal';
 import TokenSecurityPanel from './TokenSecurityPanel';
 import TokenSearchAutocomplete from './TokenSearchAutocomplete';
+import PairSearchModal from './PairSearchModal';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
