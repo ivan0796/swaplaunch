@@ -92,13 +92,48 @@ const TokenSearchModal = ({ isOpen, onClose, onSelectToken, chainId, excludeToke
               <div className="animate-spin w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full mx-auto mb-2"></div>
               Searching...
             </div>
-          ) : searchResults.length === 0 && searchQuery.length >= 2 ? (
-            <div className="text-center py-8 text-gray-500">
-              No tokens found
+          ) : showPopular ? (
+            <div>
+              <div className="px-3 py-2 flex items-center gap-2 text-sm font-semibold text-gray-600">
+                <TrendingUp className="w-4 h-4" />
+                Popular Tokens
+              </div>
+              <div className="space-y-1">
+                {popularTokens.map((token) => {
+                  const address = token.address || token.mint;
+                  const logoUrl = `https://assets.coingecko.com/coins/images/${token.coingeckoId === 'ethereum' ? '279' : token.coingeckoId === 'binancecoin' ? '825' : token.coingeckoId === 'matic-network' ? '4713' : token.coingeckoId === 'solana' ? '4128' : token.coingeckoId === 'tether' ? '325' : token.coingeckoId === 'usd-coin' ? '6319' : token.coingeckoId === 'wrapped-bitcoin' ? '7598' : token.coingeckoId === 'ripple' ? '44' : token.coingeckoId === 'chainlink' ? '877' : token.coingeckoId === 'dai' ? '9956' : '1'}/small/${token.coingeckoId}.png`;
+                  
+                  return (
+                    <button
+                      key={`${chainId}-${address}`}
+                      onClick={() => handleSelectToken({
+                        ...token,
+                        address: address,
+                        chainId: chainId,
+                        logoURI: logoUrl
+                      })}
+                      className="w-full p-3 hover:bg-gray-50 rounded-lg transition-colors flex items-center gap-3 text-left"
+                    >
+                      <img
+                        src={logoUrl}
+                        alt={token.symbol}
+                        className="w-8 h-8 rounded-full"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                      <div className="flex-1">
+                        <div className="font-semibold">{token.symbol}</div>
+                        <div className="text-sm text-gray-500">{token.name}</div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           ) : searchResults.length === 0 ? (
-            <div className="text-center py-8 text-gray-400 text-sm">
-              Start typing to search tokens...
+            <div className="text-center py-8 text-gray-500">
+              No tokens found
             </div>
           ) : (
             <div className="space-y-1">
