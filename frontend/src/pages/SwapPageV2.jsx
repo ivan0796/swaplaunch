@@ -6,10 +6,12 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import SwapFormV2 from '../components/SwapFormV2';
 import SolanaSwapForm from '../components/SolanaSwapForm';
 import NetworkSelector from '../components/NetworkSelector';
-import TrendingTokens from '../components/TrendingTokens';
+import TrendingTokensV2 from '../components/TrendingTokensV2';
+import NewListings from '../components/NewListings';
 import SwapHistoryModal from '../components/SwapHistoryModal';
 import ReferralWidget from '../components/ReferralWidget';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const SwapPageV2 = () => {
   const { address: evmAddress, isConnected: evmConnected } = useAccount();
