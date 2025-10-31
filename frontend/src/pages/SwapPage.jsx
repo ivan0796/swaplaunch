@@ -16,6 +16,7 @@ import { Button } from '../components/ui/button';
 const SwapPage = () => {
   const { address: evmAddress, isConnected: evmConnected } = useAccount();
   const chainId = useChainId();
+  const { publicKey: solanaPublicKey, connected: solanaConnected } = useWallet();
   const [selectedChain, setSelectedChain] = useState(1);
 
   useEffect(() => {
@@ -24,8 +25,11 @@ const SwapPage = () => {
     }
   }, [chainId, evmConnected]);
 
-  const isConnected = evmConnected;
-  const walletAddress = evmAddress;
+  // Determine connection status based on selected chain
+  const isConnected = selectedChain === 0 ? solanaConnected : evmConnected;
+  const walletAddress = selectedChain === 0 
+    ? (solanaPublicKey?.toString() || null) 
+    : evmAddress;
 
   return (
     <div className="min-h-screen" style={{
