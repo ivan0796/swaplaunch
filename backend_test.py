@@ -266,6 +266,10 @@ class SwapLaunchAPITester:
             # Test GET without specific wallet
             self.test_swaps_get_endpoint()
         
+        # Test Solana token resolution (high priority test)
+        print("\n🔍 Testing Solana Token Resolution...")
+        self.test_solana_token_resolve()
+        
         # Print summary
         print("\n" + "=" * 60)
         print(f"📊 Test Summary: {self.tests_passed}/{self.tests_run} tests passed")
