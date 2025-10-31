@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Link } from 'react-router-dom';
@@ -6,54 +6,71 @@ import { ArrowLeft, Shield, Zap, Globe } from 'lucide-react';
 
 const BridgePage = () => {
   const { address, isConnected } = useAccount();
+  const widgetContainerRef = useRef(null);
 
   useEffect(() => {
+    if (!isConnected || !widgetContainerRef.current) return;
+
+    // Clear any existing widget
+    widgetContainerRef.current.innerHTML = '';
+
+    // Create widget container
+    const widgetDiv = document.createElement('div');
+    widgetDiv.id = 'lifi-widget-container';
+    widgetContainerRef.current.appendChild(widgetDiv);
+
     // Load LI.FI widget script
     const script = document.createElement('script');
-    script.src = 'https://widget.li.fi/latest/widget.js';
+    script.src = 'https://unpkg.com/@lifi/widget@latest/dist/widget.umd.js';
     script.async = true;
-    document.body.appendChild(script);
-
+    
     script.onload = () => {
-      if (window.LiFiWidget) {
-        window.LiFiWidget.createWidget('#lifi-widget', {
-          integrator: 'SwapLaunch',
-          chains: {
-            allow: [1, 10, 56, 100, 137, 250, 8453, 42161, 43114], // Ethereum, Optimism, BSC, Gnosis, Polygon, Fantom, Base, Arbitrum, Avalanche
-          },
-          walletManagement: {
-            connect: async () => {
-              // Wallet is already connected via RainbowKit
-              return address;
+      if (window.LiFi && window.LiFi.Widget) {
+        try {
+          new window.LiFi.Widget({
+            el: '#lifi-widget-container',
+            integrator: 'SwapLaunch',
+            variant: 'wide',
+            appearance: 'light',
+            theme: {
+              palette: {
+                primary: { main: '#6366f1' },
+                secondary: { main: '#10b981' },
+              },
             },
-            disconnect: async () => {
-              // Handle disconnect if needed
+            chains: {
+              allow: [1, 10, 56, 100, 137, 250, 8453, 42161, 43114],
             },
-          },
-          appearance: 'light',
-          theme: {
-            palette: {
-              primary: { main: '#6366f1' },
-              secondary: { main: '#10b981' },
-            },
-            shape: {
-              borderRadius: 16,
-              borderRadiusSecondary: 12,
-            },
-          },
-          variant: 'default',
-          subvariant: 'default',
-          hiddenUI: ['appearance', 'language'],
-        });
+          });
+        } catch (error) {
+          console.error('Failed to initialize LI.FI widget:', error);
+        }
       }
     };
+
+    script.onerror = () => {
+      console.error('Failed to load LI.FI widget script');
+      if (widgetContainerRef.current) {
+        widgetContainerRef.current.innerHTML = `
+          <div class="text-center py-12">
+            <p class="text-red-600 mb-4">Failed to load bridge widget</p>
+            <p class="text-sm text-gray-600">Please try refreshing the page</p>
+          </div>
+        `;
+      }
+    };
+
+    document.body.appendChild(script);
 
     return () => {
       if (document.body.contains(script)) {
         document.body.removeChild(script);
       }
+      if (widgetContainerRef.current) {
+        widgetContainerRef.current.innerHTML = '';
+      }
     };
-  }, [address]);
+  }, [isConnected, address]);
 
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_20%_-10%,rgba(129,140,248,.25),transparent),radial-gradient(800px_500px_at_80%_0%,rgba(16,185,129,.18),transparent)]">
