@@ -133,13 +133,26 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
         chain: chainName
       });
 
+      const quoteData = response.data;
+      
+      // 0x v2 API can return buyAmount in different places
+      const buyAmount = quoteData.buyAmount || quoteData.transaction?.buyAmount || quoteData.issues?.buyAmount;
+      
+      if (!buyAmount) {
+        throw new Error('No buyAmount in quote response');
+      }
+
       // Calculate price impact (simplified)
-      const outputAmount = ethers.formatUnits(response.data.buyAmount, buyToken.decimals);
+      const outputAmount = ethers.formatUnits(buyAmount, buyToken.decimals);
       const expectedOutput = parseFloat(sellAmount); // Simplified
       const impact = Math.abs(((expectedOutput - parseFloat(outputAmount)) / expectedOutput) * 100);
       setPriceImpact(impact);
 
-      setQuote(response.data);
+      // Normalize quote data structure
+      setQuote({
+        ...quoteData,
+        buyAmount: buyAmount // Ensure buyAmount is at top level
+      });
     } catch (err) {
       console.error('Error fetching quote:', err);
       const errorMsg = err.response?.data?.detail || err.message || 'Failed to fetch quote';
