@@ -81,18 +81,18 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
   // Update CoinGecko ID when sell token changes
   useEffect(() => {
     if (sellToken?.address) {
-      const coinId = getCoinGeckoId(sellToken.address);
+      const coinId = getCoinGeckoId(sellToken.address, chainId);
       setSellTokenCoinId(coinId);
     }
-  }, [sellToken]);
+  }, [sellToken, chainId]);
 
   // Update CoinGecko ID when buy token changes
   useEffect(() => {
     if (buyToken?.address) {
-      const coinId = getCoinGeckoId(buyToken.address);
+      const coinId = getCoinGeckoId(buyToken.address, chainId);
       setBuyTokenCoinId(coinId);
     }
-  }, [buyToken]);
+  }, [buyToken, chainId]);
 
   // Auto-fetch quote when inputs change (with debouncing)
   useEffect(() => {
