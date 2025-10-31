@@ -117,12 +117,14 @@ class SwapLaunchAPITester:
         try:
             test_swap_data = {
                 "wallet_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0",
+                "chain": "ethereum",  # Added missing chain field
                 "chain_id": 1,
                 "token_in": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
                 "token_out": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
                 "amount_in": "1.0",
                 "amount_out": "3000.0",
                 "fee_amount": "6.0",
+                "fee_percentage": "0.2",  # Added missing fee_percentage field
                 "tx_hash": f"0x{''.join([f'{i:02x}' for i in range(32)])}"  # Mock tx hash
             }
             
