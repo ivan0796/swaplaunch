@@ -43,6 +43,14 @@ const webpackConfig = {
         stream: require.resolve('stream-browserify'),
         buffer: require.resolve('buffer'),
         process: require.resolve('process/browser'),
+        http: false,
+        https: false,
+        zlib: false,
+        url: false,
+        assert: false,
+        os: false,
+        path: false,
+        fs: false,
       };
 
       // Provide process global
