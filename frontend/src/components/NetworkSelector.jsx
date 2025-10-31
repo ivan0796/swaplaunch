@@ -21,6 +21,12 @@ const CHAIN_CONFIG = {
     icon: '🟪',
     color: 'from-purple-400 to-purple-600',
     type: 'evm'
+  },
+  0: {
+    name: 'Solana',
+    icon: '◎',
+    color: 'from-purple-500 to-indigo-600',
+    type: 'solana'
   }
 };
 
