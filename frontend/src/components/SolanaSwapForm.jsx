@@ -44,7 +44,7 @@ const SolanaSwapForm = () => {
   }, [sellToken, buyToken, sellAmount, wallet.publicKey]);
 
   const fetchQuote = async () => {
-    if (!sellToken || !buyToken || !sellAmount || parseFloat(sellAmount) <= 0 || !wallet.publicKey) {
+    if (!sellToken || !buyToken || !sellAmount || parseFloat(sellAmount) <= 0) {
       return;
     }
 
@@ -54,11 +54,14 @@ const SolanaSwapForm = () => {
     try {
       const sellAmountLamports = Math.floor(parseFloat(sellAmount) * Math.pow(10, sellToken.decimals));
 
+      // Verwende eine Dummy-Adresse wenn nicht connected (nur für Quote)
+      const userPublicKey = wallet.publicKey?.toString() || 'DummyAddressForQuoteOnly11111111111111111111';
+
       const response = await axios.post(`${API}/solana/quote`, {
         inputMint: sellToken.mint,
         outputMint: buyToken.mint,
         amount: sellAmountLamports,
-        userPublicKey: wallet.publicKey.toString()
+        userPublicKey: userPublicKey
       });
 
       setQuote(response.data);
