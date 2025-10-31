@@ -76,7 +76,7 @@ const SwapPage = () => {
               {/* Swap Form */}
               <div className="mt-6">
                 {isConnected ? (
-                  <SwapFormEnhanced
+                  <SwapFormV2
                     chainId={selectedChain}
                     walletAddress={walletAddress}
                   />
