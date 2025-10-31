@@ -176,6 +176,7 @@ const TrendingTokensV2 = ({ onTokenSelect }) => {
                     </div>
                   </div>
                 </button>
+              </div>
               );
             })}
           </div>
