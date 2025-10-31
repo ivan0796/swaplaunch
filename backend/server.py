@@ -33,10 +33,26 @@ CACHE_TTL = 10  # seconds
 
 # Chain configuration
 CHAIN_CONFIG = {
-    "ethereum": {"chain_id": 1, "rpc": os.environ.get('RPC_ETH'), "api_base": "https://api.0x.org"},
-    "bsc": {"chain_id": 56, "rpc": os.environ.get('RPC_BSC'), "api_base": "https://bsc.api.0x.org"},
-    "polygon": {"chain_id": 137, "rpc": os.environ.get('RPC_POLYGON'), "api_base": "https://polygon.api.0x.org"},
-    "solana": {"chain_id": 0, "rpc": os.environ.get('RPC_SOLANA'), "api_base": os.environ.get('JUPITER_API_URL')}
+    "ethereum": {
+        "chain_id": 1, 
+        "rpc": os.environ.get('RPC_ETH'), 
+        "api_base": "https://api.0x.org"  # v2 API uses main domain for all chains
+    },
+    "bsc": {
+        "chain_id": 56, 
+        "rpc": os.environ.get('RPC_BSC'), 
+        "api_base": "https://api.0x.org"  # v2 uses chainId parameter instead of subdomain
+    },
+    "polygon": {
+        "chain_id": 137, 
+        "rpc": os.environ.get('RPC_POLYGON'), 
+        "api_base": "https://api.0x.org"  # v2 uses chainId parameter instead of subdomain
+    },
+    "solana": {
+        "chain_id": 0, 
+        "rpc": os.environ.get('RPC_SOLANA'), 
+        "api_base": os.environ.get('JUPITER_API_URL')
+    }
 }
 
 # Define Models
