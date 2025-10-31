@@ -37,7 +37,8 @@ const NetworkSelector = ({ selectedChain, onChainChange, disabled }) => {
   const handleChainSelect = async (chainId) => {
     onChainChange(chainId);
     
-    if (!disabled && currentChainId !== chainId) {
+    // Only switch EVM chains via wagmi
+    if (!disabled && chainId !== 0 && currentChainId !== chainId) {
       try {
         await switchChain({ chainId });
       } catch (error) {
