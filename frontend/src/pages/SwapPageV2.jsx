@@ -89,7 +89,7 @@ const SwapPageV2 = () => {
               <div>
                 <h2 className="text-lg font-bold tracking-tight">Swap Tokens</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Trade crypto across 4 blockchains with advanced security
+                  Trade crypto across multiple blockchains with advanced security
                 </p>
               </div>
             </div>
