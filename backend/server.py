@@ -334,41 +334,55 @@ async def test_quote_endpoint(
     buyToken: str = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
 ):
     """
-    Test endpoint to debug 0x API integration
+    Test endpoint to debug 0x API v2 integration
     """
     chain_config = CHAIN_CONFIG.get(chain)
     if not chain_config:
         return {"error": f"Chain {chain} not found"}
     
-    # Simple test request
+    # Test request with v2 parameters
     params = {
+        "chainId": str(chain_config["chain_id"]),
         "sellToken": sellToken,
         "buyToken": buyToken,
         "sellAmount": "1000000000000000000",  # 1 ETH
-        "takerAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0"
+        "taker": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0"
     }
     
-    headers = {}
+    headers = {
+        "0x-version": "v2"
+    }
     api_key = os.environ.get('ZEROX_API_KEY')
     if api_key:
         headers["0x-api-key"] = api_key
     
     try:
         async with httpx.AsyncClient(timeout=30.0) as http_client:
-            # Try /price endpoint
-            url_price = f"{chain_config['api_base']}/swap/v1/price"
-            response_price = await http_client.get(url_price, params=params, headers=headers)
+            # Try v2 price endpoint
+            url_v2 = f"{chain_config['api_base']}/swap/allowance-holder/price"
+            response_v2 = await http_client.get(url_v2, params=params, headers=headers)
             
-            return {
+            result = {
                 "chain": chain,
                 "api_base": chain_config['api_base'],
                 "has_api_key": bool(api_key),
-                "price_endpoint": {
-                    "url": url_price,
-                    "status": response_price.status_code,
-                    "response": response_price.json() if response_price.status_code == 200 else response_price.text[:500]
+                "v2_endpoint": {
+                    "url": url_v2,
+                    "status": response_v2.status_code,
+                    "headers_sent": dict(headers),
+                    "params_sent": params
                 }
             }
+            
+            if response_v2.status_code == 200:
+                data = response_v2.json()
+                result["v2_endpoint"]["success"] = True
+                result["v2_endpoint"]["buyAmount"] = data.get("buyAmount", "N/A")
+                result["v2_endpoint"]["price"] = data.get("price", "N/A")
+            else:
+                result["v2_endpoint"]["error"] = response_v2.text[:500]
+            
+            return result
     except Exception as e:
         return {"error": str(e)}
 
