@@ -114,10 +114,14 @@ const SwapPageV2 = () => {
 
         {/* Sidebar */}
         <aside className="space-y-6">
-          {/* Trending Tokens */}
-          <TrendingTokens onTokenSelect={(coin) => {
-            console.log('Selected trending token:', coin);
-          }} />
+          {/* Trending Tokens V2 */}
+          <TrendingTokensV2 onTokenSelect={handleTrendingTokenSelect} />
+
+          {/* New Listings */}
+          <NewListings 
+            selectedChain={selectedChain}
+            onTokenSelect={handleNewListingSelect} 
+          />
 
           {/* Features Card */}
           <div className="space-y-3">
