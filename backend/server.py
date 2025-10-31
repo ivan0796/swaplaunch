@@ -739,6 +739,7 @@ async def resolve_token(query: str = Query(..., min_length=1)):
     """
     Resolve token by name, symbol, or contract address
     Supports EVM (Dexscreener) and Solana (Jupiter Registry)
+    Enhanced with logo fetching from multiple sources
     """
     cache_key = f"resolve_{query.lower()}"
     current_time = datetime.now(timezone.utc).timestamp()
@@ -769,7 +770,7 @@ async def resolve_token(query: str = Query(..., min_length=1)):
                     dex_data = dex_response.json()
                     pairs = dex_data.get("pairs", [])
                     
-                    # Extract unique tokens with better data
+                    # Extract unique tokens with better data and logos
                     seen = set()
                     for pair in pairs[:20]:  # Top 20 pairs for better results
                         base_token = pair.get("baseToken", {})
@@ -793,13 +794,35 @@ async def resolve_token(query: str = Query(..., min_length=1)):
                             }
                             chain = chain_map.get(chain_id, chain_id)
                             
+                            # Get logo from multiple sources
+                            logo_url = None
+                            
+                            # 1. Try pair info imageUrl
+                            if pair.get("info", {}).get("imageUrl"):
+                                logo_url = pair.get("info", {}).get("imageUrl")
+                            
+                            # 2. Try TrustWallet for EVM tokens
+                            elif chain in ["ethereum", "bsc", "polygon"] and address.startswith("0x"):
+                                tw_chain_map = {
+                                    "ethereum": "ethereum",
+                                    "bsc": "smartchain",
+                                    "polygon": "polygon"
+                                }
+                                tw_chain = tw_chain_map.get(chain)
+                                if tw_chain:
+                                    logo_url = f"https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/{tw_chain}/assets/{address}/logo.png"
+                            
+                            # 3. For Solana, try Solana token list
+                            elif chain == "solana":
+                                logo_url = f"https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/{address}/logo.png"
+                            
                             results.append({
                                 "chain": chain,
                                 "name": base_token.get("name"),
                                 "symbol": base_token.get("symbol"),
                                 "address": address,
                                 "decimals": 18,  # Default for EVM, Solana varies
-                                "logoURL": pair.get("info", {}).get("imageUrl"),  # Get logo from pair info
+                                "logoURL": logo_url,
                                 "source": "dexscreener",
                                 "priceUsd": pair.get("priceUsd"),
                                 "liquidity": pair.get("liquidity", {}).get("usd"),
