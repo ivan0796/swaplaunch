@@ -33,14 +33,11 @@ const POPULAR_TOKENS = {
     { symbol: 'MATIC', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18 },
     { symbol: 'USDC', address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', decimals: 6 },
     { symbol: 'USDT', address: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', decimals: 6 },
-  ],
-  solana: SOLANA_TOKENS
+  ]
 };
 
 const SwapForm = ({ chainId, walletAddress, walletType = 'evm' }) => {
   const { data: walletClient } = useWalletClient();
-  const { connection } = useConnection();
-  const { publicKey: solanaPublicKey, sendTransaction: sendSolanaTransaction } = useWallet();
   const [sellToken, setSellToken] = useState('');
   const [buyToken, setBuyToken] = useState('');
   const [sellAmount, setSellAmount] = useState('');
@@ -48,6 +45,9 @@ const SwapForm = ({ chainId, walletAddress, walletType = 'evm' }) => {
   const [loading, setLoading] = useState(false);
   const [swapping, setSwapping] = useState(false);
   const [error, setError] = useState(null);
+  const [autoSlippage, setAutoSlippage] = useState(true);
+  const [manualSlippage, setManualSlippage] = useState(0.5);
+  const [showSlippageSettings, setShowSlippageSettings] = useState(false);
 
   // Reset form when chain changes
   useEffect(() => {
