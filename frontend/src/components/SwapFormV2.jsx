@@ -572,9 +572,24 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
 
       {/* Swap Direction */}
       <div className="flex justify-center">
-        <div className="bg-gray-100 rounded-full p-2">
+        <button 
+          onClick={() => {
+            // Swap tokens
+            const tempToken = sellToken;
+            setSellToken(buyToken);
+            setBuyToken(tempToken);
+            
+            // Clear amounts and quote
+            setSellAmount('');
+            setQuote(null);
+            
+            toast.success('Tokens swapped!');
+          }}
+          className="bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors cursor-pointer"
+          title="Swap token positions"
+        >
           <ArrowDown className="w-5 h-5 text-gray-600" />
-        </div>
+        </button>
       </div>
 
       {/* Buy Token */}
