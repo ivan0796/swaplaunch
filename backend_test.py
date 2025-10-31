@@ -77,18 +77,23 @@ class SwapLaunchAPITester:
             return False
 
     def test_quote_endpoint_structure(self):
-        """Test quote endpoint structure (will fail without real tokens but should show proper error)"""
+        """Test EVM quote endpoint structure"""
         try:
-            # Test with invalid parameters to check endpoint structure
-            params = {
-                "chainId": 1,
+            # Test EVM quote endpoint with proper structure
+            test_data = {
                 "sellToken": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",  # ETH
                 "buyToken": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",   # USDC
                 "sellAmount": "1000000000000000000",  # 1 ETH in wei
-                "takerAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0"
+                "takerAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0",
+                "chain": "ethereum"
             }
             
-            response = requests.get(f"{self.api_url}/quote", params=params, timeout=30)
+            response = requests.post(
+                f"{self.api_url}/evm/quote", 
+                json=test_data,
+                headers={"Content-Type": "application/json"},
+                timeout=30
+            )
             
             # We expect this to either succeed (if 0x API works) or fail with proper error structure
             if response.status_code == 200:
