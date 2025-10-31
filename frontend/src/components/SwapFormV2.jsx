@@ -84,6 +84,7 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
   const [showSellTokenSearch, setShowSellTokenSearch] = useState(false);
   const [showBuyTokenSearch, setShowBuyTokenSearch] = useState(false);
   const [showPairSearch, setShowPairSearch] = useState(false);
+  const [showWalletConfirm, setShowWalletConfirm] = useState(false);
   
   // Swap states
   const [quote, setQuote] = useState(null);
