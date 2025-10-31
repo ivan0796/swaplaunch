@@ -42,13 +42,46 @@ export const POPULAR_TOKENS = {
   ]
 };
 
-// Fetch logo from CoinGecko
-export const getTokenLogo = (coingeckoId) => {
-  if (!coingeckoId) return null;
-  return `https://assets.coingecko.com/coins/images/1/large/${coingeckoId}.png`;
+// Fetch logo from CoinGecko or fallback to TrustWallet
+export const getTokenLogo = (address, chainId, coingeckoId) => {
+  // Try CoinGecko first if we have the ID
+  if (coingeckoId) {
+    // Use proper CoinGecko API endpoint for token images
+    return `https://assets.coingecko.com/coins/images/${coingeckoId}/large/logo.png`;
+  }
+  
+  // Fallback to TrustWallet assets
+  if (!address || address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    // Native tokens
+    const nativeLogos = {
+      1: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png',
+      56: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png',
+      137: 'https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png'
+    };
+    return nativeLogos[chainId];
+  }
+  
+  // EVM tokens from TrustWallet
+  const chainMap = {
+    1: 'ethereum',
+    56: 'smartchain',
+    137: 'polygon'
+  };
+  
+  const chain = chainMap[chainId];
+  if (chain && address.startsWith('0x')) {
+    const checksumAddress = address; // Should ideally checksum
+    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chain}/assets/${checksumAddress}/logo.png`;
+  }
+  
+  return null;
 };
 
-// Get popular tokens for a chain
+// Add logos to popular tokens
 export const getPopularTokens = (chainId) => {
-  return POPULAR_TOKENS[chainId] || [];
+  const tokens = POPULAR_TOKENS[chainId] || [];
+  return tokens.map(token => ({
+    ...token,
+    logoURI: getTokenLogo(token.address || token.mint, chainId, token.coingeckoId)
+  }));
 };
