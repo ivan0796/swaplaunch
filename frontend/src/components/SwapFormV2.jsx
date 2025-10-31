@@ -378,8 +378,8 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       </div>
 
       {showSlippageSettings && !autoSlippage && (
-        <div className="bg-gray-50 rounded-lg p-3">
-          <label className="text-xs text-gray-600 mb-2 block">Custom Slippage (%)</label>
+        <div className="bg-gray-50 rounded-lg p-3 dark:bg-gray-800">
+          <label className="text-xs text-gray-600 dark:text-gray-400 mb-2 block">Custom Slippage (%)</label>
           <Input
             type="number"
             value={manualSlippage}
@@ -389,6 +389,17 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
             max="50"
             className="h-8"
           />
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            Recommended: 0.1-0.5% for stablecoins, 0.5-1% for major tokens
+          </p>
+        </div>
+      )}
+
+      {/* Auto-Slippage Info (nur sichtbar im Auto-Modus) */}
+      {autoSlippage && effectiveSlippage.reason && (
+        <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+          <Zap className="w-3 h-3" />
+          <span>Auto: {effectiveSlippage.reason}</span>
         </div>
       )}
 
