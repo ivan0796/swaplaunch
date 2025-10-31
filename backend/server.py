@@ -352,27 +352,18 @@ async def test_quote_endpoint(
     
     try:
         async with httpx.AsyncClient(timeout=30.0) as http_client:
-            # Try permit2 endpoint
-            url_permit2 = f"{chain_config['api_base']}/swap/permit2/quote"
-            response_permit2 = await http_client.get(url_permit2, params=params, headers=headers)
-            
-            # Try v1 endpoint
-            url_v1 = f"{chain_config['api_base']}/swap/v1/quote"
-            response_v1 = await http_client.get(url_v1, params=params, headers=headers)
+            # Try /price endpoint
+            url_price = f"{chain_config['api_base']}/swap/v1/price"
+            response_price = await http_client.get(url_price, params=params, headers=headers)
             
             return {
                 "chain": chain,
                 "api_base": chain_config['api_base'],
                 "has_api_key": bool(api_key),
-                "permit2": {
-                    "url": url_permit2,
-                    "status": response_permit2.status_code,
-                    "response": response_permit2.text[:500] if response_permit2.status_code != 200 else "Success"
-                },
-                "v1": {
-                    "url": url_v1,
-                    "status": response_v1.status_code,
-                    "response": response_v1.text[:500] if response_v1.status_code != 200 else "Success"
+                "price_endpoint": {
+                    "url": url_price,
+                    "status": response_price.status_code,
+                    "response": response_price.json() if response_price.status_code == 200 else response_price.text[:500]
                 }
             }
     except Exception as e:
