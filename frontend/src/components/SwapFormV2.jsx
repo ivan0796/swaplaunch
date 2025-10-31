@@ -310,6 +310,7 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
           }}
           placeholder="🔍 Search any token by name, symbol or address"
           excludeAddress={buyToken?.address}
+          chainId={chainId}
         />
       </div>
 
