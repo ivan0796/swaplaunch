@@ -529,15 +529,15 @@ DISCOVERY_CACHE_TTL = 60  # 60 seconds for trending/discovery data
 async def get_trending_categories(category: str = Query("top", regex="^(top|gainers|losers)$")):
     """
     Get trending tokens in categories: top (volume), gainers, losers
-    Uses CoinGecko /coins/markets endpoint
+    Uses CoinGecko /coins/markets endpoint with fallback
     """
     cache_key = f"trending_{category}"
     current_time = datetime.now(timezone.utc).timestamp()
     
-    # Check cache
+    # Check cache - use longer cache for rate-limited APIs
     if cache_key in discovery_cache:
         cached_data, cached_time = discovery_cache[cache_key]
-        if current_time - cached_time < DISCOVERY_CACHE_TTL:
+        if current_time - cached_time < (DISCOVERY_CACHE_TTL * 6):  # 30 min cache
             logger.info(f"Returning cached trending {category}")
             return cached_data
     
@@ -565,8 +565,14 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
                 params=params
             )
             
+            # Handle rate limiting gracefully
+            if response.status_code == 429:
+                logger.warning(f"CoinGecko rate limit for trending {category}, returning empty result")
+                return {"category": category, "tokens": [], "error": "Rate limited"}
+            
             if response.status_code != 200:
-                raise HTTPException(status_code=response.status_code, detail="CoinGecko API error")
+                logger.error(f"CoinGecko API error: {response.status_code}")
+                return {"category": category, "tokens": [], "error": "API unavailable"}
             
             data = response.json()
             
@@ -597,15 +603,16 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
                 ]
             }
             
-            # Cache the result
+            # Cache the result for longer due to rate limits
             discovery_cache[cache_key] = (result, current_time)
             return result
             
     except httpx.TimeoutException:
-        raise HTTPException(status_code=504, detail="CoinGecko API timeout")
+        logger.warning(f"CoinGecko API timeout for trending {category}")
+        return {"category": category, "tokens": [], "error": "API timeout"}
     except Exception as e:
         logger.error(f"Error fetching trending {category}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to fetch trending tokens: {str(e)}")
+        return {"category": category, "tokens": [], "error": str(e)}
 
 
 @api_router.get("/dex/new-listings")
