@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { searchTokens, isValidAddress } from '../services/tokenList';
+import axios from 'axios';
 import { Search, X, TrendingUp } from 'lucide-react';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 import { getPopularTokens } from '../utils/popularTokens';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const TokenSearchModal = ({ isOpen, onClose, onSelectToken, chainId, excludeToken }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,13 +34,49 @@ const TokenSearchModal = ({ isOpen, onClose, onSelectToken, chainId, excludeToke
     setShowPopular(false);
     const timer = setTimeout(async () => {
       setLoading(true);
-      const results = await searchTokens(searchQuery, chainId);
-      // Filter out excluded token
-      const filtered = results.filter(t => 
-        t.address.toLowerCase() !== excludeToken?.toLowerCase()
-      );
-      setSearchResults(filtered);
-      setLoading(false);
+      try {
+        // Use new token resolve API
+        const response = await axios.get(`${BACKEND_URL}/api/token/resolve`, {
+          params: { query: searchQuery }
+        });
+        
+        let results = response.data.results || [];
+        
+        // Map to expected format
+        results = results.map(token => ({
+          address: token.address,
+          symbol: token.symbol,
+          name: token.name,
+          decimals: token.decimals,
+          logoURI: token.logoURL,
+          chain: token.chain
+        }));
+        
+        // Filter by current chain
+        const chainMap = { 1: 'ethereum', 56: 'bsc', 137: 'polygon', 0: 'solana' };
+        const currentChain = chainMap[chainId];
+        
+        // Prioritize current chain, but show others too
+        results.sort((a, b) => {
+          const aIsCurrentChain = a.chain === currentChain;
+          const bIsCurrentChain = b.chain === currentChain;
+          if (aIsCurrentChain && !bIsCurrentChain) return -1;
+          if (!aIsCurrentChain && bIsCurrentChain) return 1;
+          return 0;
+        });
+        
+        // Filter out excluded token
+        const filtered = results.filter(t => 
+          t.address.toLowerCase() !== excludeToken?.toLowerCase()
+        );
+        
+        setSearchResults(filtered);
+      } catch (error) {
+        console.error('Token search failed:', error);
+        setSearchResults([]);
+      } finally {
+        setLoading(false);
+      }
     }, 300);
 
     return () => clearTimeout(timer);
