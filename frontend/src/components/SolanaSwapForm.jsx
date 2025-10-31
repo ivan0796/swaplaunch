@@ -284,7 +284,7 @@ const SolanaSwapForm = () => {
       <Button
         data-testid="execute-swap-button"
         onClick={executeSwap}
-        disabled={!quote || swapping || loading || !wallet.connected}
+        disabled={!wallet.connected || !quote || swapping || loading}
         className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed"
       >
         {swapping ? (
@@ -293,7 +293,7 @@ const SolanaSwapForm = () => {
             Swapping...
           </>
         ) : !wallet.connected ? (
-          'Connect Solana Wallet'
+          'Connect Wallet'
         ) : !quote ? (
           'Enter amount to swap'
         ) : (
