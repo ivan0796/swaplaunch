@@ -52,7 +52,7 @@ const NetworkSelector = ({ selectedChain, onChainChange, disabled }) => {
       <label className="block text-sm font-medium text-gray-700">
         Select Network
       </label>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-4 gap-3">
         {Object.entries(CHAIN_CONFIG).map(([chainKey, config]) => {
           const chainId = parseInt(chainKey);
           const isSelected = selectedChain === chainId;
