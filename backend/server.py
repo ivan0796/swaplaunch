@@ -170,11 +170,18 @@ async def get_evm_quote(request: EVMQuoteRequest):
     
     try:
         async with httpx.AsyncClient(timeout=30.0) as http_client:
+            # Use /swap/permit2/quote endpoint (newer 0x API)
+            api_url = f"{chain_config['api_base']}/swap/permit2/quote"
+            
+            logger.info(f"Requesting 0x quote: {api_url} with params: {params}")
+            
             response = await http_client.get(
-                f"{chain_config['api_base']}/swap/v1/quote",
+                api_url,
                 params=params,
                 headers=headers
             )
+            
+            logger.info(f"0x API response status: {response.status_code}")
             
             if response.status_code == 200:
                 quote_data = response.json()
@@ -190,6 +197,25 @@ async def get_evm_quote(request: EVMQuoteRequest):
             else:
                 error_detail = response.text
                 logger.error(f"0x API error on {chain}: {response.status_code} - {error_detail}")
+                
+                # Try fallback to v1 endpoint
+                logger.info(f"Trying fallback to /swap/v1/quote")
+                response_v1 = await http_client.get(
+                    f"{chain_config['api_base']}/swap/v1/quote",
+                    params=params,
+                    headers=headers
+                )
+                
+                if response_v1.status_code == 200:
+                    quote_data = response_v1.json()
+                    quote_data["chain"] = chain
+                    quote_data["chain_id"] = chain_config["chain_id"]
+                    quote_data["feeRecipient"] = fee_recipient
+                    quote_data["platformFee"] = buy_token_percentage_fee
+                    
+                    quote_cache[cache_key] = (quote_data, datetime.now(timezone.utc).timestamp())
+                    return quote_data
+                
                 raise HTTPException(
                     status_code=response.status_code,
                     detail=f"0x API error: {error_detail}"
