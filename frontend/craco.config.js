@@ -37,6 +37,14 @@ const webpackConfig = {
     },
     configure: (webpackConfig) => {
 
+      // Ensure resolve.fallback exists
+      if (!webpackConfig.resolve) {
+        webpackConfig.resolve = {};
+      }
+      if (!webpackConfig.resolve.fallback) {
+        webpackConfig.resolve.fallback = {};
+      }
+
       // Add polyfills for Solana wallet adapters
       webpackConfig.resolve.fallback = {
         ...webpackConfig.resolve.fallback,
@@ -50,6 +58,8 @@ const webpackConfig = {
         fs: false,
         net: false,
         tls: false,
+        http: false,
+        https: false,
       };
 
       // Add Buffer and process plugins - Filter out existing ProvidePlugin first
@@ -61,6 +71,13 @@ const webpackConfig = {
         new webpack.ProvidePlugin({
           Buffer: ['buffer', 'Buffer'],
           process: 'process/browser',
+        })
+      );
+
+      // Add DefinePlugin for process.env
+      webpackConfig.plugins.push(
+        new webpack.DefinePlugin({
+          'process.env': JSON.stringify(process.env),
         })
       );
 
