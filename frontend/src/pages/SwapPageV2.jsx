@@ -31,6 +31,22 @@ const SwapPageV2 = () => {
     ? (solanaPublicKey?.toString() || null) 
     : evmAddress;
 
+  // Token selection handlers
+  const handleTrendingTokenSelect = (token) => {
+    toast.info(`Selected ${token.symbol}`, {
+      description: 'Token info loaded. Connect wallet to trade.'
+    });
+    console.log('Trending token selected:', token);
+  };
+
+  const handleNewListingSelect = (token) => {
+    toast.info(`New listing: ${token.symbol}`, {
+      description: 'Check security before trading'
+    });
+    console.log('New listing selected:', token);
+  };
+
+
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_20%_-10%,rgba(129,140,248,.25),transparent),radial-gradient(800px_500px_at_80%_0%,rgba(16,185,129,.18),transparent)]">
       {/* Header */}
