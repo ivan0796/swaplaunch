@@ -95,15 +95,8 @@ const SwapPageV2 = () => {
               </div>
             </div>
             <div className="rounded-2xl border border-black/5 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
-              {/* Network Selector */}
-              <NetworkSelector
-                selectedChain={selectedChain}
-                onChainChange={setSelectedChain}
-                disabled={!isConnected}
-              />
-
               {/* Swap Form */}
-              <div className="mt-6">
+              <div>
                 {selectedChain === 0 ? (
                   <SolanaSwapForm />
                 ) : (
