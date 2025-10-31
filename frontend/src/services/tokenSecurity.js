@@ -56,7 +56,7 @@ export const parseSecurityRisks = (securityData) => {
   if (!securityData) return { level: 'unknown', risks: [] };
 
   const risks = [];
-  let riskLevel = 'low';
+  let riskLevel = 'low'; // Low risk = High security
 
   // Critical risks
   if (securityData.is_honeypot === '1') {
@@ -120,6 +120,24 @@ export const parseSecurityRisks = (securityData) => {
   }
 
   return { level: riskLevel, risks, buyTax, sellTax };
+};
+
+/**
+ * Get display label for security level (inverted - low risk = high security)
+ */
+export const getSecurityLabel = (level) => {
+  switch (level) {
+    case 'critical':
+      return 'CRITICAL';
+    case 'high':
+      return 'LOW';
+    case 'medium':
+      return 'MEDIUM';
+    case 'low':
+      return 'HIGH'; // Low risk = High security
+    default:
+      return 'UNKNOWN';
+  }
 };
 
 /**
