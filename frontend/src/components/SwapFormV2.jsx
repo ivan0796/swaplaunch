@@ -16,6 +16,7 @@ import TokenSearchModal from './TokenSearchModal';
 import TokenSecurityPanel from './TokenSecurityPanel';
 import TokenSearchAutocomplete from './TokenSearchAutocomplete';
 import PairSearchModal from './PairSearchModal';
+import CombinedSecurityWarning from './CombinedSecurityWarning';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
