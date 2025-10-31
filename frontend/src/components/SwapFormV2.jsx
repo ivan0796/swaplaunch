@@ -483,6 +483,14 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
         )}
       </div>
 
+        {/* Price Widget for Buy Token */}
+        {buyTokenCoinId && (
+          <div className="mt-2">
+            <TokenPriceWidget coinId={buyTokenCoinId} />
+          </div>
+        )}
+
+
       {/* Quote Details */}
       {quote && sellToken && buyToken && (
         <div data-testid="quote-details" className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-2">
