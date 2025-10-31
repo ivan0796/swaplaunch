@@ -1,0 +1,86 @@
+import React from 'react';
+import { ChevronDown } from 'lucide-react';
+
+const CHAIN_CONFIG = {
+  1: {
+    name: 'Ethereum',
+    icon: '⟠',
+    color: 'from-blue-400 to-blue-600',
+  },
+  56: {
+    name: 'BSC',
+    icon: '🟡',
+    color: 'from-yellow-400 to-yellow-600',
+  },
+  137: {
+    name: 'Polygon',
+    icon: '🟪',
+    color: 'from-purple-400 to-purple-600',
+  },
+  0: {
+    name: 'Solana',
+    icon: '◎',
+    color: 'from-purple-500 to-indigo-600',
+  }
+};
+
+const NetworkSelectorDropdown = ({ selectedChain, onChainChange, className = "" }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const selectedConfig = CHAIN_CONFIG[selectedChain] || CHAIN_CONFIG[1];
+
+  const handleSelect = (chainId) => {
+    onChainChange(chainId);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className={`relative ${className}`}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 transition-colors min-w-[140px]"
+      >
+        <span className="text-lg">{selectedConfig.icon}</span>
+        <span className="font-medium text-sm">{selectedConfig.name}</span>
+        <ChevronDown className={`w-4 h-4 ml-auto transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-40"
+            onClick={() => setIsOpen(false)}
+          />
+          
+          {/* Dropdown */}
+          <div className="absolute top-full left-0 mt-2 w-full bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl z-50 overflow-hidden">
+            {Object.entries(CHAIN_CONFIG).map(([chainId, config]) => {
+              const id = parseInt(chainId);
+              const isSelected = id === selectedChain;
+              
+              return (
+                <button
+                  key={id}
+                  onClick={() => handleSelect(id)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
+                    isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                  }`}
+                >
+                  <span className="text-xl">{config.icon}</span>
+                  <div className="flex-1 text-left">
+                    <div className="font-medium text-sm">{config.name}</div>
+                  </div>
+                  {isSelected && (
+                    <div className="w-2 h-2 rounded-full bg-blue-600" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default NetworkSelectorDropdown;
