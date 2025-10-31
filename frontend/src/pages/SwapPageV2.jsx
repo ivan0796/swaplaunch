@@ -61,10 +61,15 @@ const SwapPageV2 = () => {
           <nav className="hidden items-center gap-6 text-sm md:flex">
             <a className="opacity-80 hover:opacity-100 cursor-pointer" href="#">Trade</a>
             <a className="opacity-80 hover:opacity-100 cursor-pointer" href="#">Earn</a>
-            <a className="opacity-80 hover:opacity-100 cursor-pointer" href="#">Bridge</a>
+            <Link className="opacity-80 hover:opacity-100" to="/bridge">Bridge</Link>
             <Link className="opacity-80 hover:opacity-100" to="/risk-disclosure">Info</Link>
           </nav>
           <div className="flex items-center gap-2">
+            {/* Network Selector in Header */}
+            <NetworkSelectorDropdown
+              selectedChain={selectedChain}
+              onChainChange={setSelectedChain}
+            />
             <SwapHistoryModal />
             {isConnected && <ReferralWidget walletAddress={walletAddress} />}
             {selectedChain === 0 ? (
