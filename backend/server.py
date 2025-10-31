@@ -529,12 +529,12 @@ DISCOVERY_CACHE_TTL = 60  # 60 seconds for trending/discovery data
 async def get_trending_categories(category: str = Query("top", regex="^(top|gainers|losers)$")):
     """
     Get trending tokens in categories: top (volume), gainers, losers
-    Uses CoinGecko /coins/markets endpoint with fallback
+    Uses Dexscreener as primary source (better availability)
     """
     cache_key = f"trending_{category}"
     current_time = datetime.now(timezone.utc).timestamp()
     
-    # Check cache - use longer cache for rate-limited APIs
+    # Check cache - use longer cache
     if cache_key in discovery_cache:
         cached_data, cached_time = discovery_cache[cache_key]
         if current_time - cached_time < (DISCOVERY_CACHE_TTL * 6):  # 30 min cache
@@ -543,73 +543,76 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
     
     try:
         async with httpx.AsyncClient(timeout=15.0) as http_client:
-            # Determine order parameter based on category
-            if category == "top":
-                order_param = "volume_desc"
-            elif category == "gainers":
-                order_param = "market_cap_desc"  # Will sort by % later
-            else:  # losers
-                order_param = "market_cap_desc"
-            
-            params = {
-                "vs_currency": "usd",
-                "order": order_param,
-                "per_page": 50,
-                "page": 1,
-                "sparkline": False,
-                "price_change_percentage": "24h"
-            }
-            
+            # Use Dexscreener boosted/trending endpoint
             response = await http_client.get(
-                "https://api.coingecko.com/api/v3/coins/markets",
-                params=params
+                "https://api.dexscreener.com/latest/dex/tokens/trending",
+                headers={"Accept": "application/json"}
             )
             
-            # Handle rate limiting gracefully
             if response.status_code == 429:
-                logger.warning(f"CoinGecko rate limit for trending {category}, returning empty result")
+                logger.warning(f"Dexscreener rate limit for trending")
                 return {"category": category, "tokens": [], "error": "Rate limited"}
             
             if response.status_code != 200:
-                logger.error(f"CoinGecko API error: {response.status_code}")
+                logger.error(f"Dexscreener API error: {response.status_code}")
                 return {"category": category, "tokens": [], "error": "API unavailable"}
             
             data = response.json()
             
-            # Process based on category
+            if not data or not isinstance(data, list):
+                return {"category": category, "tokens": [], "error": "No data"}
+            
+            # Process tokens
+            processed_tokens = []
+            for item in data[:50]:  # Top 50
+                if not isinstance(item, dict):
+                    continue
+                    
+                # Extract price change
+                price_change = None
+                if isinstance(item.get('priceChange'), dict):
+                    price_change = item['priceChange'].get('h24', 0)
+                
+                token_info = {
+                    "id": item.get('tokenAddress', '')[:8],
+                    "symbol": item.get('symbol', '').upper(),
+                    "name": item.get('name', ''),
+                    "image": item.get('image'),
+                    "current_price": float(item.get('priceUsd', 0)) if item.get('priceUsd') else 0,
+                    "price_change_24h": float(price_change) if price_change else 0,
+                    "market_cap": None,
+                    "total_volume": float(item.get('volume', {}).get('h24', 0)) if isinstance(item.get('volume'), dict) else 0
+                }
+                processed_tokens.append(token_info)
+            
+            # Sort based on category
             if category == "gainers":
-                # Sort by highest price change percentage
-                data = sorted(data, key=lambda x: x.get('price_change_percentage_24h', 0) or 0, reverse=True)[:20]
+                processed_tokens = sorted(
+                    [t for t in processed_tokens if t['price_change_24h'] > 0],
+                    key=lambda x: x['price_change_24h'],
+                    reverse=True
+                )[:20]
             elif category == "losers":
-                # Sort by lowest price change percentage
-                data = sorted(data, key=lambda x: x.get('price_change_percentage_24h', 0) or 0)[:20]
+                processed_tokens = sorted(
+                    [t for t in processed_tokens if t['price_change_24h'] < 0],
+                    key=lambda x: x['price_change_24h']
+                )[:20]
             else:  # top by volume
-                data = data[:20]
+                processed_tokens = sorted(
+                    processed_tokens,
+                    key=lambda x: x['total_volume'],
+                    reverse=True
+                )[:20]
             
             result = {
                 "category": category,
-                "tokens": [
-                    {
-                        "id": token.get("id"),
-                        "symbol": token.get("symbol", "").upper(),
-                        "name": token.get("name"),
-                        "image": token.get("image"),
-                        "current_price": token.get("current_price"),
-                        "price_change_24h": token.get("price_change_percentage_24h"),
-                        "market_cap": token.get("market_cap"),
-                        "total_volume": token.get("total_volume")
-                    }
-                    for token in data
-                ]
+                "tokens": processed_tokens
             }
             
-            # Cache the result for longer due to rate limits
+            # Cache the result
             discovery_cache[cache_key] = (result, current_time)
             return result
             
-    except httpx.TimeoutException:
-        logger.warning(f"CoinGecko API timeout for trending {category}")
-        return {"category": category, "tokens": [], "error": "API timeout"}
     except Exception as e:
         logger.error(f"Error fetching trending {category}: {str(e)}")
         return {"category": category, "tokens": [], "error": str(e)}
