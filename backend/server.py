@@ -342,6 +342,60 @@ async def get_swaps(
     
     return swaps
 
+@api_router.get("/test-quote")
+async def test_quote_endpoint(
+    chain: str = "ethereum",
+    sellToken: str = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    buyToken: str = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+):
+    """
+    Test endpoint to debug 0x API integration
+    """
+    chain_config = CHAIN_CONFIG.get(chain)
+    if not chain_config:
+        return {"error": f"Chain {chain} not found"}
+    
+    # Simple test request
+    params = {
+        "sellToken": sellToken,
+        "buyToken": buyToken,
+        "sellAmount": "1000000000000000000",  # 1 ETH
+        "takerAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0"
+    }
+    
+    headers = {}
+    api_key = os.environ.get('ZEROX_API_KEY')
+    if api_key:
+        headers["0x-api-key"] = api_key
+    
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as http_client:
+            # Try permit2 endpoint
+            url_permit2 = f"{chain_config['api_base']}/swap/permit2/quote"
+            response_permit2 = await http_client.get(url_permit2, params=params, headers=headers)
+            
+            # Try v1 endpoint
+            url_v1 = f"{chain_config['api_base']}/swap/v1/quote"
+            response_v1 = await http_client.get(url_v1, params=params, headers=headers)
+            
+            return {
+                "chain": chain,
+                "api_base": chain_config['api_base'],
+                "has_api_key": bool(api_key),
+                "permit2": {
+                    "url": url_permit2,
+                    "status": response_permit2.status_code,
+                    "response": response_permit2.text[:500] if response_permit2.status_code != 200 else "Success"
+                },
+                "v1": {
+                    "url": url_v1,
+                    "status": response_v1.status_code,
+                    "response": response_v1.text[:500] if response_v1.status_code != 200 else "Success"
+                }
+            }
+    except Exception as e:
+        return {"error": str(e)}
+
 @api_router.get("/chains")
 async def get_supported_chains():
     """
