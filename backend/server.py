@@ -700,13 +700,6 @@ async def get_new_dex_listings(chain: Optional[str] = Query(None)):
     except Exception as e:
         logger.error(f"Error fetching new listings: {str(e)}")
         return {"pairs": [], "note": "DEX data unavailable"}
-            return result
-            
-    except httpx.TimeoutException:
-        return {"pairs": [], "note": "DEX data timeout"}
-    except Exception as e:
-        logger.error(f"Error fetching new DEX listings: {str(e)}")
-        return {"pairs": [], "note": "DEX data unavailable"}
 
 
 @api_router.get("/token/resolve")
