@@ -91,7 +91,7 @@ const TokenSecurityPanel = ({ tokenAddress, chainId, tokenSymbol }) => {
           {level === 'low' && (
             <div className="flex items-start gap-2 text-green-700">
               <Shield className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              <span>Low risk token. Appears safe to trade.</span>
+              <span>High security token. Appears safe to trade.</span>
             </div>
           )}
         </div>
