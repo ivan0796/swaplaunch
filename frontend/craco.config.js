@@ -36,6 +36,24 @@ const webpackConfig = {
     },
     configure: (webpackConfig) => {
 
+      // Add Node.js polyfills for Solana wallet adapter
+      webpackConfig.resolve.fallback = {
+        ...webpackConfig.resolve.fallback,
+        crypto: require.resolve('crypto-browserify'),
+        stream: require.resolve('stream-browserify'),
+        buffer: require.resolve('buffer'),
+        process: require.resolve('process/browser'),
+      };
+
+      // Provide process global
+      const webpack = require('webpack');
+      webpackConfig.plugins.push(
+        new webpack.ProvidePlugin({
+          process: 'process/browser',
+          Buffer: ['buffer', 'Buffer'],
+        })
+      );
+
       // Disable hot reload completely if environment variable is set
       if (config.disableHotReload) {
         // Remove hot reload related plugins
