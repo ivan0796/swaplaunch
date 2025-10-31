@@ -702,7 +702,16 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       <Button
         data-testid="execute-swap-button"
         onClick={executeSwap}
-        disabled={!walletAddress || !quote || swapping || loading}
+        disabled={
+          !walletAddress || 
+          !sellToken || 
+          !buyToken || 
+          !sellAmount || 
+          parseFloat(sellAmount) <= 0 ||
+          !quote || 
+          swapping || 
+          loading
+        }
         className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed"
       >
         {swapping ? (
@@ -712,10 +721,16 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
           </>
         ) : !walletAddress ? (
           'Connect Wallet'
+        ) : !sellToken || !buyToken ? (
+          'Select tokens'
+        ) : !sellAmount || parseFloat(sellAmount) <= 0 ? (
+          'Enter amount'
+        ) : loading ? (
+          'Loading...'
         ) : !quote ? (
-          'Enter amount to swap'
+          'Swap not available for this pair'
         ) : (
-          'Confirm Swap'
+          'Start Swapping'
         )}
       </Button>
 
