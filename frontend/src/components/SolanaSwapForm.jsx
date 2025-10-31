@@ -12,9 +12,27 @@ const API = `${BACKEND_URL}/api`;
 
 // Popular Solana tokens
 const SOLANA_TOKENS = [
-  { symbol: 'SOL', mint: 'So11111111111111111111111111111111111111112', decimals: 9, name: 'Solana' },
-  { symbol: 'USDC', mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', decimals: 6, name: 'USD Coin' },
-  { symbol: 'USDT', mint: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', decimals: 6, name: 'Tether USD' },
+  { 
+    symbol: 'SOL', 
+    mint: 'So11111111111111111111111111111111111111112', 
+    decimals: 9, 
+    name: 'Solana',
+    logoURI: 'https://assets.coingecko.com/coins/images/4128/large/solana.png'
+  },
+  { 
+    symbol: 'USDC', 
+    mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', 
+    decimals: 6, 
+    name: 'USD Coin',
+    logoURI: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png'
+  },
+  { 
+    symbol: 'USDT', 
+    mint: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', 
+    decimals: 6, 
+    name: 'Tether USD',
+    logoURI: 'https://assets.coingecko.com/coins/images/325/large/Tether.png'
+  },
 ];
 
 const SolanaSwapForm = () => {
