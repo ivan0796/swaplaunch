@@ -21,31 +21,21 @@ const CHAIN_CONFIG = {
     icon: '🟪',
     color: 'from-purple-400 to-purple-600',
     type: 'evm'
-  },
-  'solana': {
-    name: 'Solana',
-    icon: '◎',
-    color: 'from-green-400 to-green-600',
-    type: 'solana',
-    id: 'solana'
   }
 };
 
-const NetworkSelector = ({ selectedChain, onChainChange, disabled, walletType = 'evm' }) => {
+const NetworkSelector = ({ selectedChain, onChainChange, disabled }) => {
   const currentChainId = useChainId();
   const { switchChain } = useSwitchChain();
 
   const handleChainSelect = async (chainId) => {
     onChainChange(chainId);
     
-    // Only switch EVM chains via wagmi
-    if (typeof chainId === 'number' && !disabled) {
-      if (currentChainId !== chainId) {
-        try {
-          await switchChain({ chainId });
-        } catch (error) {
-          console.error('Failed to switch chain:', error);
-        }
+    if (!disabled && currentChainId !== chainId) {
+      try {
+        await switchChain({ chainId });
+      } catch (error) {
+        console.error('Failed to switch chain:', error);
       }
     }
   };
@@ -55,26 +45,25 @@ const NetworkSelector = ({ selectedChain, onChainChange, disabled, walletType = 
       <label className="block text-sm font-medium text-gray-700">
         Select Network
       </label>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         {Object.entries(CHAIN_CONFIG).map(([chainKey, config]) => {
-          const chainId = config.id || parseInt(chainKey);
-          const isSelected = selectedChain === chainId || selectedChain === chainKey;
+          const chainId = parseInt(chainKey);
+          const isSelected = selectedChain === chainId;
           const isCurrentNetwork = currentChainId === chainId;
-          const isDisabled = disabled || (config.type === 'solana' && walletType !== 'solana');
           
           return (
             <button
               key={chainKey}
               data-testid={`network-${config.name.toLowerCase()}`}
               onClick={() => handleChainSelect(chainId)}
-              disabled={isDisabled}
+              disabled={disabled}
               className={`
                 relative p-4 rounded-xl border-2 transition-all duration-200
                 ${isSelected 
                   ? 'border-blue-500 bg-blue-50 shadow-md' 
                   : 'border-gray-200 bg-white hover:border-gray-300'
                 }
-                ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:shadow-lg'}
+                ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:shadow-lg'}
                 flex flex-col items-center gap-2
               `}
             >
@@ -91,15 +80,8 @@ const NetworkSelector = ({ selectedChain, onChainChange, disabled, walletType = 
               <span className="font-medium text-sm">{config.name}</span>
               
               {/* Active Indicator */}
-              {isCurrentNetwork && config.type === 'evm' && (
+              {isCurrentNetwork && (
                 <span className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              )}
-              
-              {/* Solana Badge */}
-              {config.type === 'solana' && (
-                <span className="text-xs text-gray-500 mt-1">
-                  {walletType === 'solana' ? '✓' : 'Connect Phantom'}
-                </span>
               )}
             </button>
           );
