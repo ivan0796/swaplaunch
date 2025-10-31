@@ -833,7 +833,7 @@ async def resolve_token(query: str = Query(..., min_length=1)):
                 logger.warning(f"Dexscreener search failed: {str(e)}")
             
             # For Solana, also check Jupiter Token Registry
-            if is_solana_mint or (not results and len(query) >= 32):
+            if is_solana_mint or (not results and len(query) >= 32) or query.lower() in ['sol', 'solana']:
                 try:
                     # Fetch Jupiter token list (should be cached)
                     jupiter_response = await http_client.get("https://token.jup.ag/all")
@@ -843,6 +843,30 @@ async def resolve_token(query: str = Query(..., min_length=1)):
                         
                         # Search in Jupiter tokens
                         query_lower = query.lower()
+                        
+                        # Prioritize native SOL for "sol" or "solana" queries
+                        native_sol = {
+                            "address": "So11111111111111111111111111111111111111112",
+                            "symbol": "SOL",
+                            "name": "Solana",
+                            "decimals": 9,
+                            "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png"
+                        }
+                        
+                        if query_lower in ['sol', 'solana'] and native_sol["address"].lower() not in seen:
+                            results.insert(0, {
+                                "chain": "solana",
+                                "name": native_sol["name"],
+                                "symbol": native_sol["symbol"],
+                                "address": native_sol["address"],
+                                "decimals": native_sol["decimals"],
+                                "logoURL": native_sol["logoURI"],
+                                "source": "jupiter",
+                                "priceUsd": None,
+                                "liquidity": None
+                            })
+                            seen.add(native_sol["address"].lower())
+                        
                         for token in jupiter_tokens:
                             if (
                                 token.get("address", "").lower() == query_lower or
