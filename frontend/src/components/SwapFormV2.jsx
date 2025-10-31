@@ -14,6 +14,7 @@ import { getExplorerUrl, getExplorerName } from '../utils/explorer';
 import { getReferrerFromStorage } from '../utils/referral';
 import TokenSearchModal from './TokenSearchModal';
 import TokenSecurityPanel from './TokenSecurityPanel';
+import TokenSearchAutocomplete from './TokenSearchAutocomplete';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
