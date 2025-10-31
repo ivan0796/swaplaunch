@@ -5,21 +5,25 @@ const CHAIN_CONFIG = {
   1: {
     name: 'Ethereum',
     icon: '⟠',
+    logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
     color: 'from-blue-400 to-blue-600',
   },
   56: {
     name: 'BSC',
     icon: '🟡',
+    logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png',
     color: 'from-yellow-400 to-yellow-600',
   },
   137: {
     name: 'Polygon',
     icon: '🟪',
+    logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png',
     color: 'from-purple-400 to-purple-600',
   },
   0: {
     name: 'Solana',
     icon: '◎',
+    logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png',
     color: 'from-purple-500 to-indigo-600',
   }
 };
@@ -39,7 +43,16 @@ const NetworkSelectorDropdown = ({ selectedChain, onChainChange, className = "" 
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 transition-colors min-w-[140px]"
       >
-        <span className="text-lg">{selectedConfig.icon}</span>
+        <img 
+          src={selectedConfig.logoUrl} 
+          alt={selectedConfig.name}
+          className="w-5 h-5 rounded-full"
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.nextElementSibling.style.display = 'inline';
+          }}
+        />
+        <span className="text-lg" style={{ display: 'none' }}>{selectedConfig.icon}</span>
         <span className="font-medium text-sm">{selectedConfig.name}</span>
         <ChevronDown className={`w-4 h-4 ml-auto transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
@@ -66,7 +79,16 @@ const NetworkSelectorDropdown = ({ selectedChain, onChainChange, className = "" 
                     isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                   }`}
                 >
-                  <span className="text-xl">{config.icon}</span>
+                  <img 
+                    src={config.logoUrl} 
+                    alt={config.name}
+                    className="w-6 h-6 rounded-full"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextElementSibling.style.display = 'inline';
+                    }}
+                  />
+                  <span className="text-xl" style={{ display: 'none' }}>{config.icon}</span>
                   <div className="flex-1 text-left">
                     <div className="font-medium text-sm">{config.name}</div>
                   </div>
