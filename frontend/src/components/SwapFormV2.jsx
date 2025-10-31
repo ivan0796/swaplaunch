@@ -324,6 +324,30 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
     setBuyToken(token);
   };
 
+  // Handle pair selection
+  const handleSelectPair = (pair) => {
+    // Set both tokens from the pair
+    const baseToken = {
+      symbol: pair.baseToken.symbol,
+      address: pair.baseToken.address,
+      decimals: 18, // Default, should ideally get from chain
+      name: pair.baseToken.name,
+      logoURI: pair.logoUrl
+    };
+    
+    const quoteToken = {
+      symbol: pair.quoteToken.symbol,
+      address: pair.quoteToken.address,
+      decimals: 18,
+      name: pair.quoteToken.name,
+      logoURI: null
+    };
+    
+    setSellToken(baseToken);
+    setBuyToken(quoteToken);
+    toast.success(`Selected ${pair.baseToken.symbol}/${pair.quoteToken.symbol} pair`);
+  };
+
   // Calculate slippage intelligently based on token types
   const effectiveSlippage = autoSlippage 
     ? calculateAutoSlippage(priceImpact, sellToken?.symbol, buyToken?.symbol)
@@ -351,11 +375,32 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
         excludeToken={sellToken?.address}
       />
 
+      {/* Pair Search Modal */}
+      <PairSearchModal
+        isOpen={showPairSearch}
+        onClose={() => setShowPairSearch(false)}
+        onSelectPair={handleSelectPair}
+        chainId={chainId}
+      />
+
       {/* Token Price Widget */}
       {sellTokenCoinId && (
         <TokenPriceWidget coinId={sellTokenCoinId} />
       )}
 
+      {/* Quick Pair Selection Button */}
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowPairSearch(true)}
+          className="flex items-center gap-2"
+        >
+          <TrendingUp className="w-4 h-4" />
+          Select Trading Pair
+        </Button>
+        <span className="text-xs text-gray-500">Or search tokens individually below</span>
+      </div>
 
       {/* Universal Token Search */}
       <div className="mb-4">
