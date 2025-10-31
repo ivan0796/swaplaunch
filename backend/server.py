@@ -69,6 +69,27 @@ class SwapLogCreate(BaseModel):
     fee_percentage: str = "0.2"
     tx_hash: Optional[str] = None
     status: str = "pending"
+    referrer: Optional[str] = None  # Referral tracking
+
+class ReferralLog(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    referrer_wallet: str
+    trader_wallet: str
+    chain: str
+    token_pair: str
+    swap_amount: str
+    tx_hash: Optional[str] = None
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class ReferralLogCreate(BaseModel):
+    referrer_wallet: str
+    trader_wallet: str
+    chain: str
+    token_pair: str
+    swap_amount: str
+    tx_hash: Optional[str] = None
 
 class EVMQuoteRequest(BaseModel):
     sellToken: str
