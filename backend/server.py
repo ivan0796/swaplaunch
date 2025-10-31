@@ -190,10 +190,11 @@ async def get_evm_quote(request: EVMQuoteRequest):
     
     try:
         async with httpx.AsyncClient(timeout=30.0) as http_client:
-            # Use v2 API endpoint
-            api_url = f"{chain_config['api_base']}/swap/allowance-holder/price"
+            # Use v2 API endpoint - /quote für vollständige Transaction-Data
+            # /price gibt nur Preis zurück, /quote gibt transaction data
+            api_url = f"{chain_config['api_base']}/swap/allowance-holder/quote"
             
-            logger.info(f"Requesting 0x v2 price: {api_url}")
+            logger.info(f"Requesting 0x v2 quote: {api_url}")
             
             response = await http_client.get(
                 api_url,
@@ -209,6 +210,14 @@ async def get_evm_quote(request: EVMQuoteRequest):
                 quote_data["chain_id"] = chain_config["chain_id"]
                 quote_data["feeRecipient"] = fee_recipient
                 quote_data["platformFee"] = buy_token_percentage_fee
+                
+                # Ensure critical fields exist
+                if not quote_data.get("transaction") or not quote_data["transaction"].get("data"):
+                    logger.error(f"Invalid quote response - missing transaction data: {quote_data}")
+                    raise HTTPException(
+                        status_code=500,
+                        detail="Invalid quote response from 0x API - missing transaction data"
+                    )
                 
                 # Cache the response
                 quote_cache[cache_key] = (quote_data, datetime.now(timezone.utc).timestamp())
