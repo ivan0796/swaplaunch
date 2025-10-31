@@ -212,6 +212,7 @@ const SwapForm = ({ chainId, walletAddress, walletType = 'evm' }) => {
   };
 
   const tokens = POPULAR_TOKENS[chainId] || [];
+  const tokenAddressKey = walletType === 'solana' ? 'mint' : 'address';
 
   return (
     <div data-testid="swap-form" className="space-y-4">
@@ -227,7 +228,7 @@ const SwapForm = ({ chainId, walletAddress, walletType = 'evm' }) => {
           >
             <option value="">Select Token</option>
             {tokens.map(token => (
-              <option key={token.address} value={token.address}>
+              <option key={token[tokenAddressKey]} value={token[tokenAddressKey]}>
                 {token.symbol}
               </option>
             ))}
@@ -264,13 +265,17 @@ const SwapForm = ({ chainId, walletAddress, walletType = 'evm' }) => {
           >
             <option value="">Select Token</option>
             {tokens.map(token => (
-              <option key={token.address} value={token.address}>
+              <option key={token[tokenAddressKey]} value={token[tokenAddressKey]}>
                 {token.symbol}
               </option>
             ))}
           </select>
           <div className="flex-1 px-4 py-3 bg-gray-50 rounded-xl border border-gray-300 text-lg text-gray-900">
-            {quote ? ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken)) : '0.0'}
+            {quote ? (
+              quote.isSolana 
+                ? (parseInt(quote.netOutputAmount) / Math.pow(10, getTokenDecimals(buyToken))).toFixed(6)
+                : ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken))
+            ) : '0.0'}
           </div>
         </div>
       </div>
@@ -281,23 +286,56 @@ const SwapForm = ({ chainId, walletAddress, walletType = 'evm' }) => {
           <div className="flex items-start">
             <Info className="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
             <div className="flex-1 space-y-1 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Rate:</span>
-                <span className="font-medium">1 {tokens.find(t => t.address === sellToken)?.symbol} = {(parseFloat(ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken))) / parseFloat(sellAmount)).toFixed(6)} {tokens.find(t => t.address === buyToken)?.symbol}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Platform Fee (0.2%):</span>
-                <span className="font-medium">{(parseFloat(ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken))) * 0.002).toFixed(6)} {tokens.find(t => t.address === buyToken)?.symbol}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Gas (estimated):</span>
-                <span className="font-medium">{quote.estimatedGas || 'N/A'}</span>
-              </div>
-              {quote.sources && quote.sources.length > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Route:</span>
-                  <span className="font-medium text-xs">{quote.sources.slice(0, 2).map(s => s.name).join(', ')}</span>
-                </div>
+              {quote.isSolana ? (
+                <>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Output Amount:</span>
+                    <span className="font-medium">
+                      {(parseInt(quote.quote.outAmount) / Math.pow(10, getTokenDecimals(buyToken))).toFixed(6)} {tokens.find(t => t.mint === buyToken)?.symbol}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Platform Fee (0.2%):</span>
+                    <span className="font-medium">
+                      {(parseInt(quote.platformFee.amount) / Math.pow(10, getTokenDecimals(buyToken))).toFixed(6)} {tokens.find(t => t.mint === buyToken)?.symbol}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">You Receive:</span>
+                    <span className="font-medium text-green-600">
+                      {(parseInt(quote.netOutputAmount) / Math.pow(10, getTokenDecimals(buyToken))).toFixed(6)} {tokens.find(t => t.mint === buyToken)?.symbol}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Route:</span>
+                    <span className="font-medium text-xs">Jupiter Aggregator</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Rate:</span>
+                    <span className="font-medium">
+                      1 {tokens.find(t => t.address === sellToken)?.symbol} = {(parseFloat(ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken))) / parseFloat(sellAmount)).toFixed(6)} {tokens.find(t => t.address === buyToken)?.symbol}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Platform Fee (0.2%):</span>
+                    <span className="font-medium">
+                      {(parseFloat(ethers.formatUnits(quote.buyAmount, getTokenDecimals(buyToken))) * 0.002).toFixed(6)} {tokens.find(t => t.address === buyToken)?.symbol}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Gas (estimated):</span>
+                    <span className="font-medium">{quote.estimatedGas || 'N/A'}</span>
+                  </div>
+                  {quote.sources && quote.sources.length > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Route:</span>
+                      <span className="font-medium text-xs">{quote.sources.slice(0, 2).map(s => s.name).join(', ')}</span>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
