@@ -154,35 +154,38 @@ async def get_evm_quote(request: EVMQuoteRequest):
     buy_token_percentage_fee = "0.2"  # 0.2%
     
     # Build 0x API request
-    # Note: 0x API v1 uses /price for indicative pricing without signature
+    # Note: 0x API v2 uses /swap/allowance-holder/price for quotes
     params = {
+        "chainId": str(chain_config["chain_id"]),
         "sellToken": request.sellToken,
         "buyToken": request.buyToken,
         "sellAmount": request.sellAmount,
-        "takerAddress": request.takerAddress,
+        "taker": request.takerAddress,
         "feeRecipient": fee_recipient,
         "buyTokenPercentageFee": buy_token_percentage_fee
     }
     
-    headers = {}
+    headers = {
+        "0x-version": "v2"  # Required for v2 API
+    }
     api_key = os.environ.get('ZEROX_API_KEY')
     if api_key:
         headers["0x-api-key"] = api_key
     
     try:
         async with httpx.AsyncClient(timeout=30.0) as http_client:
-            # Try /price endpoint first (works without API key for basic quotes)
-            price_url = f"{chain_config['api_base']}/swap/v1/price"
+            # Use v2 API endpoint
+            api_url = f"{chain_config['api_base']}/swap/allowance-holder/price"
             
-            logger.info(f"Requesting 0x price: {price_url}")
+            logger.info(f"Requesting 0x v2 price: {api_url}")
             
             response = await http_client.get(
-                price_url,
+                api_url,
                 params=params,
                 headers=headers
             )
             
-            logger.info(f"0x API response status: {response.status_code}")
+            logger.info(f"0x API v2 response status: {response.status_code}")
             
             if response.status_code == 200:
                 quote_data = response.json()
@@ -197,10 +200,10 @@ async def get_evm_quote(request: EVMQuoteRequest):
                 return quote_data
             else:
                 error_detail = response.text
-                logger.error(f"0x API error on {chain}: {response.status_code} - {error_detail}")
+                logger.error(f"0x API v2 error on {chain}: {response.status_code} - {error_detail}")
                 raise HTTPException(
                     status_code=response.status_code,
-                    detail=f"0x API error: {error_detail}"
+                    detail=f"0x API v2 error: {error_detail}"
                 )
     except httpx.TimeoutException:
         raise HTTPException(status_code=504, detail="Request to 0x API timed out")
