@@ -87,10 +87,14 @@ const SwapPage = () => {
               {/* Swap Form */}
               <div className="mt-6">
                 {isConnected ? (
-                  <SwapFormV2
-                    chainId={selectedChain}
-                    walletAddress={walletAddress}
-                  />
+                  selectedChain === 0 ? (
+                    <SolanaSwapForm />
+                  ) : (
+                    <SwapFormV2
+                      chainId={selectedChain}
+                      walletAddress={walletAddress}
+                    />
+                  )
                 ) : (
                   <div data-testid="connect-wallet-prompt" className="text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
                     <svg
