@@ -14,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<SwapPageV2 />} />
           <Route path="/bridge" element={<BridgePage />} />
+          <Route path="/faq" element={<FAQPage />} />
           <Route path="/risk-disclosure" element={<RiskDisclosure />} />
         </Routes>
       </BrowserRouter>
