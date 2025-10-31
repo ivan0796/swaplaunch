@@ -307,6 +307,7 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       toast.success('Swap completed successfully!');
     } catch (err) {
       console.error('Swap failed:', err);
+      setShowWalletConfirm(false);
       const errorMsg = err.message || 'Swap transaction failed';
       toast.error(errorMsg);
     } finally {
