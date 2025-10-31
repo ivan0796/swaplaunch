@@ -284,6 +284,35 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
         <TokenPriceWidget coinId={sellTokenCoinId} />
       )}
 
+
+      {/* Universal Token Search */}
+      <div className="mb-4">
+        <TokenSearchAutocomplete
+          onSelect={(token) => {
+            // Map resolved token to our format
+            const formattedToken = {
+              symbol: token.symbol,
+              address: token.address,
+              decimals: token.decimals || 18,
+              name: token.name,
+              logoURI: token.logoURL
+            };
+            
+            // Set as sell token by default
+            if (buyToken && token.address?.toLowerCase() === buyToken.address?.toLowerCase()) {
+              toast.error('Cannot select the same token for both sides');
+              return;
+            }
+            setSellToken(formattedToken);
+            toast.success(`Selected ${token.symbol}`, {
+              description: `Now trading ${token.name}`
+            });
+          }}
+          placeholder="🔍 Search any token by name, symbol or address"
+          excludeAddress={buyToken?.address}
+        />
+      </div>
+
       {/* Slippage Settings */}
       <div className="flex items-center justify-between">
         <span className="text-sm text-gray-600">Slippage Tolerance</span>
