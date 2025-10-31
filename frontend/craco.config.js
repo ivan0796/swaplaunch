@@ -51,7 +51,8 @@ const webpackConfig = {
         crypto: require.resolve('crypto-browserify'),
         stream: require.resolve('stream-browserify'),
         buffer: require.resolve('buffer/'),
-        process: require.resolve('process/browser'),
+        'process/browser': require.resolve('process/browser.js'),
+        process: require.resolve('process/browser.js'),
         vm: require.resolve('vm-browserify'),
         zlib: require.resolve('browserify-zlib'),
         path: require.resolve('path-browserify'),
@@ -60,7 +61,17 @@ const webpackConfig = {
         tls: false,
         http: false,
         https: false,
+        os: false,
+        url: false,
       };
+
+      // Ensure fullySpecified is false for .mjs files
+      webpackConfig.module.rules.push({
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      });
 
       // Add Buffer and process plugins - Filter out existing ProvidePlugin first
       webpackConfig.plugins = webpackConfig.plugins.filter(
