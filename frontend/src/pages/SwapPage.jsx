@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAccount, useChainId } from 'wagmi';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import SwapFormV2 from '../components/SwapFormV2';
+import SolanaSwapForm from '../components/SolanaSwapForm';
 import NetworkSelector from '../components/NetworkSelector';
 import TrendingTokens from '../components/TrendingTokens';
 import SwapHistoryModal from '../components/SwapHistoryModal';
