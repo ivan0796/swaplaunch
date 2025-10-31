@@ -33,6 +33,41 @@ const SOLANA_TOKENS = [
     name: 'Tether USD',
     logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.png'
   },
+  { 
+    symbol: 'RAY', 
+    mint: '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R', 
+    decimals: 6, 
+    name: 'Raydium',
+    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R/logo.png'
+  },
+  { 
+    symbol: 'BONK', 
+    mint: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', 
+    decimals: 5, 
+    name: 'Bonk',
+    logoURI: 'https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I'
+  },
+  { 
+    symbol: 'JTO', 
+    mint: 'jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL', 
+    decimals: 9, 
+    name: 'Jito',
+    logoURI: 'https://metadata.jito.network/token/jto/image'
+  },
+  { 
+    symbol: 'WIF', 
+    mint: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', 
+    decimals: 6, 
+    name: 'dogwifhat',
+    logoURI: 'https://bafkreibk3covs5ltyqxa272uodhculbr6kea6betidfwy3ajsav2vjzyum.ipfs.nftstorage.link'
+  },
+  { 
+    symbol: 'JUP', 
+    mint: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', 
+    decimals: 6, 
+    name: 'Jupiter',
+    logoURI: 'https://static.jup.ag/jup/icon.png'
+  },
 ];
 
 const SolanaSwapForm = () => {
