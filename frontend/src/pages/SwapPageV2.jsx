@@ -5,7 +5,7 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import SwapFormV2 from '../components/SwapFormV2';
 import SolanaSwapForm from '../components/SolanaSwapForm';
-import NetworkSelector from '../components/NetworkSelector';
+import NetworkSelectorDropdown from '../components/NetworkSelectorDropdown';
 import TrendingTokensV2 from '../components/TrendingTokensV2';
 import NewListings from '../components/NewListings';
 import SwapHistoryModal from '../components/SwapHistoryModal';
