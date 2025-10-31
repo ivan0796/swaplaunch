@@ -146,7 +146,7 @@ const BridgePage = () => {
         {/* Bridge Widget Container */}
         <div className="rounded-2xl border border-black/5 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
           {isConnected ? (
-            <div id="lifi-widget" className="w-full min-h-[600px]"></div>
+            <div ref={widgetContainerRef} className="w-full min-h-[600px]"></div>
           ) : (
             <div className="text-center py-20">
               <div className="mb-6">
