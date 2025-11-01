@@ -5,6 +5,7 @@ import SwapPageV2 from './pages/SwapPageV2';
 import BridgePage from './pages/BridgePage';
 import RiskDisclosure from './pages/RiskDisclosure';
 import FAQPage from './pages/FAQPage';
+import LaunchpadPage from './pages/LaunchpadPage';
 import { Toaster } from './components/ui/sonner';
 
 function App() {
