@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAccount, useWalletClient } from 'wagmi';
-import { ArrowLeft, Rocket, Shield, TrendingUp, Coins, AlertCircle, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Rocket, Shield, TrendingUp, Coins, AlertCircle, CheckCircle, X } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { toast } from 'sonner';
 import WalletButtonWithHistory from '../components/WalletButtonWithHistory';
