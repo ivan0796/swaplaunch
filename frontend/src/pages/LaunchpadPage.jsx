@@ -279,6 +279,131 @@ const LaunchpadPage = () => {
                 </select>
               </div>
 
+              {/* Token Image Upload */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Token Image <span className="text-gray-500 text-xs">(Optional)</span>
+                </label>
+                <div className="flex items-center gap-4">
+                  {formData.imagePreview ? (
+                    <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-purple-500">
+                      <img 
+                        src={formData.imagePreview} 
+                        alt="Token preview" 
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, tokenImage: null, imagePreview: null }))}
+                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="w-20 h-20 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center">
+                      <span className="text-gray-400 text-2xl">📷</span>
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      id="tokenImage"
+                    />
+                    <label
+                      htmlFor="tokenImage"
+                      className="inline-block px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg cursor-pointer text-sm font-medium"
+                    >
+                      Choose Image
+                    </label>
+                    <p className="text-xs text-gray-500 mt-1">
+                      PNG, JPG, GIF up to 2MB
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Advanced Features */}
+              <div className="border-t border-gray-200 pt-4 mt-4">
+                <h3 className="font-semibold mb-3">🚀 Advanced Features (Extra Fees Apply)</h3>
+                
+                {/* Anti-Bot Protection */}
+                <div className="flex items-start gap-3 mb-3 p-3 rounded-lg hover:bg-gray-50">
+                  <input
+                    type="checkbox"
+                    name="enableAntiBot"
+                    checked={formData.enableAntiBot}
+                    onChange={handleInputChange}
+                    className="mt-1 w-4 h-4"
+                    id="antiBot"
+                  />
+                  <div className="flex-1">
+                    <label htmlFor="antiBot" className="font-medium cursor-pointer">
+                      Anti-Bot Protection (+0.005 ETH ≈ $6)
+                    </label>
+                    <p className="text-xs text-gray-600">
+                      Prevents bot sniping during launch with transaction limits
+                    </p>
+                  </div>
+                </div>
+
+                {/* Liquidity Lock */}
+                <div className="flex items-start gap-3 mb-3 p-3 rounded-lg hover:bg-gray-50">
+                  <input
+                    type="checkbox"
+                    name="enableLiquidityLock"
+                    checked={formData.enableLiquidityLock}
+                    onChange={handleInputChange}
+                    className="mt-1 w-4 h-4"
+                    id="liquidityLock"
+                  />
+                  <div className="flex-1">
+                    <label htmlFor="liquidityLock" className="font-medium cursor-pointer">
+                      Liquidity Lock (+0.01 ETH ≈ $13)
+                    </label>
+                    <p className="text-xs text-gray-600">
+                      Automatically locks liquidity to prevent rug pulls
+                    </p>
+                    {formData.enableLiquidityLock && (
+                      <select
+                        name="lockDuration"
+                        value={formData.lockDuration}
+                        onChange={handleInputChange}
+                        className="mt-2 w-full px-3 py-2 text-sm rounded-lg border border-gray-300"
+                      >
+                        <option value="30">30 Days</option>
+                        <option value="90">90 Days</option>
+                        <option value="180">180 Days</option>
+                        <option value="365">1 Year</option>
+                      </select>
+                    )}
+                  </div>
+                </div>
+
+                {/* Max Wallet Limit */}
+                <div className="p-3 rounded-lg bg-gray-50">
+                  <label className="block font-medium mb-2">
+                    Max Wallet Limit (% of supply)
+                  </label>
+                  <input
+                    type="number"
+                    name="maxWalletPercent"
+                    value={formData.maxWalletPercent}
+                    onChange={handleInputChange}
+                    min="0.1"
+                    max="100"
+                    step="0.1"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300"
+                  />
+                  <p className="text-xs text-gray-600 mt-1">
+                    Prevents whales from holding too much. Recommended: 2-5%
+                  </p>
+                </div>
+              </div>
+
               {/* Description */}
               <div>
                 <label className="block text-sm font-medium mb-2">
