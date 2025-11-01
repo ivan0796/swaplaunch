@@ -20,6 +20,30 @@ const CHAIN_CONFIG = {
     logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png',
     color: 'from-purple-400 to-purple-600',
   },
+  42161: {
+    name: 'Arbitrum',
+    icon: '🔵',
+    logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/arbitrum/info/logo.png',
+    color: 'from-blue-500 to-blue-700',
+  },
+  10: {
+    name: 'Optimism',
+    icon: '🔴',
+    logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/optimism/info/logo.png',
+    color: 'from-red-400 to-red-600',
+  },
+  8453: {
+    name: 'Base',
+    icon: '🔵',
+    logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/base/info/logo.png',
+    color: 'from-blue-600 to-indigo-600',
+  },
+  43114: {
+    name: 'Avalanche',
+    icon: '🔺',
+    logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/avalanchec/info/logo.png',
+    color: 'from-red-500 to-red-700',
+  },
   0: {
     name: 'Solana',
     icon: '◎',
