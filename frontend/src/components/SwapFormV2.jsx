@@ -17,6 +17,8 @@ import TokenSecurityPanel from './TokenSecurityPanel';
 import TokenSearchAutocomplete from './TokenSearchAutocomplete';
 import PairSearchModal from './PairSearchModal';
 import CombinedSecurityWarning from './CombinedSecurityWarning';
+import TokenRiskDisclaimer from './TokenRiskDisclaimer';
+import { CMC_TOP_TOKENS } from '../utils/cmcTokens';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
