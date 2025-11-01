@@ -51,11 +51,39 @@ const LaunchpadPage = () => {
   const LAUNCH_FEE = estimatedFee.eth; // Dynamic fee
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     }));
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload an image file');
+        return;
+      }
+      
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('Image size must be less than 2MB');
+        return;
+      }
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({
+          ...prev,
+          tokenImage: file,
+          imagePreview: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleLaunch = async () => {
