@@ -1,11 +1,11 @@
 import { http, createConfig } from 'wagmi';
-import { mainnet, bsc, polygon, arbitrum, optimism, base, avalanche } from 'wagmi/chains';
+import { mainnet, bsc, polygon, arbitrum, optimism, base, avalanche, fantom, cronos, zkSync } from 'wagmi/chains';
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 
 export const config = getDefaultConfig({
   appName: 'SwapLaunch',
-  projectId: '48a588dc4a0d828d44650c0f6836e30c', // WalletConnect v2 Project ID
-  chains: [mainnet, bsc, polygon, arbitrum, optimism, base, avalanche],
+  projectId: '48a588dc4a0d828d44650c0f6836e30c',
+  chains: [mainnet, bsc, polygon, arbitrum, optimism, base, avalanche, fantom, cronos, zkSync],
   transports: {
     [mainnet.id]: http(),
     [bsc.id]: http(),
@@ -14,6 +14,9 @@ export const config = getDefaultConfig({
     [optimism.id]: http(),
     [base.id]: http(),
     [avalanche.id]: http(),
+    [fantom.id]: http(),
+    [cronos.id]: http(),
+    [zkSync.id]: http(),
   },
 });
 
