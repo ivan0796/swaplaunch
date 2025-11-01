@@ -529,7 +529,7 @@ DISCOVERY_CACHE_TTL = 60  # 60 seconds for trending/discovery data
 async def get_trending_categories(category: str = Query("top", regex="^(top|gainers|losers)$")):
     """
     Get trending tokens using Dexscreener boosted tokens
-    Shows tokens that are currently boosted/promoted on DEXs
+    Top = Top 10 by market cap, Gainers = Highest 24h gain, Losers = Highest 24h loss
     """
     cache_key = f"trending_{category}"
     current_time = datetime.now(timezone.utc).timestamp()
@@ -564,23 +564,25 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
                 logger.warning(f"Unexpected data format from Dexscreener: {type(data)}")
                 return {"category": category, "tokens": [], "error": "No data"}
             
-            # Process tokens
+            # Process tokens with full details
             processed_tokens = []
-            for item in data[:50]:  # Top 50
+            for item in data[:50]:  # Top 50 boosted
                 if not isinstance(item, dict):
                     continue
                 
-                # Get token info
                 token_address = item.get('tokenAddress', '')
                 chain_id = item.get('chainId', 'unknown')
                 
-                # Fetch price data from search API if available
+                # Fetch price data from Dexscreener token endpoint
                 price_usd = 0
                 price_change = 0
                 volume = 0
+                market_cap = 0
+                token_name = "Unknown Token"
+                token_symbol = "TOKEN"
+                image_url = None
                 
                 try:
-                    # Quick lookup for price data
                     if token_address:
                         search_resp = await http_client.get(
                             f"https://api.dexscreener.com/latest/dex/tokens/{token_address}",
@@ -590,40 +592,61 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
                             search_data = search_resp.json()
                             pairs = search_data.get('pairs', [])
                             if pairs and len(pairs) > 0:
+                                # Get data from first (most liquid) pair
                                 first_pair = pairs[0]
+                                base_token = first_pair.get('baseToken', {})
+                                
+                                token_name = base_token.get('name', 'Unknown Token')
+                                token_symbol = base_token.get('symbol', 'TOKEN')
                                 price_usd = float(first_pair.get('priceUsd', 0)) if first_pair.get('priceUsd') else 0
                                 price_change = float(first_pair.get('priceChange', {}).get('h24', 0)) if isinstance(first_pair.get('priceChange'), dict) else 0
                                 volume = float(first_pair.get('volume', {}).get('h24', 0)) if isinstance(first_pair.get('volume'), dict) else 0
-                except:
-                    pass  # Continue without price data
+                                
+                                # Calculate market cap from liquidity and FDV
+                                liquidity_usd = float(first_pair.get('liquidity', {}).get('usd', 0)) if isinstance(first_pair.get('liquidity'), dict) else 0
+                                fdv = float(first_pair.get('fdv', 0)) if first_pair.get('fdv') else 0
+                                market_cap = fdv if fdv > 0 else liquidity_usd * 2  # Estimate if FDV not available
+                                
+                                # Get image from pair info
+                                image_url = first_pair.get('info', {}).get('imageUrl')
+                except Exception as e:
+                    logger.warning(f"Failed to fetch details for {token_address}: {str(e)}")
+                    continue
                 
                 token_info = {
                     "id": token_address[:8] if token_address else "",
-                    "symbol": item.get('icon', {}).get('description', 'TOKEN')[:10] if isinstance(item.get('icon'), dict) else 'TOKEN',
-                    "name": item.get('description', 'Unknown')[:50] if item.get('description') else 'Unknown',
-                    "image": item.get('icon', {}).get('url') if isinstance(item.get('icon'), dict) else None,
+                    "symbol": token_symbol,
+                    "name": token_name,
+                    "image": image_url,
                     "current_price": price_usd,
                     "price_change_24h": price_change,
-                    "market_cap": None,
+                    "market_cap": market_cap,
                     "total_volume": volume,
                     "chainId": chain_id
                 }
                 processed_tokens.append(token_info)
             
             # Sort based on category
-            if category == "gainers":
+            if category == "top":
+                # Top 10 by market cap
+                processed_tokens = sorted(
+                    [t for t in processed_tokens if t['market_cap'] > 0],
+                    key=lambda x: x['market_cap'],
+                    reverse=True
+                )[:10]
+            elif category == "gainers":
+                # Top gainers by 24h price change
                 processed_tokens = sorted(
                     [t for t in processed_tokens if t['price_change_24h'] > 0],
                     key=lambda x: x['price_change_24h'],
                     reverse=True
                 )[:15]
-            elif category == "losers":
+            else:  # losers
+                # Top losers by 24h price change
                 processed_tokens = sorted(
                     [t for t in processed_tokens if t['price_change_24h'] < 0],
                     key=lambda x: x['price_change_24h']
                 )[:15]
-            else:  # top by volume or just show boosted
-                processed_tokens = processed_tokens[:15]
             
             result = {
                 "category": category,
