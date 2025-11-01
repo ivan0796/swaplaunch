@@ -44,6 +44,24 @@ const CHAIN_CONFIG = {
     logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/avalanchec/info/logo.png',
     color: 'from-red-500 to-red-700',
   },
+  250: {
+    name: 'Fantom',
+    icon: '👻',
+    logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/fantom/info/logo.png',
+    color: 'from-blue-400 to-cyan-500',
+  },
+  25: {
+    name: 'Cronos',
+    icon: '💎',
+    logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/cronos/info/logo.png',
+    color: 'from-blue-600 to-purple-600',
+  },
+  324: {
+    name: 'zkSync',
+    icon: '⚡',
+    logoUrl: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/zksync/info/logo.png',
+    color: 'from-purple-600 to-blue-600',
+  },
   0: {
     name: 'Solana',
     icon: '◎',
