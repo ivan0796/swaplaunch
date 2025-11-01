@@ -16,12 +16,39 @@ const LaunchpadPage = () => {
     totalSupply: '',
     decimals: '18',
     description: '',
+    tokenImage: null,
+    imagePreview: null,
+    // Additional revenue features
+    enableAntiBot: false,
+    enableLiquidityLock: false,
+    lockDuration: '30', // days
+    maxWalletPercent: '2', // % of supply
   });
 
   const [launching, setLaunching] = useState(false);
   const [launchSuccess, setLaunchSuccess] = useState(null);
+  const [estimatedFee, setEstimatedFee] = useState({ eth: '0.025', usd: '25' }); // Dynamic based on gas
 
-  const LAUNCH_FEE = '0.05'; // 0.05 ETH/BNB launch fee
+  // Estimate fee based on current gas prices (simplified)
+  useEffect(() => {
+    const estimateGasFee = async () => {
+      // In production, fetch real gas prices from etherscan or similar
+      // For now, simulate dynamic pricing between 20-50 EUR
+      const baseFeEth = 0.02;
+      const additionalFees = 
+        (formData.enableAntiBot ? 0.005 : 0) +
+        (formData.enableLiquidityLock ? 0.01 : 0);
+      
+      const totalEth = baseFeEth + additionalFees;
+      const estimatedUsd = (totalEth * 1250).toFixed(0); // ETH @ ~1250 USD
+      
+      setEstimatedFee({ eth: totalEth.toFixed(3), usd: estimatedUsd });
+    };
+    
+    estimateGasFee();
+  }, [formData.enableAntiBot, formData.enableLiquidityLock]);
+
+  const LAUNCH_FEE = estimatedFee.eth; // Dynamic fee
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
