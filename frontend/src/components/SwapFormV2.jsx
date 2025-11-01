@@ -40,6 +40,11 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
   const [showPairSearch, setShowPairSearch] = useState(false);
   const [showWalletConfirm, setShowWalletConfirm] = useState(false);
   
+  // Risk disclaimer states
+  const [showRiskDisclaimer, setShowRiskDisclaimer] = useState(false);
+  const [pendingToken, setPendingToken] = useState(null);
+  const [pendingTokenType, setPendingTokenType] = useState(null); // 'sell' or 'buy'
+  
   // Swap states
   const [quote, setQuote] = useState(null);
   const [loading, setLoading] = useState(false);
