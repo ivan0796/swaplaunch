@@ -425,11 +425,16 @@ const LaunchpadPage = () => {
                   <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div className="flex-1 text-sm">
                     <p className="font-medium text-blue-900 dark:text-blue-100 mb-1">
-                      Launch Fee: {LAUNCH_FEE} ETH
+                      Total Launch Fee: {LAUNCH_FEE} ETH (~${estimatedFee.usd})
                     </p>
-                    <p className="text-blue-700 dark:text-blue-300">
-                      This one-time fee covers gas costs and platform maintenance. Your token will be deployed to the blockchain immediately.
-                    </p>
+                    <div className="text-blue-700 dark:text-blue-300 space-y-1">
+                      <p>• Base Fee: 0.02 ETH (~$25)</p>
+                      {formData.enableAntiBot && <p>• Anti-Bot: +0.005 ETH (~$6)</p>}
+                      {formData.enableLiquidityLock && <p>• Liquidity Lock: +0.01 ETH (~$13)</p>}
+                      <p className="mt-2 text-xs">
+                        Fee adjusts based on current gas prices (€20-50 range)
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
