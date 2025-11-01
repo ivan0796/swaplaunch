@@ -70,6 +70,70 @@ const DEFAULT_TOKENS = {
       name: 'USD Coin',
       logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/assets/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/logo.png'
     },
+  ],
+  42161: [
+    { 
+      symbol: 'ETH', 
+      address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 
+      decimals: 18, 
+      name: 'Ethereum',
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
+    },
+    { 
+      symbol: 'USDC', 
+      address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831', 
+      decimals: 6, 
+      name: 'USD Coin',
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png'
+    },
+  ],
+  10: [
+    { 
+      symbol: 'ETH', 
+      address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 
+      decimals: 18, 
+      name: 'Ethereum',
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
+    },
+    { 
+      symbol: 'USDC', 
+      address: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', 
+      decimals: 6, 
+      name: 'USD Coin',
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png'
+    },
+  ],
+  8453: [
+    { 
+      symbol: 'ETH', 
+      address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 
+      decimals: 18, 
+      name: 'Ethereum',
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
+    },
+    { 
+      symbol: 'USDC', 
+      address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 
+      decimals: 6, 
+      name: 'USD Coin',
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png'
+    },
+  ],
+  43114: [
+    { 
+      symbol: 'AVAX', 
+      address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 
+      decimals: 18, 
+      name: 'Avalanche',
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/avalanchec/info/logo.png'
+    },
+    { 
+      symbol: 'USDC', 
+      address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E', 
+      decimals: 6, 
+      name: 'USD Coin',
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png'
+    },
   ]
 };
 
