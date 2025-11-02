@@ -758,13 +758,14 @@ async def get_new_dex_listings(chain: Optional[str] = Query(None)):
 
 
 @api_router.get("/token/resolve")
-async def resolve_token(query: str = Query(..., min_length=1)):
+async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional[int] = Query(None)):
     """
     Resolve token by name, symbol, or contract address
     Supports EVM (Dexscreener) and Solana (Jupiter Registry)
     Enhanced with logo fetching from multiple sources
+    Prioritizes tokens from the specified chainId if provided
     """
-    cache_key = f"resolve_{query.lower()}"
+    cache_key = f"resolve_{query.lower()}_{chainId if chainId else 'all'}"
     current_time = datetime.now(timezone.utc).timestamp()
     
     # Check cache
@@ -774,6 +775,26 @@ async def resolve_token(query: str = Query(..., min_length=1)):
             return cached_data
     
     results = []
+    prioritized_results = []  # Results from the selected chain
+    
+    # Chain ID to Dexscreener chain mapping
+    CHAIN_ID_MAP = {
+        1: "ethereum",
+        56: "bsc",
+        137: "polygon",
+        42161: "arbitrum",
+        10: "optimism",
+        8453: "base",
+        43114: "avalanchec",
+        250: "fantom",
+        25: "cronos",
+        324: "zksync",
+        0: "solana",
+        "xrp": "xrpl",
+        "tron": "tron"
+    }
+    
+    selected_chain = CHAIN_ID_MAP.get(chainId) if chainId else None
     
     # Check if query is a Solana mint address or EVM contract address
     is_solana_mint = len(query) >= 32 and not query.startswith("0x")
