@@ -226,7 +226,6 @@ const NetworkSelectorDropdown = ({ selectedChain, onChainChange, className = "" 
                       <span className="text-xl" style={{ display: 'none' }}>{config.icon}</span>
                       <div className="flex-1 text-left">
                         <div className="font-medium text-sm">{config.name}</div>
-                        <div className="text-xs text-gray-500">{config.type}</div>
                       </div>
                       {isSelected && (
                         <div className="w-2 h-2 rounded-full bg-blue-600" />
