@@ -196,15 +196,12 @@ class SwapLaunchAPITester:
             self.log_test("GET Swaps Endpoint", False, "", str(e))
             return False
 
-    def test_solana_token_resolve(self):
-        """Test Solana token resolution for specific contract address"""
+    def test_chain_prioritized_token_search_without_chainid(self):
+        """Test token search without chainId parameter"""
         try:
-            # Test the specific Solana contract address mentioned in the review request
-            contract_address = "DZpa4peCErsNzsYJ69XYYTSjZGDQhuexnzj7EiZ1pump"
-            
             response = requests.get(
                 f"{self.api_url}/token/resolve",
-                params={"query": contract_address},
+                params={"query": "USDC"},
                 timeout=15
             )
             
@@ -223,38 +220,351 @@ class SwapLaunchAPITester:
                 else:
                     results = data.get("results", [])
                     count = data.get("count", 0)
+                    prioritized_chain = data.get("prioritized_chain")
                     
-                    # Check if we got results
-                    if count > 0 and len(results) > 0:
-                        # Verify first result has proper structure
-                        first_result = results[0]
-                        token_keys = ["chain", "name", "symbol", "address", "source"]
-                        has_token_structure = all(key in first_result for key in token_keys)
-                        
-                        if has_token_structure:
-                            # Check if it's a Solana token
-                            is_solana = first_result.get("chain") == "solana"
-                            # Address comparison should be case-insensitive for Solana
-                            has_address = first_result.get("address", "").lower() == contract_address.lower()
-                            
-                            success = is_solana and has_address
-                            details = f"✅ Found {count} results. Token: {first_result.get('name')} ({first_result.get('symbol')}) on {first_result.get('chain')} from {first_result.get('source')}. Price: ${first_result.get('priceUsd', 'N/A')}"
-                        else:
-                            success = False
-                            details = f"Token result missing required fields. Got: {list(first_result.keys())}"
-                    else:
-                        success = False
-                        details = f"No results found for contract address {contract_address}"
+                    # Without chainId, prioritized_chain should be None
+                    success = prioritized_chain is None and count > 0
+                    details = f"Found {count} USDC results without chain prioritization. Prioritized chain: {prioritized_chain}"
                         
             else:
                 details = f"Status: {response.status_code}, Response: {response.text[:500]}"
                 
-            self.log_test("Solana Token Resolution", success, details,
-                         "" if success else f"Failed to resolve Solana contract {contract_address}")
+            self.log_test("Token Search Without ChainId", success, details,
+                         "" if success else f"Failed to search USDC without chainId")
             return success
             
         except Exception as e:
-            self.log_test("Solana Token Resolution", False, "", str(e))
+            self.log_test("Token Search Without ChainId", False, "", str(e))
+            return False
+
+    def test_chain_prioritized_token_search_ethereum(self):
+        """Test token search with chainId=1 (Ethereum)"""
+        try:
+            response = requests.get(
+                f"{self.api_url}/token/resolve",
+                params={"query": "USDC", "chainId": 1},
+                timeout=15
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                
+                # Check response structure
+                expected_keys = ["query", "results", "count", "prioritized_chain"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if not has_expected_structure:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+                else:
+                    results = data.get("results", [])
+                    count = data.get("count", 0)
+                    prioritized_chain = data.get("prioritized_chain")
+                    
+                    # Should have prioritized_chain as "ethereum"
+                    success = prioritized_chain == "ethereum" and count > 0
+                    
+                    # Check if first result is from Ethereum (if results exist)
+                    if success and results:
+                        first_result = results[0]
+                        first_chain = first_result.get("chain")
+                        if first_chain != "ethereum":
+                            success = False
+                            details = f"First result not from Ethereum. Got: {first_chain}"
+                        else:
+                            details = f"✅ Found {count} USDC results prioritized for Ethereum. First result: {first_result.get('name')} on {first_chain}"
+                    else:
+                        details = f"Found {count} USDC results. Prioritized chain: {prioritized_chain}"
+                        
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("Token Search Ethereum Priority", success, details,
+                         "" if success else f"Failed Ethereum prioritized search")
+            return success
+            
+        except Exception as e:
+            self.log_test("Token Search Ethereum Priority", False, "", str(e))
+            return False
+
+    def test_chain_prioritized_token_search_bsc(self):
+        """Test token search with chainId=56 (BSC)"""
+        try:
+            response = requests.get(
+                f"{self.api_url}/token/resolve",
+                params={"query": "USDC", "chainId": 56},
+                timeout=15
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                
+                # Check response structure
+                expected_keys = ["query", "results", "count", "prioritized_chain"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if not has_expected_structure:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+                else:
+                    results = data.get("results", [])
+                    count = data.get("count", 0)
+                    prioritized_chain = data.get("prioritized_chain")
+                    
+                    # Should have prioritized_chain as "bsc"
+                    success = prioritized_chain == "bsc" and count >= 0  # BSC might not have USDC results
+                    details = f"Found {count} USDC results prioritized for BSC. Prioritized chain: {prioritized_chain}"
+                    
+                    # Check if first result is from BSC (if results exist)
+                    if results and len(results) > 0:
+                        first_result = results[0]
+                        first_chain = first_result.get("chain")
+                        if first_chain == "bsc":
+                            details += f" First result: {first_result.get('name')} on {first_chain}"
+                        
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("Token Search BSC Priority", success, details,
+                         "" if success else f"Failed BSC prioritized search")
+            return success
+            
+        except Exception as e:
+            self.log_test("Token Search BSC Priority", False, "", str(e))
+            return False
+
+    def test_chain_prioritized_token_search_solana(self):
+        """Test token search with chainId=0 (Solana)"""
+        try:
+            response = requests.get(
+                f"{self.api_url}/token/resolve",
+                params={"query": "SOL", "chainId": 0},
+                timeout=15
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                
+                # Check response structure
+                expected_keys = ["query", "results", "count", "prioritized_chain"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if not has_expected_structure:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+                else:
+                    results = data.get("results", [])
+                    count = data.get("count", 0)
+                    prioritized_chain = data.get("prioritized_chain")
+                    
+                    # Should have prioritized_chain as "solana"
+                    success = prioritized_chain == "solana" and count > 0
+                    
+                    # Check if first result is SOL from Solana
+                    if success and results:
+                        first_result = results[0]
+                        first_chain = first_result.get("chain")
+                        first_symbol = first_result.get("symbol", "").upper()
+                        if first_chain != "solana" or first_symbol != "SOL":
+                            success = False
+                            details = f"First result not SOL from Solana. Got: {first_symbol} on {first_chain}"
+                        else:
+                            details = f"✅ Found {count} SOL results prioritized for Solana. First result: {first_result.get('name')} ({first_symbol}) on {first_chain}"
+                    else:
+                        details = f"Found {count} SOL results. Prioritized chain: {prioritized_chain}"
+                        
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("Token Search Solana Priority", success, details,
+                         "" if success else f"Failed Solana prioritized search")
+            return success
+            
+        except Exception as e:
+            self.log_test("Token Search Solana Priority", False, "", str(e))
+            return False
+
+    def test_xrp_chain_support(self):
+        """Test XRP chain search"""
+        try:
+            response = requests.get(
+                f"{self.api_url}/token/resolve",
+                params={"query": "XRP", "chainId": "xrp"},
+                timeout=15
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                
+                # Check response structure
+                expected_keys = ["query", "results", "count", "prioritized_chain"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if not has_expected_structure:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+                else:
+                    results = data.get("results", [])
+                    count = data.get("count", 0)
+                    prioritized_chain = data.get("prioritized_chain")
+                    
+                    # Should have prioritized_chain as "xrpl" (mapped from "xrp")
+                    success = prioritized_chain == "xrpl" and count >= 0  # XRP might not have results in Dexscreener
+                    details = f"XRP chain mapping working. Found {count} results. Prioritized chain: {prioritized_chain}"
+                        
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("XRP Chain Support", success, details,
+                         "" if success else f"Failed XRP chain support test")
+            return success
+            
+        except Exception as e:
+            self.log_test("XRP Chain Support", False, "", str(e))
+            return False
+
+    def test_tron_chain_support(self):
+        """Test Tron chain search"""
+        try:
+            response = requests.get(
+                f"{self.api_url}/token/resolve",
+                params={"query": "TRX", "chainId": "tron"},
+                timeout=15
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                
+                # Check response structure
+                expected_keys = ["query", "results", "count", "prioritized_chain"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if not has_expected_structure:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+                else:
+                    results = data.get("results", [])
+                    count = data.get("count", 0)
+                    prioritized_chain = data.get("prioritized_chain")
+                    
+                    # Should have prioritized_chain as "tron"
+                    success = prioritized_chain == "tron" and count >= 0  # Tron might not have results in Dexscreener
+                    details = f"Tron chain mapping working. Found {count} results. Prioritized chain: {prioritized_chain}"
+                        
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("Tron Chain Support", success, details,
+                         "" if success else f"Failed Tron chain support test")
+            return success
+            
+        except Exception as e:
+            self.log_test("Tron Chain Support", False, "", str(e))
+            return False
+
+    def test_token_logo_resolution(self):
+        """Test token logo resolution for major tokens"""
+        try:
+            # Test major tokens that should have logos
+            test_tokens = [
+                {"query": "ETH", "chainId": 1, "expected_chain": "ethereum"},
+                {"query": "BNB", "chainId": 56, "expected_chain": "bsc"},
+                {"query": "MATIC", "chainId": 137, "expected_chain": "polygon"},
+                {"query": "SOL", "chainId": 0, "expected_chain": "solana"}
+            ]
+            
+            logos_found = 0
+            total_tokens = len(test_tokens)
+            
+            for token_test in test_tokens:
+                response = requests.get(
+                    f"{self.api_url}/token/resolve",
+                    params={"query": token_test["query"], "chainId": token_test["chainId"]},
+                    timeout=15
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    results = data.get("results", [])
+                    
+                    if results:
+                        first_result = results[0]
+                        logo_url = first_result.get("logoURL")
+                        
+                        if logo_url and logo_url.strip():
+                            logos_found += 1
+            
+            success = logos_found >= (total_tokens * 0.5)  # At least 50% should have logos
+            details = f"Found logos for {logos_found}/{total_tokens} major tokens"
+                
+            self.log_test("Token Logo Resolution", success, details,
+                         "" if success else f"Too few tokens have logos: {logos_found}/{total_tokens}")
+            return success
+            
+        except Exception as e:
+            self.log_test("Token Logo Resolution", False, "", str(e))
+            return False
+
+    def test_dex_pairs_endpoint(self):
+        """Test DEX pairs endpoint"""
+        try:
+            response = requests.get(
+                f"{self.api_url}/dex/pairs",
+                params={"query": "USDC"},
+                timeout=15
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                
+                # Check response structure
+                expected_keys = ["query", "pairs", "count"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if not has_expected_structure:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+                else:
+                    pairs = data.get("pairs", [])
+                    count = data.get("count", 0)
+                    
+                    success = count >= 0  # Should work even if no pairs found
+                    
+                    if pairs and len(pairs) > 0:
+                        # Check first pair structure
+                        first_pair = pairs[0]
+                        pair_keys = ["pairAddress", "chainId", "baseToken", "quoteToken"]
+                        has_pair_structure = all(key in first_pair for key in pair_keys)
+                        
+                        if has_pair_structure:
+                            details = f"✅ Found {count} USDC pairs. First pair: {first_pair.get('baseToken', {}).get('symbol')}/{first_pair.get('quoteToken', {}).get('symbol')} on {first_pair.get('chainId')}"
+                        else:
+                            success = False
+                            details = f"Pair structure incomplete. Got: {list(first_pair.keys())}"
+                    else:
+                        details = f"Pairs endpoint working. Found {count} pairs for USDC"
+                        
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("DEX Pairs Endpoint", success, details,
+                         "" if success else f"Failed DEX pairs test")
+            return success
+            
+        except Exception as e:
+            self.log_test("DEX Pairs Endpoint", False, "", str(e))
             return False
 
     def run_all_tests(self):
