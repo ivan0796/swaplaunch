@@ -758,7 +758,7 @@ async def get_new_dex_listings(chain: Optional[str] = Query(None)):
 
 
 @api_router.get("/token/resolve")
-async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional[int] = Query(None)):
+async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional[str] = Query(None)):
     """
     Resolve token by name, symbol, or contract address
     Supports EVM (Dexscreener) and Solana (Jupiter Registry)
