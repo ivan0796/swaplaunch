@@ -39,7 +39,7 @@ const TokenSearchAutocomplete = ({ onSelect, placeholder = "Search token name, s
     return () => clearTimeout(timer);
   }, [query, chainId, excludeAddress, searchTokens]);
 
-  const searchTokens = async () => {
+  const searchTokens = useCallback(async () => {
     setLoading(true);
     setError(null);
     
@@ -78,7 +78,7 @@ const TokenSearchAutocomplete = ({ onSelect, placeholder = "Search token name, s
     } finally {
       setLoading(false);
     }
-  };
+  }, [query, chainId, excludeAddress]);
 
   const handleSelect = (token) => {
     onSelect(token);
