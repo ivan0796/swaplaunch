@@ -103,12 +103,20 @@
 #====================================================================================================
 
 user_problem_statement: |
-  SwapLaunch v2.0 - Token Logo Fix & Dexscreener Integration
+  SwapLaunch v3.0 - Multi-Chain Expansion & Enhanced Features
   
-  Issues reported by user (German):
-  1. Falsche Logos für ETH, SOL, USDC etc. - Die richtigen Logos von TrustWallet einsetzen
-  2. Coins werden nicht gefunden wenn Contract eingegeben wird - Mit Dexscreener verbinden
-  3. Trading-Paare sollen auswählbar sein aus Dexscreener
+  Previous issues (COMPLETED):
+  1. ✅ Token logos from TrustWallet
+  2. ✅ Dexscreener integration for contract search
+  3. ✅ Trading pair selection
+  
+  New Requirements:
+  1. Add more Layer-1 chains (XRP, Tron, etc.) with native DEXs
+  2. Implement chain filtering (EVM chains → show only EVM-compatible networks)
+  3. Chain-prioritized token search (prioritize tokens from selected chain)
+  4. Add "Token Sniffer" button in TokenSecurityPanel
+  5. Trending data from CoinMarketCap (NO API key available - keeping existing implementation)
+  6. Ensure token logos for WETH, DAI, etc. (already using CMC logos in DEFAULT_TOKENS)
 
 backend:
   - task: "Token Logo URLs from TrustWallet"
