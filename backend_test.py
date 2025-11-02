@@ -274,9 +274,9 @@ class SwapLaunchAPITester:
                             success = False
                             details = f"First result not from Ethereum. Got: {first_chain}"
                         else:
-                            details = f"✅ Found {count} USDC results prioritized for Ethereum. First result: {first_result.get('name')} on {first_chain}"
+                            details = f"✅ Found {count} ETH results prioritized for Ethereum. First result: {first_result.get('name')} on {first_chain}"
                     else:
-                        details = f"Found {count} USDC results. Prioritized chain: {prioritized_chain}"
+                        details = f"Found {count} ETH results. Prioritized chain: {prioritized_chain}"
                         
             else:
                 details = f"Status: {response.status_code}, Response: {response.text[:500]}"
