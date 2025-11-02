@@ -23,8 +23,56 @@ import { CMC_TOP_TOKENS } from '../utils/cmcTokens';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-// Popular default tokens by chain - now using CMC data
-const DEFAULT_TOKENS = CMC_TOP_TOKENS;
+// Popular default tokens by chain - ONLY Top/Major coins with CMC logos
+const DEFAULT_TOKENS = {
+  1: [ // Ethereum
+    { symbol: 'ETH', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'Ethereum', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
+    { symbol: 'USDT', address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', decimals: 6, name: 'Tether', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png' },
+    { symbol: 'USDC', address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', decimals: 6, name: 'USD Coin', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png' },
+    { symbol: 'WETH', address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', decimals: 18, name: 'Wrapped Ether', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/2396.png' },
+    { symbol: 'DAI', address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', decimals: 18, name: 'Dai', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/4943.png' },
+  ],
+  56: [ // BSC
+    { symbol: 'BNB', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'BNB', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png' },
+    { symbol: 'USDT', address: '0x55d398326f99059fF775485246999027B3197955', decimals: 18, name: 'Tether', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png' },
+    { symbol: 'USDC', address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', decimals: 18, name: 'USD Coin', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png' },
+  ],
+  137: [ // Polygon
+    { symbol: 'MATIC', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'Polygon', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png' },
+    { symbol: 'USDC', address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', decimals: 6, name: 'USD Coin', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png' },
+    { symbol: 'USDT', address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F', decimals: 6, name: 'Tether', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png' },
+  ],
+  42161: [ // Arbitrum
+    { symbol: 'ETH', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'Ethereum', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
+    { symbol: 'USDC', address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831', decimals: 6, name: 'USD Coin', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png' },
+    { symbol: 'ARB', address: '0x912CE59144191C1204E64559FE8253a0e49E6548', decimals: 18, name: 'Arbitrum', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png' },
+  ],
+  10: [ // Optimism
+    { symbol: 'ETH', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'Ethereum', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
+    { symbol: 'USDC', address: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', decimals: 6, name: 'USD Coin', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png' },
+    { symbol: 'OP', address: '0x4200000000000000000000000000000000000042', decimals: 18, name: 'Optimism', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11840.png' },
+  ],
+  8453: [ // Base
+    { symbol: 'ETH', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'Ethereum', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
+    { symbol: 'USDC', address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', decimals: 6, name: 'USD Coin', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png' },
+  ],
+  43114: [ // Avalanche
+    { symbol: 'AVAX', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'Avalanche', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png' },
+    { symbol: 'USDC', address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E', decimals: 6, name: 'USD Coin', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png' },
+  ],
+  250: [ // Fantom
+    { symbol: 'FTM', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'Fantom', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3513.png' },
+    { symbol: 'USDC', address: '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75', decimals: 6, name: 'USD Coin', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png' },
+  ],
+  25: [ // Cronos
+    { symbol: 'CRO', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'Cronos', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3635.png' },
+    { symbol: 'USDC', address: '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59', decimals: 6, name: 'USD Coin', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png' },
+  ],
+  324: [ // zkSync
+    { symbol: 'ETH', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18, name: 'Ethereum', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
+    { symbol: 'USDC', address: '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4', decimals: 6, name: 'USD Coin', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png' },
+  ],
+};
 
 const SwapFormV2 = ({ chainId, walletAddress }) => {
   const { data: walletClient } = useWalletClient();
