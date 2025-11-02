@@ -120,6 +120,22 @@ const NetworkSelectorDropdown = ({ selectedChain, onChainChange, className = "" 
     setIsOpen(false);
   };
 
+  // Filter chains based on selected chain type
+  const getFilteredChains = () => {
+    const selectedType = selectedConfig?.type;
+    
+    // If selected chain is EVM, show only EVM chains
+    // If selected chain is Non-EVM, show all chains
+    return Object.entries(CHAIN_CONFIG).filter(([_, config]) => {
+      if (selectedType === 'EVM') {
+        return config.type === 'EVM';
+      }
+      return true; // Show all chains for Non-EVM selection
+    });
+  };
+
+  const filteredChains = getFilteredChains();
+
   return (
     <div className={`relative ${className}`}>
       <button
@@ -149,15 +165,21 @@ const NetworkSelectorDropdown = ({ selectedChain, onChainChange, className = "" 
           />
           
           {/* Dropdown */}
-          <div className="absolute top-full left-0 mt-2 w-full bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl z-50 overflow-hidden">
-            {Object.entries(CHAIN_CONFIG).map(([chainId, config]) => {
-              const id = parseInt(chainId);
-              const isSelected = id === selectedChain;
+          <div className="absolute top-full left-0 mt-2 min-w-[200px] bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl z-50 overflow-hidden max-h-[400px] overflow-y-auto">
+            {/* EVM Chains Section */}
+            {selectedConfig.type === 'EVM' && (
+              <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
+                EVM Chains Only
+              </div>
+            )}
+            
+            {filteredChains.map(([chainId, config]) => {
+              const isSelected = chainId === selectedChain || (typeof chainId === 'number' && chainId === selectedChain);
               
               return (
                 <button
-                  key={id}
-                  onClick={() => handleSelect(id)}
+                  key={chainId}
+                  onClick={() => handleSelect(chainId)}
                   className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
                     isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                   }`}
@@ -174,6 +196,7 @@ const NetworkSelectorDropdown = ({ selectedChain, onChainChange, className = "" 
                   <span className="text-xl" style={{ display: 'none' }}>{config.icon}</span>
                   <div className="flex-1 text-left">
                     <div className="font-medium text-sm">{config.name}</div>
+                    <div className="text-xs text-gray-500">{config.type}</div>
                   </div>
                   {isSelected && (
                     <div className="w-2 h-2 rounded-full bg-blue-600" />
