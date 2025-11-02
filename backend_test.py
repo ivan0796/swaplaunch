@@ -569,7 +569,7 @@ class SwapLaunchAPITester:
 
     def run_all_tests(self):
         """Run all backend API tests"""
-        print("🚀 Starting SwapLaunch Backend API Tests")
+        print("🚀 Starting SwapLaunch v3.0 Backend API Tests")
         print(f"📡 Testing API at: {self.api_url}")
         print("=" * 60)
         
@@ -589,9 +589,25 @@ class SwapLaunchAPITester:
             # Test GET without specific wallet
             self.test_swaps_get_endpoint()
         
-        # Test Solana token resolution (high priority test)
-        print("\n🔍 Testing Solana Token Resolution...")
-        self.test_solana_token_resolve()
+        # Priority Tests: Chain-Prioritized Token Search
+        print("\n🔍 Testing Chain-Prioritized Token Search...")
+        self.test_chain_prioritized_token_search_without_chainid()
+        self.test_chain_prioritized_token_search_ethereum()
+        self.test_chain_prioritized_token_search_bsc()
+        self.test_chain_prioritized_token_search_solana()
+        
+        # Priority Tests: New Chain Support
+        print("\n🌐 Testing New Chain Support...")
+        self.test_xrp_chain_support()
+        self.test_tron_chain_support()
+        
+        # Test Token Logo Resolution
+        print("\n🖼️ Testing Token Logo Resolution...")
+        self.test_token_logo_resolution()
+        
+        # Test DEX Pairs Endpoint
+        print("\n📊 Testing DEX Pairs Endpoint...")
+        self.test_dex_pairs_endpoint()
         
         # Print summary
         print("\n" + "=" * 60)
