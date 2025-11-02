@@ -528,8 +528,10 @@ DISCOVERY_CACHE_TTL = 60  # 60 seconds for trending/discovery data
 @api_router.get("/trending/categories")
 async def get_trending_categories(category: str = Query("top", regex="^(top|gainers|losers)$")):
     """
-    Get trending tokens using Dexscreener boosted tokens
-    Top = Top 10 by market cap, Gainers = Highest 24h gain, Losers = Highest 24h loss
+    Get trending/top tokens from CoinGecko
+    Top = Top coins by market cap (Bitcoin, Ethereum, XRP, etc.)
+    Gainers = Top gainers by 24h price change
+    Losers = Top losers by 24h price change
     """
     cache_key = f"trending_{category}"
     current_time = datetime.now(timezone.utc).timestamp()
@@ -543,110 +545,76 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
     
     try:
         async with httpx.AsyncClient(timeout=15.0) as http_client:
-            # Use Dexscreener boosted tokens endpoint
-            response = await http_client.get(
-                "https://api.dexscreener.com/token-boosts/latest/v1",
-                headers={"Accept": "application/json"}
-            )
+            
+            if category == "top":
+                # Get top coins by market cap from CoinGecko
+                response = await http_client.get(
+                    "https://api.coingecko.com/api/v3/coins/markets",
+                    params={
+                        "vs_currency": "usd",
+                        "order": "market_cap_desc",
+                        "per_page": 15,
+                        "page": 1,
+                        "sparkline": False,
+                        "price_change_percentage": "24h"
+                    }
+                )
+            elif category == "gainers":
+                # Get top gainers by 24h price change
+                response = await http_client.get(
+                    "https://api.coingecko.com/api/v3/coins/markets",
+                    params={
+                        "vs_currency": "usd",
+                        "order": "price_change_percentage_24h_desc",
+                        "per_page": 15,
+                        "page": 1,
+                        "sparkline": False,
+                        "price_change_percentage": "24h"
+                    }
+                )
+            else:  # losers
+                # Get top losers by 24h price change
+                response = await http_client.get(
+                    "https://api.coingecko.com/api/v3/coins/markets",
+                    params={
+                        "vs_currency": "usd",
+                        "order": "price_change_percentage_24h_asc",
+                        "per_page": 15,
+                        "page": 1,
+                        "sparkline": False,
+                        "price_change_percentage": "24h"
+                    }
+                )
             
             if response.status_code == 429:
-                logger.warning(f"Dexscreener rate limit for trending")
+                logger.warning(f"CoinGecko rate limit for trending {category}")
                 return {"category": category, "tokens": [], "error": "Rate limited"}
             
             if response.status_code != 200:
-                logger.error(f"Dexscreener API error: {response.status_code}")
+                logger.error(f"CoinGecko API error: {response.status_code}")
                 return {"category": category, "tokens": [], "error": "API unavailable"}
             
             data = response.json()
             
-            # Dexscreener returns array of boosted tokens
             if not data or not isinstance(data, list):
-                logger.warning(f"Unexpected data format from Dexscreener: {type(data)}")
+                logger.warning(f"Unexpected data format from CoinGecko: {type(data)}")
                 return {"category": category, "tokens": [], "error": "No data"}
             
-            # Process tokens with full details
+            # Process tokens
             processed_tokens = []
-            for item in data[:50]:  # Top 50 boosted
-                if not isinstance(item, dict):
-                    continue
-                
-                token_address = item.get('tokenAddress', '')
-                chain_id = item.get('chainId', 'unknown')
-                
-                # Fetch price data from Dexscreener token endpoint
-                price_usd = 0
-                price_change = 0
-                volume = 0
-                market_cap = 0
-                token_name = "Unknown Token"
-                token_symbol = "TOKEN"
-                image_url = None
-                
-                try:
-                    if token_address:
-                        search_resp = await http_client.get(
-                            f"https://api.dexscreener.com/latest/dex/tokens/{token_address}",
-                            timeout=5.0
-                        )
-                        if search_resp.status_code == 200:
-                            search_data = search_resp.json()
-                            pairs = search_data.get('pairs', [])
-                            if pairs and len(pairs) > 0:
-                                # Get data from first (most liquid) pair
-                                first_pair = pairs[0]
-                                base_token = first_pair.get('baseToken', {})
-                                
-                                token_name = base_token.get('name', 'Unknown Token')
-                                token_symbol = base_token.get('symbol', 'TOKEN')
-                                price_usd = float(first_pair.get('priceUsd', 0)) if first_pair.get('priceUsd') else 0
-                                price_change = float(first_pair.get('priceChange', {}).get('h24', 0)) if isinstance(first_pair.get('priceChange'), dict) else 0
-                                volume = float(first_pair.get('volume', {}).get('h24', 0)) if isinstance(first_pair.get('volume'), dict) else 0
-                                
-                                # Calculate market cap from liquidity and FDV
-                                liquidity_usd = float(first_pair.get('liquidity', {}).get('usd', 0)) if isinstance(first_pair.get('liquidity'), dict) else 0
-                                fdv = float(first_pair.get('fdv', 0)) if first_pair.get('fdv') else 0
-                                market_cap = fdv if fdv > 0 else liquidity_usd * 2  # Estimate if FDV not available
-                                
-                                # Get image from pair info
-                                image_url = first_pair.get('info', {}).get('imageUrl')
-                except Exception as e:
-                    logger.warning(f"Failed to fetch details for {token_address}: {str(e)}")
-                    continue
-                
+            for coin in data:
                 token_info = {
-                    "id": token_address[:8] if token_address else "",
-                    "symbol": token_symbol,
-                    "name": token_name,
-                    "image": image_url,
-                    "current_price": price_usd,
-                    "price_change_24h": price_change,
-                    "market_cap": market_cap,
-                    "total_volume": volume,
-                    "chainId": chain_id
+                    "id": coin.get("id", ""),
+                    "symbol": coin.get("symbol", "").upper(),
+                    "name": coin.get("name", ""),
+                    "image": coin.get("image", ""),
+                    "current_price": coin.get("current_price", 0),
+                    "price_change_24h": coin.get("price_change_percentage_24h", 0),
+                    "market_cap": coin.get("market_cap", 0),
+                    "total_volume": coin.get("total_volume", 0),
+                    "market_cap_rank": coin.get("market_cap_rank", 0)
                 }
                 processed_tokens.append(token_info)
-            
-            # Sort based on category
-            if category == "top":
-                # Top 10 by market cap
-                processed_tokens = sorted(
-                    [t for t in processed_tokens if t['market_cap'] > 0],
-                    key=lambda x: x['market_cap'],
-                    reverse=True
-                )[:10]
-            elif category == "gainers":
-                # Top gainers by 24h price change
-                processed_tokens = sorted(
-                    [t for t in processed_tokens if t['price_change_24h'] > 0],
-                    key=lambda x: x['price_change_24h'],
-                    reverse=True
-                )[:15]
-            else:  # losers
-                # Top losers by 24h price change
-                processed_tokens = sorted(
-                    [t for t in processed_tokens if t['price_change_24h'] < 0],
-                    key=lambda x: x['price_change_24h']
-                )[:15]
             
             result = {
                 "category": category,
