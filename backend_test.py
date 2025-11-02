@@ -242,7 +242,7 @@ class SwapLaunchAPITester:
         try:
             response = requests.get(
                 f"{self.api_url}/token/resolve",
-                params={"query": "USDC", "chainId": 1},
+                params={"query": "ETH", "chainId": 1},
                 timeout=15
             )
             
