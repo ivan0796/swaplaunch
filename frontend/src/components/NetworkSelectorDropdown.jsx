@@ -113,28 +113,39 @@ const CHAIN_CONFIG = {
 
 const NetworkSelectorDropdown = ({ selectedChain, onChainChange, className = "" }) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState('');
   const selectedConfig = CHAIN_CONFIG[selectedChain] || CHAIN_CONFIG[1];
+  const searchInputRef = React.useRef(null);
 
   const handleSelect = (chainId) => {
     onChainChange(chainId);
     setIsOpen(false);
+    setSearchQuery('');
   };
 
-  // Filter chains based on selected chain type
+  // Filter chains based on search query - show ALL chains, no EVM/Non-EVM filtering
   const getFilteredChains = () => {
-    const selectedType = selectedConfig?.type;
+    const allChains = Object.entries(CHAIN_CONFIG);
     
-    // If selected chain is EVM, show only EVM chains
-    // If selected chain is Non-EVM, show all chains
-    return Object.entries(CHAIN_CONFIG).filter(([_, config]) => {
-      if (selectedType === 'EVM') {
-        return config.type === 'EVM';
-      }
-      return true; // Show all chains for Non-EVM selection
-    });
+    if (!searchQuery) {
+      return allChains;
+    }
+    
+    const lowerQuery = searchQuery.toLowerCase();
+    return allChains.filter(([_, config]) => 
+      config.name.toLowerCase().includes(lowerQuery) ||
+      config.type.toLowerCase().includes(lowerQuery)
+    );
   };
 
   const filteredChains = getFilteredChains();
+
+  // Focus search input when dropdown opens
+  React.useEffect(() => {
+    if (isOpen && searchInputRef.current) {
+      setTimeout(() => searchInputRef.current?.focus(), 100);
+    }
+  }, [isOpen]);
 
   return (
     <div className={`relative ${className}`}>
@@ -161,49 +172,70 @@ const NetworkSelectorDropdown = ({ selectedChain, onChainChange, className = "" 
           {/* Backdrop */}
           <div
             className="fixed inset-0 z-40"
-            onClick={() => setIsOpen(false)}
+            onClick={() => {
+              setIsOpen(false);
+              setSearchQuery('');
+            }}
           />
           
           {/* Dropdown */}
-          <div className="absolute top-full left-0 mt-2 min-w-[200px] bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl z-50 overflow-hidden max-h-[400px] overflow-y-auto">
-            {/* EVM Chains Section */}
-            {selectedConfig.type === 'EVM' && (
-              <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
-                EVM Chains Only
+          <div className="absolute top-full left-0 mt-2 min-w-[250px] bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl z-50 overflow-hidden">
+            {/* Search Input */}
+            <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Suche nach Chain..."
+                  className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                  onClick={(e) => e.stopPropagation()}
+                />
               </div>
-            )}
+            </div>
             
-            {filteredChains.map(([chainId, config]) => {
-              const isSelected = chainId === selectedChain || (typeof chainId === 'number' && chainId === selectedChain);
-              
-              return (
-                <button
-                  key={chainId}
-                  onClick={() => handleSelect(chainId)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
-                    isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-                  }`}
-                >
-                  <img 
-                    src={config.logoUrl} 
-                    alt={config.name}
-                    className="w-6 h-6 rounded-full"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextElementSibling.style.display = 'inline';
-                    }}
-                  />
-                  <span className="text-xl" style={{ display: 'none' }}>{config.icon}</span>
-                  <div className="flex-1 text-left">
-                    <div className="font-medium text-sm">{config.name}</div>
-                    <div className="text-xs text-gray-500">{config.type}</div>
-                  </div>
-                  {isSelected && (
-                    <div className="w-2 h-2 rounded-full bg-blue-600" />
-                  )}
-                </button>
-              );
-            })}
+            {/* Chain List */}
+            <div className="max-h-[350px] overflow-y-auto">
+              {filteredChains.length === 0 ? (
+                <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                  Keine Chains gefunden
+                </div>
+              ) : (
+                filteredChains.map(([chainId, config]) => {
+                  const isSelected = chainId === selectedChain || (typeof chainId === 'number' && chainId === selectedChain);
+                  
+                  return (
+                    <button
+                      key={chainId}
+                      onClick={() => handleSelect(chainId)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
+                        isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                      }`}
+                    >
+                      <img 
+                        src={config.logoUrl} 
+                        alt={config.name}
+                        className="w-6 h-6 rounded-full"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextElementSibling.style.display = 'inline';
+                        }}
+                      />
+                      <span className="text-xl" style={{ display: 'none' }}>{config.icon}</span>
+                      <div className="flex-1 text-left">
+                        <div className="font-medium text-sm">{config.name}</div>
+                        <div className="text-xs text-gray-500">{config.type}</div>
+                      </div>
+                      {isSelected && (
+                        <div className="w-2 h-2 rounded-full bg-blue-600" />
+                      )}
+                    </button>
+                  );
+                })
+              )}
+            </div>
           </div>
         </>
       )}
