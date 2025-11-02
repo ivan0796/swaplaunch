@@ -254,15 +254,18 @@ frontend:
 
 metadata:
   created_by: "main_agent"
-  version: "3.2"
-  test_sequence: 4
+  version: "4.0"
+  test_sequence: 5
   run_ui: true
 
 test_plan:
   current_focus:
-    - "Dexscreener Trading Pairs Endpoint"
-    - "Pair Search Modal Component"
-    - "Integrate Pair Selection in SwapFormV2"
+    - "Add XRP and Tron Chain Support"
+    - "Chain-Prioritized Token Search"
+    - "Network Selector with XRP & Tron"
+    - "EVM Chain Filtering Logic"
+    - "Token Sniffer Button"
+    - "Chain-Prioritized Token Search UI"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -270,23 +273,45 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: |
-      ✅ All User Issues Resolved:
+      ✅ SwapLaunch v3.0 - Multi-Chain Expansion Complete:
       
-      1. **Korrekte Token Logos**
-         - Replaced all logos with correct TrustWallet GitHub URLs
-         - ETH, BNB, MATIC, SOL use native coin logo paths
-         - ERC20 tokens use checksum addresses
-         - Fallback display shows first letter if logo fails
+      **Backend Changes:**
+      1. **XRP & Tron Support**
+         - Added xrp -> xrpl and tron -> tron in CHAIN_ID_MAP
+         - Extended chain_map in token resolution to include all new chains
+         - Updated TrustWallet logo mapping for new EVM chains
       
-      2. **Contract-Suche verbessert**
-         - Enhanced /api/token/resolve for better contract detection
-         - Improved Dexscreener integration with logos
-         - Tested: USDC contract (0xA0b86991...) resolves correctly
+      2. **Chain-Prioritized Search**
+         - /api/token/resolve now accepts optional chainId parameter
+         - Separates results into prioritized_results (from selected chain) + regular results
+         - Returns combined list with prioritized tokens first
+         - Includes "prioritized_chain" in response for verification
       
-      3. **Trading-Paare auswählbar**
-         - New /api/dex/pairs endpoint created
-         - PairSearchModal component with full pair info
-         - "Select Trading Pair" button in swap form
-         - Auto-populates both tokens when pair selected
+      **Frontend Changes:**
+      1. **NetworkSelectorDropdown Enhancements**
+         - Added XRP Ledger (Sologenic DEX) with CMC logo
+         - Added Tron (SunSwap) with TrustWallet logo
+         - All chains categorized as 'EVM' or 'Non-EVM'
+         - Implemented chain filtering: EVM chains show only EVM options
+         - Added "EVM Chains Only" header when filter active
+         - Display chain type badge for each network
       
-      Ready for frontend testing to verify pair selection flow.
+      2. **Token Sniffer Button**
+         - Added prominent button in TokenSecurityPanel header
+         - Links to GoPlus Labs full report
+         - Blue gradient styling with Shield icon
+         - Opens in new tab with security attributes
+      
+      3. **Chain-Prioritized Search UI**
+         - TokenSearchAutocomplete now passes chainId to backend
+         - Added badge colors for all new chains (10 total)
+         - Fixed React hook dependencies
+      
+      **Notes:**
+      - Trending from CMC: User has NO API key, keeping existing CoinGecko/Dexscreener implementation
+      - Token logos (WETH, DAI): Already using CMC URLs in DEFAULT_TOKENS
+      - Services restarted successfully
+      
+      **Ready for Testing:**
+      - Backend: Chain support, prioritized token search
+      - Frontend: Network selector filtering, Token Sniffer button, search UI
