@@ -121,27 +121,33 @@ user_problem_statement: |
 backend:
   - task: "Add XRP and Tron Chain Support"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added XRP Ledger and Tron to CHAIN_ID_MAP in /api/token/resolve endpoint. Chain mapping includes: xrp -> xrpl, tron -> tron. Backend now supports these chains for token resolution."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Fixed chainId parameter type from int to str to support string chain IDs. XRP chain (chainId=xrp) correctly maps to 'xrpl' and returns prioritized results. Tron chain (chainId=tron) correctly maps to 'tron' and returns prioritized results with TRX from Tron chain first. Both chains working perfectly."
 
   - task: "Chain-Prioritized Token Search"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Enhanced /api/token/resolve endpoint to accept optional chainId parameter. Backend now prioritizes tokens from the specified chain by separating prioritized_results and regular results, then combining them with prioritized first. Returns prioritized_chain in response for verification."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: All chain prioritization working correctly. Without chainId: prioritized_chain=null. Ethereum (chainId=1): prioritized_chain='ethereum'. BSC (chainId=56): prioritized_chain='bsc'. Solana (chainId=0): prioritized_chain='solana' with SOL token first. Response format includes prioritized_chain field as expected."
 
   - task: "Token Logo URLs from TrustWallet"
     implemented: true
