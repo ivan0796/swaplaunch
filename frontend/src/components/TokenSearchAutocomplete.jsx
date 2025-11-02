@@ -37,7 +37,8 @@ const TokenSearchAutocomplete = ({ onSelect, placeholder = "Search token name, s
     }, 250); // Reduced from 400ms to 250ms for faster response
 
     return () => clearTimeout(timer);
-  }, [query]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, chainId, excludeAddress]);
 
   const searchTokens = async () => {
     setLoading(true);
