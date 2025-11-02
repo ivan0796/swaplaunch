@@ -794,7 +794,16 @@ async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional
         "tron": "tron"
     }
     
-    selected_chain = CHAIN_ID_MAP.get(chainId) if chainId else None
+    # Handle both integer and string chainId inputs
+    selected_chain = None
+    if chainId:
+        # Try to convert to int first for numeric chain IDs
+        try:
+            chain_id_key = int(chainId)
+            selected_chain = CHAIN_ID_MAP.get(chain_id_key)
+        except ValueError:
+            # If conversion fails, use as string key
+            selected_chain = CHAIN_ID_MAP.get(chainId)
     
     # Check if query is a Solana mint address or EVM contract address
     is_solana_mint = len(query) >= 32 and not query.startswith("0x")
