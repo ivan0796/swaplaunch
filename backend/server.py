@@ -794,6 +794,114 @@ async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional
         "tron": "tron"
     }
     
+    # Native tokens for each chain - these should ALWAYS appear first
+    NATIVE_TOKENS = {
+        "ethereum": {
+            "name": "Ethereum",
+            "symbol": "ETH",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png",
+            "isNative": True
+        },
+        "bsc": {
+            "name": "BNB",
+            "symbol": "BNB",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png",
+            "isNative": True
+        },
+        "polygon": {
+            "name": "Polygon",
+            "symbol": "MATIC",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png",
+            "isNative": True
+        },
+        "arbitrum": {
+            "name": "Ethereum",
+            "symbol": "ETH",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png",
+            "isNative": True
+        },
+        "optimism": {
+            "name": "Ethereum",
+            "symbol": "ETH",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png",
+            "isNative": True
+        },
+        "base": {
+            "name": "Ethereum",
+            "symbol": "ETH",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png",
+            "isNative": True
+        },
+        "avalanchec": {
+            "name": "Avalanche",
+            "symbol": "AVAX",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png",
+            "isNative": True
+        },
+        "fantom": {
+            "name": "Fantom",
+            "symbol": "FTM",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/3513.png",
+            "isNative": True
+        },
+        "cronos": {
+            "name": "Cronos",
+            "symbol": "CRO",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/3635.png",
+            "isNative": True
+        },
+        "zksync": {
+            "name": "Ethereum",
+            "symbol": "ETH",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png",
+            "isNative": True
+        },
+        "solana": {
+            "name": "Solana",
+            "symbol": "SOL",
+            "address": "So11111111111111111111111111111111111111112",
+            "decimals": 9,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
+            "isNative": True
+        },
+        "xrpl": {
+            "name": "XRP",
+            "symbol": "XRP",
+            "address": "native",
+            "decimals": 6,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/52.png",
+            "isNative": True
+        },
+        "tron": {
+            "name": "TRON",
+            "symbol": "TRX",
+            "address": "T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb",
+            "decimals": 6,
+            "logoURL": "https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png",
+            "isNative": True
+        }
+    }
+    
     # Handle both integer and string chainId inputs
     selected_chain = None
     if chainId:
@@ -804,6 +912,36 @@ async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional
         except ValueError:
             # If conversion fails, use as string key
             selected_chain = CHAIN_ID_MAP.get(chainId)
+    
+    # Check if query matches a native token
+    query_lower = query.lower()
+    native_token_results = []
+    
+    # Check all native tokens
+    for chain, native_token in NATIVE_TOKENS.items():
+        if (query_lower == native_token["symbol"].lower() or 
+            query_lower == native_token["name"].lower() or
+            query_lower in native_token["symbol"].lower() or
+            query_lower in native_token["name"].lower()):
+            
+            token_data = {
+                "chain": chain,
+                "name": native_token["name"],
+                "symbol": native_token["symbol"],
+                "address": native_token["address"],
+                "decimals": native_token["decimals"],
+                "logoURL": native_token["logoURL"],
+                "source": "native",
+                "priceUsd": None,
+                "liquidity": None,
+                "isNative": True
+            }
+            
+            # If selected_chain matches, add to prioritized, otherwise to native list
+            if selected_chain and chain == selected_chain:
+                prioritized_results.insert(0, token_data)
+            else:
+                native_token_results.append(token_data)
     
     # Check if query is a Solana mint address or EVM contract address
     is_solana_mint = len(query) >= 32 and not query.startswith("0x")
