@@ -834,7 +834,14 @@ async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional
                                 "ethereum": "ethereum",
                                 "bsc": "bsc", 
                                 "polygon": "polygon",
-                                "solana": "solana"
+                                "solana": "solana",
+                                "arbitrum": "arbitrum",
+                                "optimism": "optimism",
+                                "base": "base",
+                                "avalanchec": "avalanchec",
+                                "fantom": "fantom",
+                                "cronos": "cronos",
+                                "zksync": "zksync"
                             }
                             chain = chain_map.get(chain_id, chain_id)
                             
@@ -846,11 +853,18 @@ async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional
                                 logo_url = pair.get("info", {}).get("imageUrl")
                             
                             # 2. Try TrustWallet for EVM tokens
-                            elif chain in ["ethereum", "bsc", "polygon"] and address.startswith("0x"):
+                            elif chain in ["ethereum", "bsc", "polygon", "arbitrum", "optimism", "base", "avalanchec", "fantom", "cronos", "zksync"] and address.startswith("0x"):
                                 tw_chain_map = {
                                     "ethereum": "ethereum",
                                     "bsc": "smartchain",
-                                    "polygon": "polygon"
+                                    "polygon": "polygon",
+                                    "arbitrum": "arbitrum",
+                                    "optimism": "optimism",
+                                    "base": "base",
+                                    "avalanchec": "avalanchec",
+                                    "fantom": "fantom",
+                                    "cronos": "cronos",
+                                    "zksync": "zksync"
                                 }
                                 tw_chain = tw_chain_map.get(chain)
                                 if tw_chain:
@@ -860,7 +874,7 @@ async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional
                             elif chain == "solana":
                                 logo_url = f"https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/{address}/logo.png"
                             
-                            results.append({
+                            token_data = {
                                 "chain": chain,
                                 "name": base_token.get("name"),
                                 "symbol": base_token.get("symbol"),
@@ -872,7 +886,13 @@ async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional
                                 "liquidity": pair.get("liquidity", {}).get("usd"),
                                 "pairAddress": pair.get("pairAddress"),
                                 "dexId": pair.get("dexId")
-                            })
+                            }
+                            
+                            # Prioritize tokens from selected chain
+                            if selected_chain and chain == selected_chain:
+                                prioritized_results.append(token_data)
+                            else:
+                                results.append(token_data)
             except Exception as e:
                 logger.warning(f"Dexscreener search failed: {str(e)}")
             
