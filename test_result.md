@@ -180,27 +180,75 @@ backend:
         comment: "Created new /api/dex/pairs endpoint that returns complete trading pairs from Dexscreener with both baseToken and quoteToken data. Returns pair info including pairAddress, chainId, dexId, liquidity, volume24h, priceChange24h, and logoUrl. Tested with PEPE query - returns correct pairs from multiple chains."
 
 frontend:
-  - task: "Pair Search Modal Component"
+  - task: "Network Selector with XRP & Tron"
     implemented: true
     working: "NA"
-    file: "/app/frontend/src/components/PairSearchModal.jsx"
+    file: "/app/frontend/src/components/NetworkSelectorDropdown.jsx"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Created new PairSearchModal component with debounced search, displays pairs with logos, liquidity, 24h volume, price change, and DEX info. Allows users to select complete trading pairs which auto-populates both sell and buy tokens. Includes chain filtering and sorting by liquidity."
+        comment: "Added XRP Ledger (Sologenic DEX) and Tron (SunSwap) to CHAIN_CONFIG. Each chain includes: name, icon, logoUrl (CMC), color gradient, type (EVM/Non-EVM), and dexUrl. XRP uses CMC logo, Tron uses TrustWallet logo."
 
-  - task: "Integrate Pair Selection in SwapFormV2"
+  - task: "EVM Chain Filtering Logic"
     implemented: true
     working: "NA"
-    file: "/app/frontend/src/components/SwapFormV2.jsx"
+    file: "/app/frontend/src/components/NetworkSelectorDropdown.jsx"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
       - working: "NA"
+        agent: "main"
+        comment: "Implemented getFilteredChains() function that filters available chains based on selected chain type. When EVM chain is selected, dropdown shows ONLY EVM chains. When Non-EVM (Solana, XRP, Tron) selected, shows all chains. Added 'EVM Chains Only' header in dropdown when filter is active. Updated dropdown to show chain type badge for each network."
+
+  - task: "Token Sniffer Button"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/TokenSecurityPanel.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added prominent 'Token Sniffer' button in TokenSecurityPanel header. Button links to GoPlus Labs full security report with Shield icon. Styled with blue gradient (bg-blue-600 hover:bg-blue-700) and positioned next to 'Show Details' toggle. Opens in new tab with proper security attributes."
+
+  - task: "Chain-Prioritized Token Search UI"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/TokenSearchAutocomplete.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated searchTokens() to pass chainId parameter to backend API. Backend now handles prioritization server-side. Added chain badge colors for all new chains (arbitrum, optimism, base, avalanchec, fantom, cronos, zksync, xrpl, tron). Fixed useEffect dependencies to include chainId and excludeAddress."
+
+  - task: "Pair Search Modal Component"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/PairSearchModal.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Created new PairSearchModal component with debounced search, displays pairs with logos, liquidity, 24h volume, price change, and DEX info. Allows users to select complete trading pairs which auto-populates both sell and buy tokens. Includes chain filtering and sorting by liquidity."
+
+  - task: "Integrate Pair Selection in SwapFormV2"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/SwapFormV2.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
         agent: "main"
         comment: "Added 'Select Trading Pair' button in SwapFormV2 that opens PairSearchModal. When user selects a pair, both tokens are automatically set (baseToken as sell, quoteToken as buy). Button placed prominently with TrendingUp icon."
 
