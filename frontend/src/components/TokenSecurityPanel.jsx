@@ -62,9 +62,21 @@ const TokenSecurityPanel = ({ tokenAddress, chainId, tokenSymbol }) => {
             {getSecurityLabel(level)}
           </span>
         </div>
-        <button className="text-sm text-blue-600 hover:text-blue-700">
-          {expanded ? 'Hide' : 'Show'} Details
-        </button>
+        <div className="flex items-center gap-2">
+          <a
+            href={`https://gopluslabs.io/token-security/${chainId}/${tokenAddress}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-1.5"
+          >
+            <Shield className="w-4 h-4" />
+            Token Sniffer
+          </a>
+          <button className="text-sm text-blue-600 hover:text-blue-700">
+            {expanded ? 'Hide' : 'Show'} Details
+          </button>
+        </div>
       </div>
 
       {/* Summary */}
