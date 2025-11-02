@@ -119,6 +119,30 @@ user_problem_statement: |
   6. Ensure token logos for WETH, DAI, etc. (already using CMC logos in DEFAULT_TOKENS)
 
 backend:
+  - task: "Add XRP and Tron Chain Support"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added XRP Ledger and Tron to CHAIN_ID_MAP in /api/token/resolve endpoint. Chain mapping includes: xrp -> xrpl, tron -> tron. Backend now supports these chains for token resolution."
+
+  - task: "Chain-Prioritized Token Search"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Enhanced /api/token/resolve endpoint to accept optional chainId parameter. Backend now prioritizes tokens from the specified chain by separating prioritized_results and regular results, then combining them with prioritized first. Returns prioritized_chain in response for verification."
+
   - task: "Token Logo URLs from TrustWallet"
     implemented: true
     working: true
@@ -137,7 +161,7 @@ backend:
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
@@ -149,7 +173,7 @@ backend:
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
