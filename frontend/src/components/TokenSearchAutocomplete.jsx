@@ -93,6 +93,15 @@ const TokenSearchAutocomplete = ({ onSelect, placeholder = "Search token name, s
       bsc: 'bg-yellow-100 text-yellow-700',
       polygon: 'bg-purple-100 text-purple-700',
       solana: 'bg-indigo-100 text-indigo-700',
+      arbitrum: 'bg-blue-100 text-blue-800',
+      optimism: 'bg-red-100 text-red-700',
+      base: 'bg-blue-100 text-blue-600',
+      avalanchec: 'bg-red-100 text-red-800',
+      fantom: 'bg-cyan-100 text-cyan-700',
+      cronos: 'bg-purple-100 text-purple-800',
+      zksync: 'bg-purple-100 text-purple-700',
+      xrpl: 'bg-cyan-100 text-cyan-800',
+      tron: 'bg-orange-100 text-orange-700'
     };
     return colors[chain?.toLowerCase()] || 'bg-gray-100 text-gray-700';
   };
