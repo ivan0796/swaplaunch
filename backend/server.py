@@ -956,11 +956,13 @@ async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional
                 except Exception as e:
                     logger.warning(f"Jupiter search failed: {str(e)}")
             
-            # Return top 15 results
+            # Return top 15 results with prioritized tokens first
+            combined_results = prioritized_results + results
             result = {
                 "query": query,
-                "results": results[:15],
-                "count": len(results[:15])
+                "results": combined_results[:15],
+                "count": len(combined_results[:15]),
+                "prioritized_chain": selected_chain
             }
             
             discovery_cache[cache_key] = (result, current_time)
