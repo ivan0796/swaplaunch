@@ -1103,8 +1103,8 @@ async def resolve_token(query: str = Query(..., min_length=1), chainId: Optional
                 except Exception as e:
                     logger.warning(f"Jupiter search failed: {str(e)}")
             
-            # Return top 15 results with prioritized tokens first
-            combined_results = prioritized_results + results
+            # Return top 15 results with native tokens first, then prioritized chain tokens, then others
+            combined_results = native_token_results + prioritized_results + results
             result = {
                 "query": query,
                 "results": combined_results[:15],
