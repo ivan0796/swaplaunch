@@ -66,9 +66,11 @@ const Navbar = ({ selectedChain, onChainChange }) => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600">
-              <span className="text-xl">🚀</span>
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="SwapLaunch" 
+              className="h-10 w-10 object-contain"
+            />
             <div className="text-xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               SwapLaunch v4.0
             </div>
