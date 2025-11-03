@@ -108,6 +108,10 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
   const [showSlippageSettings, setShowSlippageSettings] = useState(false);
   const [priceImpact, setPriceImpact] = useState(0);
   
+  // MEV Protection & Advanced settings
+  const [mevProtection, setMevProtection] = useState(false);
+  const [slippageMode, setSlippageMode] = useState('auto'); // 'auto' or 'custom'
+  
   // Price tracking
   const [sellTokenCoinId, setSellTokenCoinId] = useState(null);
   const [buyTokenCoinId, setBuyTokenCoinId] = useState(null);
