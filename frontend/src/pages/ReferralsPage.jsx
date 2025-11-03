@@ -122,9 +122,9 @@ const ReferralsPage = () => {
             <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <Users className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-2xl font-bold mb-2 dark:text-white">Connect Your Wallet</h2>
+            <h2 className="text-2xl font-bold mb-2 dark:text-white">{t('referrals.connectWallet')}</h2>
             <p className="text-gray-600 dark:text-gray-300">
-              Connect your wallet to access your referral dashboard and start earning rewards
+              {t('referrals.connectWalletDesc')}
             </p>
           </div>
         ) : (
@@ -134,7 +134,7 @@ const ReferralsPage = () => {
               <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg">
                 <h3 className="text-xl font-bold mb-4 dark:text-white flex items-center gap-2">
                   <Share2 className="w-5 h-5 text-blue-600" />
-                  Your Referral Link
+                  {t('referrals.yourLink')}
                 </h3>
                 <div className="flex items-center gap-3">
                   <input
