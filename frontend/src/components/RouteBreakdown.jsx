@@ -86,6 +86,9 @@ const RouteBreakdown = ({ quote, sellToken, buyToken, chainId }) => {
               <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {sellToken.symbol} → {buyToken.symbol} on {chainName}
               </div>
+              <div className="text-xs font-medium text-purple-600 dark:text-purple-400 mt-1">
+                ETA: {etaText}
+              </div>
             </div>
           </div>
 
