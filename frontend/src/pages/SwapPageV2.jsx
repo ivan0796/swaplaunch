@@ -61,13 +61,65 @@ const SwapPageV2 = () => {
             </div>
             <div className="text-sm font-semibold tracking-tight">SwapLaunch v4.0</div>
           </div>
-          <nav className="hidden items-center gap-6 text-sm md:flex">
-            <Link className="opacity-80 hover:opacity-100" to="/">Swap</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/portfolio">Portfolio</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/referrals">Referrals 🔥</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/launchpad">Launchpad</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/projects">Projects</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/bridge">Bridge</Link>
+          <nav className="hidden items-center gap-1 text-sm md:flex">
+            {/* TRADE */}
+            <div className="relative group">
+              <button className="px-3 py-2 opacity-80 hover:opacity-100 hover:bg-white/50 dark:hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-1">
+                Trade
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className="absolute top-full left-0 mt-1 w-40 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <Link to="/" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Swap</Link>
+                <Link to="/limit-orders" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Pro Swap</Link>
+                <Link to="/bridge" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Bridge</Link>
+              </div>
+            </div>
+
+            {/* LAUNCHPAD */}
+            <div className="relative group">
+              <button className="px-3 py-2 opacity-80 hover:opacity-100 hover:bg-white/50 dark:hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-1">
+                Launchpad
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <Link to="/projects" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Explore Projects</Link>
+                <Link to="/launchpad" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Create Launch</Link>
+                <Link to="/token-locker" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Token Locker</Link>
+              </div>
+            </div>
+
+            {/* EARN */}
+            <div className="relative group">
+              <button className="px-3 py-2 opacity-80 hover:opacity-100 hover:bg-white/50 dark:hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-1">
+                Earn 🔥
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <Link to="/referrals" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Referral Program</Link>
+                <Link to="/referrals#leaderboard" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Leaderboard</Link>
+              </div>
+            </div>
+
+            {/* PORTFOLIO */}
+            <div className="relative group">
+              <button className="px-3 py-2 opacity-80 hover:opacity-100 hover:bg-white/50 dark:hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-1">
+                Portfolio
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className="absolute top-full left-0 mt-1 w-40 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <Link to="/portfolio" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">My Assets</Link>
+                <Link to="/portfolio#history" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">History</Link>
+                <Link to="/portfolio#alerts" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Price Alerts</Link>
+              </div>
+            </div>
           </nav>
           <div className="flex items-center gap-2">
             {/* Language Switcher */}
