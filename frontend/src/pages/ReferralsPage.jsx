@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
+import { useWallet } from '@solana/wallet-adapter-react';
 import axios from 'axios';
-import { Users, DollarSign, TrendingUp, Copy, Check, Gift } from 'lucide-react';
+import { 
+  Users, DollarSign, TrendingUp, Copy, Check, Gift, 
+  Trophy, Share2, Sparkles, ExternalLink 
+} from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
@@ -9,18 +14,26 @@ import Navbar from '../components/Navbar';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const ReferralsPage = () => {
-  const { address, isConnected } = useAccount();
+  const { t } = useTranslation();
+  const { address: evmAddress, isConnected: evmConnected } = useAccount();
+  const { publicKey: solanaPublicKey, connected: solanaConnected } = useWallet();
+  
   const [selectedChain, setSelectedChain] = useState(1);
   const [stats, setStats] = useState(null);
+  const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [claiming, setClaiming] = useState(false);
 
+  const walletAddress = evmAddress || (solanaPublicKey ? solanaPublicKey.toBase58() : null);
+  const isConnected = evmConnected || solanaConnected;
+
   useEffect(() => {
-    if (isConnected && address) {
+    if (isConnected && walletAddress) {
       fetchStats();
     }
-  }, [isConnected, address]);
+    fetchLeaderboard();
+  }, [isConnected, walletAddress]);
 
   const fetchStats = async () => {
     try {
