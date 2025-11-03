@@ -97,10 +97,16 @@ const LimitOrdersPage = () => {
                   onChange={(e) => setDcaInterval(e.target.value)}
                   className="w-full px-4 py-2 border rounded-lg"
                 >
-                  <option value="daily">Daily</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
+                  <option value="once">Einmalig (One-Time)</option>
+                  <option value="daily">Täglich (Daily)</option>
+                  <option value="weekly">Wöchentlich (Weekly)</option>
+                  <option value="monthly">Monatlich (Monthly)</option>
                 </select>
+                {dcaInterval === 'once' && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    Order wird nur einmal ausgeführt, sobald der Zielpreis erreicht wird.
+                  </p>
+                )}
               </div>
             )}
 
