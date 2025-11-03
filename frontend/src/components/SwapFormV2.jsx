@@ -631,36 +631,27 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
           {/* Token Selector Button */}
           <button
             onClick={() => setShowBuyTokenSearch(true)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl hover:border-blue-500 transition-colors flex items-center justify-between bg-white"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl hover:border-blue-500 dark:hover:border-blue-400 transition-colors flex items-center justify-between bg-white dark:bg-gray-800"
             data-testid="buy-token-button"
           >
             <div className="flex items-center gap-2">
               {buyToken ? (
                 <>
-                  {buyToken.logoURI ? (
-                    <img 
-                      src={buyToken.logoURI} 
-                      alt={buyToken.symbol} 
-                      className="w-6 h-6 rounded-full"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextElementSibling.style.display = 'flex';
-                      }}
-                    />
-                  ) : null}
-                  <div 
-                    className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold"
-                    style={{ display: buyToken.logoURI ? 'none' : 'flex' }}
-                  >
-                    {buyToken.symbol?.charAt(0) || '?'}
-                  </div>
+                  <TokenLogo
+                    address={buyToken.address}
+                    chainId={chainId}
+                    symbol={buyToken.symbol}
+                    name={buyToken.name}
+                    logoURI={buyToken.logoURI}
+                    size="md"
+                  />
                   <div className="text-left">
-                    <div className="font-semibold">{buyToken.symbol}</div>
-                    <div className="text-xs text-gray-500">{buyToken.name}</div>
+                    <div className="font-semibold dark:text-white">{buyToken.symbol}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{buyToken.name}</div>
                   </div>
                 </>
               ) : (
-                <span className="text-gray-500">Select Token</span>
+                <span className="text-gray-500 dark:text-gray-400">Select Token</span>
               )}
             </div>
             <Search className="w-5 h-5 text-gray-400" />
