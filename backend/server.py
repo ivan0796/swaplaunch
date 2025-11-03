@@ -509,7 +509,7 @@ DISCOVERY_CACHE_TTL = 60  # 60 seconds for trending/discovery data
 @api_router.get("/trending/categories")
 async def get_trending_categories(category: str = Query("top", regex="^(top|gainers|losers)$")):
     """
-    Get trending/top tokens from CoinGecko
+    Get trending/top tokens from CoinMarketCap
     Top = Top coins by market cap (Bitcoin, Ethereum, XRP, etc.)
     Gainers = Top gainers by 24h price change
     Losers = Top losers by 24h price change
@@ -517,69 +517,52 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
     cache_key = f"trending_{category}"
     current_time = datetime.now(timezone.utc).timestamp()
     
-    # Check cache - use longer cache
+    # Check cache
     if cache_key in discovery_cache:
         cached_data, cached_time = discovery_cache[cache_key]
-        if current_time - cached_time < (DISCOVERY_CACHE_TTL * 6):  # 30 min cache
+        if current_time - cached_time < (DISCOVERY_CACHE_TTL * 6):  # 6 min cache
             logger.info(f"Returning cached trending {category}")
             return cached_data
     
     try:
-        async with httpx.AsyncClient(timeout=15.0) as http_client:
-            
-            if category == "top":
-                # Get top coins by market cap from CoinGecko
-                response = await http_client.get(
-                    "https://api.coingecko.com/api/v3/coins/markets",
-                    params={
-                        "vs_currency": "usd",
-                        "order": "market_cap_desc",
-                        "per_page": 15,
-                        "page": 1,
-                        "sparkline": False,
-                        "price_change_percentage": "24h"
-                    }
-                )
-            elif category == "gainers":
-                # Get top gainers by 24h price change
-                response = await http_client.get(
-                    "https://api.coingecko.com/api/v3/coins/markets",
-                    params={
-                        "vs_currency": "usd",
-                        "order": "price_change_percentage_24h_desc",
-                        "per_page": 15,
-                        "page": 1,
-                        "sparkline": False,
-                        "price_change_percentage": "24h"
-                    }
-                )
-            else:  # losers
-                # Get top losers by 24h price change
-                response = await http_client.get(
-                    "https://api.coingecko.com/api/v3/coins/markets",
-                    params={
-                        "vs_currency": "usd",
-                        "order": "price_change_percentage_24h_asc",
-                        "per_page": 15,
-                        "page": 1,
-                        "sparkline": False,
-                        "price_change_percentage": "24h"
-                    }
-                )
-            
-            if response.status_code == 429:
-                logger.warning(f"CoinGecko rate limit for trending {category}")
-                return {"category": category, "tokens": [], "error": "Rate limited"}
-            
-            if response.status_code != 200:
-                logger.error(f"CoinGecko API error: {response.status_code}")
-                return {"category": category, "tokens": [], "error": "API unavailable"}
-            
-            data = response.json()
-            
-            if not data or not isinstance(data, list):
-                logger.warning(f"Unexpected data format from CoinGecko: {type(data)}")
-                return {"category": category, "tokens": [], "error": "No data"}
+        # Get data from CoinMarketCap
+        tokens = await cmc_service.get_top_tokens(limit=15, category=category)
+        
+        if not tokens:
+            logger.warning(f"No data from CoinMarketCap for category: {category}")
+            return {"category": category, "tokens": [], "error": "No data"}
+        
+        # Process tokens
+        processed_tokens = []
+        for token in tokens:
+            processed_token = {
+                "id": token.get("id", ""),
+                "symbol": token.get("symbol", "").upper(),
+                "name": token.get("name", ""),
+                "image": token.get("image", ""),
+                "current_price": token.get("current_price", 0),
+                "price_change_24h": token.get("price_change_24h", 0),
+                "market_cap": token.get("market_cap", 0),
+                "market_cap_rank": token.get("market_cap_rank", 0),
+                "volume_24h": token.get("volume_24h", 0)
+            }
+            processed_tokens.append(processed_token)
+        
+        result = {
+            "category": category,
+            "tokens": processed_tokens,
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+        # Cache result
+        discovery_cache[cache_key] = (result, current_time)
+        logger.info(f"Successfully fetched {len(processed_tokens)} tokens for {category}")
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Error in trending categories: {str(e)}")
+        return {"category": category, "tokens": [], "error": str(e)}
             
             # Process tokens
             processed_tokens = []
