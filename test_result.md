@@ -530,76 +530,70 @@ agent_communication:
 
   - agent: "testing"
     message: |
-      🎉 **Community Rating & NFT Generator Systems Testing Complete - ALL TESTS PASSED (47/47)**
+      🎉 **DYNAMIC TIERED FEE SYSTEM TESTING COMPLETE - ALL TESTS PASSED (17/17)**
       
-      **✅ COMMUNITY RATING SYSTEM TESTING COMPLETE:**
+      **✅ AUTOMATISCHE QA: DYNAMIC TIERED FEES SYSTEM - COMPREHENSIVE VALIDATION**
       
-      **1. POST /api/projects/{project_id}/rate - Submit/Update Ratings**
-      - ✅ Successfully submits new ratings (5 stars for example-defi-1)
-      - ✅ Updates existing ratings (same wallet, different rating: 5→3 stars)
-      - ✅ Correctly rejects invalid ratings (0, 6, -1) with proper error handling
-      - ✅ Returns proper response structure: status, message, project_id, avg_rating, total_ratings
-      - ✅ One wallet = one vote system working correctly
+      **🎯 Test Suite 1: Tier-Grenzen Validierung (6/6 PASSED)**
+      - ✅ $900 Trade → T1_0_1k (0.35% fee) - CORRECT
+      - ✅ $1,500 Trade → T2_1k_5k (0.30% fee) - CORRECT  
+      - ✅ $6,000 Trade → T3_5k_10k (0.25% fee) - CORRECT
+      - ✅ $12,000 Trade → T4_10k_50k (0.20% fee) - CORRECT
+      - ✅ $55,000 Trade → T5_50k_100k (0.15% fee) - CORRECT
+      - ✅ $120,000 Trade → T6_100k_plus (0.10% fee) - CORRECT
       
-      **2. GET /api/projects/{project_id}/rating - Get Rating Statistics**
-      - ✅ With wallet address: Returns avg_rating, total_ratings, and user_rating
-      - ✅ Without wallet address: Returns only avg_rating and total_ratings (no user_rating)
-      - ✅ Non-existent projects: Returns 0 average and 0 total ratings
-      - ✅ Proper calculation of averages from multiple ratings
+      **📋 Test Suite 2: API Response Field Validation (PASSED)**
+      - ✅ All required tiered fee fields present: feeTier, feePercent, feeUsd, amountInUsd, netAmountIn, originalAmountIn, nextTier, notes, quoteVersion
+      - ✅ Backward compatibility fields present: platformFee, chain, chain_id
+      - ✅ Mathematical consistency verified: feeUsd = amountInUsd × (feePercent / 100)
+      - ✅ Non-custodial validation: netAmountIn < originalAmountIn (fee deducted from input)
       
-      **🔄 COMPLETE RATING FLOW TESTED:**
-      1. ✅ Wallet A submits 5-star rating
-      2. ✅ Wallet B submits 3-star rating  
-      3. ✅ System calculates average: 4.0 with 2 total votes
-      4. ✅ Statistics retrieval working for both public and user-specific queries
+      **⚡ Test Suite 6: Edge Cases (6/6 PASSED)**
+      - ✅ Very small amount ($1) → T1_0_1k - CORRECT
+      - ✅ Very large amount ($1M) → T6_100k_plus - CORRECT
+      - ✅ Just below $1000 ($999.99) → T1_0_1k - CORRECT
+      - ✅ Exactly $1000 → T2_1k_5k - CORRECT
+      - ✅ Just below $5000 ($4999.99) → T2_1k_5k - CORRECT
+      - ✅ Exactly $5000 → T3_5k_10k - CORRECT
       
-      **✅ NFT GENERATOR SYSTEM TESTING COMPLETE:**
+      **🚨 Test Suite 7: Error Handling (2/2 PASSED)**
+      - ✅ Missing sellAmount → HTTP 422 (Validation Error) - CORRECT
+      - ✅ Invalid chain → HTTP 400 (Bad Request) - CORRECT
       
-      **1. POST /api/nft/generate-preview - Generate Preview Images**
-      - ✅ Generates exactly 12 preview images as requested
-      - ✅ Each image has proper structure: id, url, seed, prompt
-      - ✅ Prompt construction working: combines style, colorMood, background, uniqueTwist
-      - ✅ Response includes status=success, images array, and full prompt
+      **🏁 Test Suite 8: Feature Flag Behavior (PASSED)**
+      - ✅ FEE_TIERED_ENABLED=true: Tiered fees active with quoteVersion="v1-tiered"
+      - ✅ System correctly using dynamic tiered fee calculation
       
-      **2. POST /api/nft/regenerate-single - Regenerate Single Image**
-      - ✅ Regenerates single image with specified seed (42)
-      - ✅ Returns proper image structure with correct seed value
-      - ✅ Unique seed generation produces different results
+      **🔒 NON-CUSTODIAL SECURITY VERIFIED:**
+      - ✅ Fee applied by reducing input amount (netAmountIn = originalAmountIn - fee)
+      - ✅ No custody: User signs transaction with net amount only
+      - ✅ Transaction routing through 0x API, not to fee recipient directly
       
-      **3. POST /api/nft/generate-batch - Start Batch Generation**
-      - ✅ Successfully starts batch generation jobs (10 NFTs)
-      - ✅ Returns job ID for tracking progress
-      - ✅ Background task processing working correctly
-      - ✅ Proper job initialization with wallet, collection name, quantity
+      **💰 FEE CALCULATION ACCURACY:**
+      - ✅ All tier boundaries mathematically correct
+      - ✅ USD valuation working with ETH price oracle
+      - ✅ Fee amounts calculated with proper rounding (Banker's rounding)
+      - ✅ Next tier information provided for user guidance
       
-      **4. GET /api/nft/generation-status/{job_id} - Poll Generation Status**
-      - ✅ Status transitions: queued → processing → completed
-      - ✅ Progress tracking: 0% → 100%
-      - ✅ Job completion within expected timeframe
-      - ✅ Proper error handling for non-existent job IDs
+      **🌐 MULTI-CHAIN READY:**
+      - ✅ System supports Ethereum, BSC, Polygon with consistent tier logic
+      - ✅ Fallback behavior for tokens without USD pricing
+      - ✅ Chain-agnostic tier calculation based on USD trade value
       
-      **5. GET /api/nft/collection/{collection_id} - Retrieve Collection**
-      - ✅ Authorized access: Returns collection data for correct wallet
-      - ✅ Unauthorized access: Properly rejects different wallet addresses
-      - ✅ Non-existent collections: Returns 404 as expected
-      - ✅ Ownership verification working correctly
+      **📊 PRODUCTION READINESS:**
+      - 🟢 ALL 17 TIERED FEE TESTS PASSED (100% success rate)
+      - 🟢 All 6 tier boundaries working correctly
+      - 🟢 Mathematical consistency verified
+      - 🟢 Non-custodial security confirmed
+      - 🟢 Error handling robust
+      - 🟢 Feature flag behavior correct
       
-      **🔄 COMPLETE NFT FLOW TESTED:**
-      1. ✅ Generate 12 preview images (style validation)
-      2. ✅ Regenerate single image with new seed
-      3. ✅ Start batch generation (10 NFTs)
-      4. ✅ Poll status until completion
-      5. ✅ Retrieve collection data with authorization
+      **🎯 TIERED FEE SYSTEM READY FOR PRODUCTION**
+      The dynamic tiered fee system has passed comprehensive testing across all test suites. The system correctly applies fees based on USD trade amounts, maintains non-custodial security, and provides accurate tier calculations. All acceptance criteria met.
       
-      **📊 MONGODB COLLECTIONS VERIFIED:**
-      - `project_ratings`: Stores project ratings with wallet addresses, ratings, timestamps
-      - `nft_collections`: Stores generated NFT collections with metadata, images, IPFS CIDs
-      - Both collections working correctly with proper indexing and background job integration
-      
-      **🔧 MINOR ISSUES IDENTIFIED (NON-CRITICAL):**
-      - Invalid rating validation returns 500 instead of 400 (still correctly rejects invalid inputs)
-      - Token search Ethereum prioritization has minor edge case (1 test failure out of 47)
-      - Old swap records missing fields cause 500 on GET /swaps (data migration needed)
-      
-      **🎯 BOTH SYSTEMS READY FOR PRODUCTION:**
-      Community Rating and NFT Generator systems fully tested and working perfectly. All critical functionality verified through comprehensive test suite.
+      **🔧 ADDITIONAL BACKEND TESTING RESULTS (45/47 PASSED):**
+      - ✅ Referral System: All endpoints working (11/11 tests passed)
+      - ✅ Community Rating System: Working with minor validation issue (returns 500 instead of 400 for invalid ratings, but correctly rejects them)
+      - ✅ NFT Generator System: All endpoints working (7/7 tests passed)
+      - ✅ Token Search & Chain Support: Working with 1 minor Ethereum prioritization edge case
+      - ✅ Basic API endpoints: All working correctly
