@@ -37,7 +37,7 @@ const ReferralsPage = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/referrals/stats/${address}`);
+      const response = await axios.get(`${BACKEND_URL}/api/referrals/stats/${walletAddress}`);
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching referral stats:', error);
@@ -46,9 +46,19 @@ const ReferralsPage = () => {
     }
   };
 
-  const referralLink = `${window.location.origin}?ref=${address}`;
+  const fetchLeaderboard = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/referrals/leaderboard?limit=10`);
+      setLeaderboard(response.data.leaderboard || []);
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+    }
+  };
+
+  const referralLink = walletAddress ? `${window.location.origin}/?ref=${walletAddress}` : '';
 
   const copyLink = () => {
+    if (!referralLink) return;
     navigator.clipboard.writeText(referralLink);
     setCopied(true);
     toast.success('Referral link copied!');
@@ -63,7 +73,7 @@ const ReferralsPage = () => {
 
     setClaiming(true);
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/referrals/claim/${address}`);
+      const response = await axios.post(`${BACKEND_URL}/api/referrals/claim/${walletAddress}`);
       toast.success(response.data.message);
       fetchStats(); // Refresh stats
     } catch (error) {
@@ -71,6 +81,20 @@ const ReferralsPage = () => {
     } finally {
       setClaiming(false);
     }
+  };
+
+  const formatAddress = (addr) => {
+    if (!addr) return '';
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount || 0);
   };
 
   return (
