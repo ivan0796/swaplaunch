@@ -10,6 +10,7 @@ import TrendingTokensV2 from '../components/TrendingTokensV2';
 import NewListings from '../components/NewListings';
 import SwapHistoryModal from '../components/SwapHistoryModal';
 import ReferralWidget from '../components/ReferralWidget';
+import AdBanner from '../components/AdBanner';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
