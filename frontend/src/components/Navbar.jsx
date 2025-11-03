@@ -71,7 +71,7 @@ const Navbar = ({ selectedChain, onChainChange }) => {
               alt="SwapLaunch" 
               className="h-10 w-10 object-contain"
             />
-            <div className="text-xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-blue to-brand-purple bg-clip-text text-transparent">
               SwapLaunch v4.0
             </div>
           </Link>
