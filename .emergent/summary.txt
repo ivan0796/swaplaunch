@@ -1,89 +1,92 @@
 <analysis>
-The AI engineer's work on SwapLaunch has significantly expanded its functionality and improved user experience. Starting with foundational elements like referral system backend and launchpad badge definitions, the project rapidly scaled to encompass a full platform overhaul. Key achievements include a multi-faceted navigation restructuring, consolidating Token Creator into a robust, multi-chain Create Project feature, and delivering a functional NFT Maker with prompt-based generation and mock asset handling. Branding was enhanced with a user-provided logo and a platform-wide color scheme adaptation. Crucially, the CoinGecko API was entirely migrated to CoinMarketCap. The engineer navigated complex user requirements, iterative design changes, and persistent technical challenges, particularly in ensuring consistent  integration across all pages, which is the immediate ongoing task.
+The AI engineer successfully progressed SwapLaunch through several critical phases. Initially, navigation consistency was achieved by unifying the  across all pages, resolving  import issues, and implementing robust hover/click, keyboard, and route-change behaviors. Following this, comprehensive localization was added for German and Chinese. The engineer then systematically cleaned up custody-like phrases, placeholder texts, and strategically re-introduced unfinished features, clearly marking them as Beta. Dynamic launchpad fees were implemented, adjusting to native blockchain currencies. Most recently, a sophisticated **Dynamic Tiered Fee System** was integrated into both EVM and Solana backend quote APIs, accompanied by thorough unit and integration testing. Frontend components were updated to display these fees, alongside a new Why this route? breakdown and a unified token logo resolver. A referral teaser was also added. The current work involves setting up a **secure weekly revenue reporting system**, with core Python modules already created.
 </analysis>
 
 <product_requirements>
-The SwapLaunch platform is a non-custodial multi-DEX swap platform supporting EVM chains (Ethereum, BSC, Polygon, Arbitrum, Optimism, Base, Avalanche) and Solana, integrating 0x and Jupiter APIs. Initial requirements included UI/UX enhancements like price charts, trending tokens, intelligent auto-slippage, swap history, explorer links, and a non-custodial launchpad with dynamic fees. The project has expanded with features such as automated advertising, token locker/vesting, limit orders/DCA, project listings, MEV protection, a portfolio dashboard, and multi-language support.
-
-Recent explicit user requests guided significant development:
-1.  **Referral System:** Display-only earnings initially, with future plans for on-chain withdrawal.
-2.  **Launchpad Enhancements:** Add Audit Provided, Contract Verified, Liquidity Locked, Community Rating badges, while removing Team KYC.
-3.  **Unified Navigation:** Implement a consistent menu structure (TRADE, LAUNCHPAD, EARN, PORTFOLIO) with hover-dropdowns across all pages, making Swap the default homepage ().
-4.  **Multi-Chain Token Creator:** Enable creation of ERC-20/BEP-20/SPL tokens with chain selection, gas estimation, and non-custodial deployment. This functionality was later merged into the Create Project page.
-5.  **NFT Maker:** Develop a prompt-based AI NFT generator with preview grid, batch generation, mock IPFS/Arweave storage, ERC-721/SPL options, and non-custodial minting.
-6.  **Ads System:** Transition from email applications to direct wallet-based Buy Now payments for ad slots, with automated live activation via on-chain events.
-7.  **Branding & UX:** Integrate a user-provided logo, adapt the platform's color scheme to match, ensure consistent component styling, and implement a robust token logo resolver.
-8.  **API Migration:** Replace all CoinGecko API calls with CoinMarketCap for trending and price data.
+The SwapLaunch platform is a non-custodial multi-DEX swap supporting EVM and Solana chains. Initially focused on UI/UX enhancements and a non-custodial launchpad, the project evolved to include automated advertising, token locker, limit orders, NFT Maker, MEV protection, portfolio, and multi-language support. Recent explicit user requests led to:
+1.  **Unified Navigation**: Consistent menu (TRADE, LAUNCHPAD, EARN, PORTFOLIO) with hover-dropdowns across all pages, Swap as default.
+2.  **Localization**: Multi-language support (EN, DE, ZH) for all core pages.
+3.  **Content Cleanup & Beta Flagging**: Removal of custody-like/placeholder texts, clear Beta marking for unfinished features.
+4.  **Dynamic Launchpad Fees**: Auto-adjusting launch fees (approx. ~5 USD) to native blockchain currency.
+5.  **Dynamic Tiered Fee System**: Trade amount-based tiered fees (0.10%-0.35%) applied non-custodially to input amount for EVM and Solana quotes. Required new API fields, deterministic USD valuation, precise calculation, robust logging, and comprehensive testing.
+6.  **Why this route? & Fee Breakdown**: Detailed explanation of swap routes, gas, bridge/DEX fees, and tiered platform fees.
+7.  **Unified Token Logo Resolver**: Global resolver using tokenlists, TrustWallet CDN, and initial-avatar fallback.
+8.  **Referral Teaser**: Visible, non-intrusive teaser on the homepage linking to the dashboard.
+9.  **Automated Weekly Revenue Report**: Secure, non-custodial email report (weekly cron job) aggregating revenue, volume, executed swaps, chain/tier breakdowns, and top pairs, with robust error handling and persistence.
 </product_requirements>
 
 <key_technical_concepts>
--   **Frontend:** React, Wagmi, Ethers, Shadcn UI, Solana Wallet Adapters, , Tailwind CSS.
--   **Backend:** FastAPI, Python, MongoDB, 0x Swap API, Jupiter API, GoPlus Security API, Dexscreener API, CoinMarketCap API.
--   **Blockchain:** EVM (Ethereum, BSC, Polygon, Arbitrum, Optimism, Base, Avalanche) and Solana. Non-custodial interactions.
--   **Architecture:** Modular design, environment variables, Kubernetes, i18n, Abstraction for Image/Storage providers.
+-   **Frontend**: React, React Router, Wagmi, Ethers, Solana Wallet Adapters, , Tailwind CSS, Shadcn UI.
+-   **Backend**: FastAPI, Python, MongoDB, 0x Swap API, Jupiter API, CoinMarketCap API, .
+-   **Blockchain**: EVM (Ethereum, BSC, Polygon, Arbitrum, Optimism, Base, Avalanche), Solana, Non-custodial transactions.
+-   **Architecture**: Modular design, environment variables (), Kubernetes, i18n, Abstraction for Image/Storage.
+-   **Security**: Non-custodial operations, hashed/pseudonymized data, secret management via environment variables.
 </key_technical_concepts>
 
 <code_architecture>
-The application utilizes a full-stack architecture with a React frontend, a FastAPI backend, and smart contracts for blockchain interactions.
+The application uses a React frontend, FastAPI backend, and Solidity smart contracts.
 
 
-
--   ****: The core FastAPI application, integrating various modules like ad management, referral, NFT generation, and CoinMarketCap data. It also includes the newly added Community Rating API.
-    -   *Changes*: Integrated new routers (, , ), and replaced all CoinGecko-related API logic with CoinMarketCap.
--   ** (new)**: A new Python module dedicated to handling all interactions with the CoinMarketCap API, centralizing data fetching for trending tokens and prices.
-    -   *Changes*: Created to provide a dedicated service for CoinMarketCap data, replacing  usage in .
--   ****: Environment variables for backend configuration.
-    -   *Changes*: Added  for the new API integration.
--   ** (new)**: Stores the user-provided application logo.
-    -   *Changes*: This new image asset was integrated into the frontend for branding.
--   ****: Manages the application's routing.
-    -   *Changes*: Updated to include routes for , , and  (which was later merged into ). The root route  was set to render  as the default landing page.
--   ** (new)**: The primary navigation component designed for consistency across all pages.
-    -   *Changes*: Extensively refactored multiple times to implement the new unified menu structure (TRADE, LAUNCHPAD, EARN, PORTFOLIO with dropdowns), display the application logo, and adapt to the new brand color scheme. It also required fixes for hover functionality and routing.
--   ****: The main swap interface.
-    -   *Changes*: Underwent several modifications to integrate the global  component, replacing its previous custom header. This has been a recurring point of refactoring to achieve full navigation consistency. Also updated to include the new logo.
--   ****: Displays referral program details.
-    -   *Changes*: Enhanced with a motivational design, user stats, and a Withdrawals coming soon message.
--   ****: Handles project creation and listing.
-    -   *Changes*: Integrated multi-chain selection (from the now-merged  functionality) and displays the new trust badges (Liquidity Locked, Audit Provided, Contract Verified, Community Rating). Its header was updated to use the consistent .
--   ****: Page for managing limit orders and DCA.
-    -   *Changes*: Added an Einmalig (One-Time) option for non-recurring orders, including adjustments for target price input and descriptive text.
--   ** (new)**: Implements the NFT Maker feature.
-    -   *Changes*: Replaced a placeholder with a full prompt-based generation interface, including style presets, color/background selectors, and mock image/CID generation.
--   ** (new)**: Placeholder for user's NFT collections.
-    -   *Changes*: Created as a basic placeholder page.
--   ** (new, deprecated)**: Initially created for multi-chain token creation.
-    -   *Changes*: Its core functionality for chain selection and token parameters was merged into , and this page's entry in the navigation was removed.
--   ** (new)**: A reusable component to display project information, including badges and community rating.
-    -   *Changes*: Created to standardize project listings in  and .
--   ** (new)**: Frontend service for fetching data from the new CoinMarketCap backend.
-    -   *Changes*: Created to replace calls previously made to .
--   ****: The old CoinGecko API service.
-    -   *Changes*: Effectively deprecated as its usage has been replaced by  and removed from relevant components.
--   ****: Tailwind CSS configuration for styling.
-    -   *Changes*: Updated to define new brand colors (, ) derived from the user-provided logo, affecting gradients, buttons, and other UI elements across the application.
+-   ****: Core FastAPI app.
+    -   *Changes*: Integrated , extended  and  APIs with tiered fee logic, USD price fetching, and new response fields (feeTier, feePercent, etc.).
+-   ** (new)**: Implements the  function based on user-defined tiers.
+-   ** (new)**: Handles sending emails, designed for multi-provider support.
+-   ** (new)**: Module to generate weekly revenue reports, aggregating data from successful swaps.
+-   ****: Backend environment variables.
+    -   *Changes*: Added  feature flag. Will include email service credentials.
+-   ** (new)**: Unit tests for , covering tier boundaries and edge cases.
+-   ** (new)**: Integration tests for EVM and Solana quote APIs to verify tiered fee implementation.
+-   ****: Manages application routing.
+    -   *Changes*: Registered  route.
+-   ****: Primary navigation.
+    -   *Changes*: Extensively refactored for unified global navigation, robust hover/click (desktop/mobile), keyboard support, menu state management, active route highlighting, localization, and to display Beta badges for in-progress features. Fixed duplicate  declaration.
+-   ****: Internationalization configuration.
+    -   *Changes*: Added translation keys for multiple pages (Launchpad, NFT Maker, Referrals) for English, German, and Chinese.
+-   ****: Main swap interface.
+    -   *Changes*: Fixed missing  import. Integrated the global . Modified  to store tiered fee data from API. Added simple display for tiered fee and  component. Integrated .
+-   ****: Project creation/listing.
+    -   *Changes*: Integrated  hook, translated hard-coded texts, removed Non-Custodial and Demo Mode phrases, added Beta badges. Implemented dynamic launch fees based on selected chain and native currency.
+-   ****: NFT Maker.
+    -   *Changes*: Integrated  hook, translated hard-coded texts, removed placeholder content, added Beta badge and warnings.
+-   ****: Referral program details.
+    -   *Changes*: Integrated  hook, translated hard-coded texts, removed Coming Soon and Non-Custodial phrases.
+-   ****: Bridge interface.
+    -   *Changes*: Integrated  hook, removed Coming Soon, added Beta badge and warnings.
+-   ****: Portfolio dashboard.
+    -   *Changes*: Integrated  hook, added Beta badges for History and Price Alerts.
+-   ** (existing, updated)**: Token locker.
+    -   *Changes*: Added placeholder content with Beta badge and warning.
+-   ** (existing, updated)**: Limit orders.
+    -   *Changes*: Added placeholder content with Beta badge and warning.
+-   ** (existing, updated)**: User's NFT collections.
+    -   *Changes*: Added placeholder content with Beta badge and warning.
+-   ** (new)**: Placeholder for Pro Swap interface.
+-   ****: Advertising banner.
+    -   *Changes*: Removed Advertise Here placeholder text.
+-   ****: The main swap form.
+    -   *Changes*: Modified  to handle new tiered fee fields from backend. Added UI elements to display , , . Integrated  component. Utilized  for token images.
+-   ** (new)**: Displays details of a swap route, including aggregated fees and a non-custodial disclaimer.
+-   ** (new)**: A small component for the homepage sidebar to promote the referral program.
+-   ** (new)**: Centralized utility to fetch token logos from various sources (tokenlists, TrustWallet CDN) with a fallback to initial-based avatars.
 </code_architecture>
 
 <pending_tasks>
--   **Ads with Wallet-Payment:** Implement the Buy now functionality using a real Pay-Once smart contract on Polygon/BSC, with an event listener for automated ad activation.
--   **Logo-Resolver & Polish:** Implement a robust token logo resolver (Tokenlists + TrustWallet CDN + Initial-Fallback) and ensure overall UI consistency.
--   **Automatic Payout for Referrals:** Implement on-chain or threshold-based automatic payouts for referral earnings.
--   **Full AI Integration for NFT Maker:** Integrate a real AI image generation service (e.g., Stability AI / FLUX) and actual IPFS/Arweave uploads for NFT assets.
--   **Missing Content Pages:** Populate placeholder pages like MyAssetsPage, HistoryPage, AlertsPage, ExploreLaunchpadPage, ProjectBadgesPage.
+-   **Revenue Report Cron Scheduler**: Set up the cron job for weekly email reports.
+-   **Email Service Integration**: Integrate the  with actual email providers (SendGrid, SES, Mailgun, SMTP) using environment variables.
+-   **Dry-Run & Manual Test**: Implement a manual dry-run feature for the revenue report and perform a manual test send.
+-   **README Documentation**: Create a README for the revenue report, detailing environment variables, cron, error handling, and key rotation.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer was actively working on resolving a critical **UI consistency and navigation issue**. The user reported that the application's menu did not function correctly, specifically noting that sub-menu items required a double-click to access and that hover functionality, as observed on , was not consistently applied across all other pages. This explicitly violates the requirement for a unified menu and consistent behavior across the entire platform.
+Immediately before this summary request, the AI engineer was actively implementing a **secure weekly Revenue-Reporting-System** as per detailed user requirements. This system aims to generate and send an automated email report containing aggregated revenue, volume, executed swaps, chain/tier breakdowns, and top pairs for the preceding seven days. The implementation prioritizes highest security, data minimization, and non-custodial compliance, ensuring no plaintext secrets in the repository and pseudonymized data.
 
-The core of the problem lies with , which has historically struggled to integrate with the global  component. Previous attempts to integrate the  into  resulted in frontend errors (Link is not defined), leading to a temporary revert to its custom header to ensure the application remained functional.
+The work has progressed through the initial stages:
+1.  **Revenue Report Generator**: The core logic for data aggregation and report generation has been created in .
+2.  **E-Mail Service**: A dedicated service for sending emails, supporting multiple providers, has been created in .
 
-The AI engineer is currently making the **third attempt** to unify the navigation by integrating the shared  component into . This is a direct response to the user's explicit request to rectify the inconsistent menu behavior and ensure that all menu points and sub-points can be selected from any page. The aim is to achieve full consistency, allowing hover-dropdowns and seamless navigation across all routes.
-
-Relevant files being modified:
--   : This file is currently being edited to replace any custom header implementation with the global  component () and ensure its proper rendering within the page structure.
--   : This component, while not directly edited in the *last* action, is central to the current task. It has been extensively refactored throughout the trajectory to implement the new menu structure, handle hover-dropdowns, display the application logo, and adapt to the updated brand colors. Its correct and consistent integration into  is the immediate goal.
+The next immediate step in this task is to set up the Cron scheduler to automate the weekly report generation and dispatch.
 </current_work>
 
 <optional_next_step>
-Take a screenshot of  to verify if  now correctly displays the unified  with hover functionality.
+Set up the Cron job in the backend for the weekly revenue report generation and email dispatch.
 </optional_next_step>
