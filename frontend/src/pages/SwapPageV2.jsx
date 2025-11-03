@@ -151,7 +151,7 @@ const SwapPageV2 = () => {
                   <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30">
                     ✓
                   </div>
-                  <span>4-Chain support: ETH, BSC, Polygon, Solana</span>
+                  <span>13+ Chain support: ETH, BSC, Polygon, Solana, XRP, Tron & more</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30">
