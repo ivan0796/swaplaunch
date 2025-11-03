@@ -424,8 +424,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "A/B Testing for Fee Tier Rollout"
-    - "Admin A/B Stats Endpoint"
     - "Route Breakdown Component with ETA"
   stuck_tasks: []
   test_all: false
