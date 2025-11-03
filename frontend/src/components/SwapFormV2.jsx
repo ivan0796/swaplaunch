@@ -682,6 +682,17 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
         )}
 
 
+      {/* MEV Protection & Slippage Settings */}
+      <MEVProtectionToggle
+        enabled={mevProtection}
+        onToggle={() => setMevProtection(!mevProtection)}
+        slippageMode={slippageMode}
+        onSlippageModeChange={setSlippageMode}
+      />
+
+      {/* Fee Breakdown Bar */}
+      {quote && <FeeBreakdownBar quote={quote} platformFeeBps={20} />}
+
       {/* Quote Details */}
       {quote && sellToken && buyToken && (
         <div data-testid="quote-details" className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-2">
@@ -695,14 +706,8 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Platform Fee (0.2%):</span>
-                <span className="font-medium">
-                  {(parseFloat(ethers.formatUnits(quote.buyAmount, buyToken.decimals)) * 0.002).toFixed(6)} {buyToken.symbol}
-                </span>
-              </div>
-              <div className="flex justify-between">
                 <span className="text-gray-600">Slippage:</span>
-                <span className="font-medium">{formatSlippage(effectiveSlippage.slippage)}</span>
+                <span className="font-medium">{slippageMode === 'auto' ? 'Auto (0.1-0.5%)' : formatSlippage(effectiveSlippage.slippage)}</span>
               </div>
               {quote.sources && quote.sources.length > 0 && (
                 <div className="flex justify-between">
