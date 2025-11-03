@@ -9,6 +9,7 @@ import SolanaSwapForm from '../components/SolanaSwapForm';
 import TrendingTokensV2 from '../components/TrendingTokensV2';
 import NewListings from '../components/NewListings';
 import ReferralWidget from '../components/ReferralWidget';
+import ReferralTeaser from '../components/ReferralTeaser';
 import AdBanner from '../components/AdBanner';
 import { toast } from 'sonner';
 
