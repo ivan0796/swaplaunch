@@ -215,7 +215,7 @@ const resources = {
       // Features
       "features.title": "Warum SwapLaunch v2.0?",
       "features.subtitle": "Erstklassige Funktionen",
-      "features.nonCustodial": "Non-custodial - Sie kontrollieren Ihre Schlüssel",
+      "features.security": "Sie kontrollieren Ihre Schlüssel",
       "features.bestRates": "Beste Kurse über mehrere DEXs",
       "features.multiChain": "13+ Chain-Unterstützung: ETH, BSC, Polygon, Solana, XRP, Tron & mehr",
       "features.tokenSearch": "🔍 Erweiterte Token-Suche & Sicherheitsscanner",
