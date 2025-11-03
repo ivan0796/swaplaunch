@@ -18,6 +18,10 @@ import PortfolioPage from './pages/PortfolioPage';
 import NFTMintPage from './pages/NFTMintPage';
 import MyNFTCollectionsPage from './pages/MyNFTCollectionsPage';
 import ReferralsPage from './pages/ReferralsPage';
+import TermsPage from './pages/TermsPage';
+import PrivacyPage from './pages/PrivacyPage';
+import RiskDisclosurePage from './pages/RiskDisclosurePage';
+import GettingStartedPage from './pages/GettingStartedPage';
 import { Toaster } from './components/ui/sonner';
 
 function App() {
