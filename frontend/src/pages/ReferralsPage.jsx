@@ -29,10 +29,15 @@ const ReferralsPage = () => {
   const isConnected = evmConnected || solanaConnected;
 
   useEffect(() => {
+    // Always fetch leaderboard (no wallet needed)
+    fetchLeaderboard();
+    
+    // Fetch user stats only if wallet is connected
     if (isConnected && walletAddress) {
       fetchStats();
+    } else {
+      setLoading(false);
     }
-    fetchLeaderboard();
   }, [isConnected, walletAddress]);
 
   const fetchStats = async () => {
