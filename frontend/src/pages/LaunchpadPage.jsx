@@ -186,10 +186,10 @@ const LaunchpadPage = () => {
               <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30">
                 <Shield className="w-5 h-5 text-purple-600" />
               </div>
-              <h3 className="font-semibold">{t('launchpad.nonCustodial')}</h3>
+              <h3 className="font-semibold">{t('launchpad.secureTitle')}</h3>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              {t('launchpad.nonCustodialDesc')}
+              {t('launchpad.secureDesc')}
             </p>
           </div>
 
