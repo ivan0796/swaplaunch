@@ -163,7 +163,7 @@ const Navbar = ({ selectedChain, onChainChange }) => {
                 key={idx}
                 className="relative"
                 onMouseEnter={() => handleMenuEnter(idx)}
-                onMouseLeave={() => !isTouchDevice && setOpenMenu(null)}
+                onMouseLeave={handleMenuLeave}
               >
                 <button 
                   onClick={() => handleMenuClick(idx)}
@@ -178,6 +178,8 @@ const Navbar = ({ selectedChain, onChainChange }) => {
                 {openMenu === idx && (
                   <div 
                     className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden z-50"
+                    onMouseEnter={() => handleMenuEnter(idx)}
+                    onMouseLeave={handleMenuLeave}
                   >
                     {category.items.map((item, itemIdx) => (
                       <Link
