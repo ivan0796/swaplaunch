@@ -204,11 +204,32 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       const impact = Math.abs(((expectedOutput - parseFloat(outputAmount)) / expectedOutput) * 100);
       setPriceImpact(impact);
 
-      // Normalize quote data structure
+      // Normalize quote data structure and preserve all tiered fee fields
       setQuote({
         ...quoteData,
-        buyAmount: buyAmount // Ensure buyAmount is at top level
+        buyAmount: buyAmount, // Ensure buyAmount is at top level
+        // NEW: Tiered fee fields from API (v1-tiered)
+        feeTier: quoteData.feeTier,
+        feePercent: quoteData.feePercent,
+        feeUsd: quoteData.feeUsd,
+        amountInUsd: quoteData.amountInUsd,
+        netAmountIn: quoteData.netAmountIn,
+        originalAmountIn: quoteData.originalAmountIn,
+        nextTier: quoteData.nextTier,
+        notes: quoteData.notes,
+        quoteVersion: quoteData.quoteVersion
       });
+      
+      // Log tiered fee info for debugging
+      if (quoteData.feeTier) {
+        console.log('[Tiered Fee]', {
+          tier: quoteData.feeTier,
+          feePercent: `${quoteData.feePercent}%`,
+          feeUsd: quoteData.feeUsd ? `$${quoteData.feeUsd}` : 'N/A',
+          amountUsd: quoteData.amountInUsd ? `$${quoteData.amountInUsd}` : 'N/A',
+          nextTier: quoteData.nextTier
+        });
+      }
     } catch (err) {
       console.error('Error fetching quote:', err);
       const errorMsg = err.response?.data?.detail || err.message || 'Failed to fetch quote';
