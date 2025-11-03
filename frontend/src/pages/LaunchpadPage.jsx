@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAccount, useWalletClient } from 'wagmi';
 import { ArrowLeft, Rocket, Shield, TrendingUp, Coins, AlertCircle, CheckCircle, X } from 'lucide-react';
