@@ -6,7 +6,7 @@ const resources = {
   en: {
     translation: {
       // Navigation
-      "nav.trade": "Trade",
+      "nav.trade": "Swap",
       "nav.projects": "Projects",
       "nav.launchpad": "Launchpad",
       "nav.tokenLocker": "Token Locker",
