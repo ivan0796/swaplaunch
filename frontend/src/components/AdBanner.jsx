@@ -44,15 +44,8 @@ const AdBanner = ({ position = 'banner', className = '' }) => {
   }
 
   if (!currentAd) {
-    // No active ads - show placeholder
-    return (
-      <div className={`bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200 ${className}`}>
-        <div className="text-center">
-          <div className="text-sm font-medium text-gray-600 mb-1">Advertise Here</div>
-          <div className="text-xs text-gray-500">Premium ad space available</div>
-        </div>
-      </div>
-    );
+    // No active ads - return null to hide the banner
+    return null;
   }
 
   return (
