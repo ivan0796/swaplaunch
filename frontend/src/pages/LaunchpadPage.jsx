@@ -29,15 +29,16 @@ const LaunchpadPage = () => {
     maxWalletPercent: '2', // % of supply
   });
 
-  // Chain configurations
+  // Chain configurations with native currency and launch fees
   const chains = [
-    { id: 1, name: 'Ethereum', logo: '⟠', standard: 'ERC-20', decimals: 18 },
-    { id: 56, name: 'BNB Chain', logo: '🟡', standard: 'BEP-20', decimals: 18 },
-    { id: 137, name: 'Polygon', logo: '🟣', standard: 'ERC-20', decimals: 18 },
-    { id: 42161, name: 'Arbitrum', logo: '🔵', standard: 'ERC-20', decimals: 18 },
-    { id: 8453, name: 'Base', logo: '🔷', standard: 'ERC-20', decimals: 18 },
-    { id: 43114, name: 'Avalanche', logo: '🔺', standard: 'ERC-20', decimals: 18 },
-    { id: 0, name: 'Solana', logo: '◎', standard: 'SPL', decimals: 9 }
+    { id: 1, name: 'Ethereum', logo: '⟠', standard: 'ERC-20', decimals: 18, currency: 'ETH', launchFee: '0.007', feeUSD: 25 },
+    { id: 56, name: 'BNB Chain', logo: '🟡', standard: 'BEP-20', decimals: 18, currency: 'BNB', launchFee: '0.037', feeUSD: 25 },
+    { id: 137, name: 'Polygon', logo: '🟣', standard: 'ERC-20', decimals: 18, currency: 'MATIC', launchFee: '67', feeUSD: 25 },
+    { id: 42161, name: 'Arbitrum', logo: '🔵', standard: 'ERC-20', decimals: 18, currency: 'ETH', launchFee: '0.007', feeUSD: 25 },
+    { id: 10, name: 'Optimism', logo: '🔴', standard: 'ERC-20', decimals: 18, currency: 'ETH', launchFee: '0.007', feeUSD: 25 },
+    { id: 8453, name: 'Base', logo: '🔷', standard: 'ERC-20', decimals: 18, currency: 'ETH', launchFee: '0.007', feeUSD: 25 },
+    { id: 43114, name: 'Avalanche', logo: '🔺', standard: 'ERC-20', decimals: 18, currency: 'AVAX', launchFee: '1.0', feeUSD: 25 },
+    { id: 0, name: 'Solana', logo: '◎', standard: 'SPL', decimals: 9, currency: 'SOL', launchFee: '0.14', feeUSD: 25 }
   ];
 
   const selectedChainData = chains.find(c => c.id === formData.selectedChain) || chains[0];
