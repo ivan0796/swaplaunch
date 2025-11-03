@@ -29,7 +29,7 @@ const resources = {
       // Features
       "features.title": "Why SwapLaunch v2.0?",
       "features.subtitle": "Best-in-class features",
-      "features.nonCustodial": "Non-custodial - You control your keys",
+      "features.security": "You control your keys",
       "features.bestRates": "Best rates across multiple DEXs",
       "features.multiChain": "13+ Chain support: ETH, BSC, Polygon, Solana, XRP, Tron & more",
       "features.tokenSearch": "🔍 Advanced token search & security scanner",
