@@ -43,6 +43,7 @@ const LaunchpadPage = () => {
   const [launching, setLaunching] = useState(false);
   const [launchSuccess, setLaunchSuccess] = useState(null);
   const [estimatedFee, setEstimatedFee] = useState({ eth: '0.025', usd: '25' }); // Dynamic based on gas
+  const [selectedChain, setSelectedChain] = useState(1); // For Navbar
 
   // Estimate fee based on current gas prices (simplified)
   useEffect(() => {
