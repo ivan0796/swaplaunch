@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useAccount, useChainId } from 'wagmi';
 import { useWallet } from '@solana/wallet-adapter-react';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import SwapFormV2 from '../components/SwapFormV2';
 import SolanaSwapForm from '../components/SolanaSwapForm';
 import TrendingTokensV2 from '../components/TrendingTokensV2';
