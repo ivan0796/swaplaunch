@@ -1872,6 +1872,10 @@ class SwapLaunchAPITester:
         print("\n📊 Testing DEX Pairs Endpoint...")
         self.test_dex_pairs_endpoint()
         
+        # Priority Tests: A/B Testing System for Fee Tier Rollout
+        print("\n🧪 Testing A/B Testing System for Fee Tier Rollout...")
+        self.test_ab_testing_system_flow()
+        
         # Priority Tests: Referral System Backend API
         print("\n🎯 Testing Referral System Backend API...")
         self.test_referral_track_endpoint()
