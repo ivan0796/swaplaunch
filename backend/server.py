@@ -540,6 +540,7 @@ async def get_solana_quote(request: SolanaQuoteRequest):
                 "quote": quote_data,
                 
                 # NEW: Add tiered fee fields (non-breaking)
+                "cohort": cohort,  # A/B test cohort
                 "feeTier": fee_info["fee_tier"],
                 "feePercent": fee_info["fee_percent"],
                 "feeUsd": fee_info["fee_usd"],
@@ -563,11 +564,25 @@ async def get_solana_quote(request: SolanaQuoteRequest):
                 }
             }
             
+            # Log cohort event to database for A/B analysis
+            try:
+                cohort_log = log_cohort_event(
+                    wallet_address=request.takerPublicKey,
+                    cohort=cohort,
+                    event_type="quote",
+                    amount_usd=fee_info.get("amount_in_usd"),
+                    fee_usd=fee_info.get("fee_usd"),
+                    chain="solana"
+                )
+                await db.ab_test_events.insert_one(cohort_log)
+            except Exception as e:
+                logger.error(f"Failed to log cohort event: {e}")
+            
             # Log swap for analytics (pseudonymized)
-            if request.userPublicKey:
-                wallet_hash = hashlib.sha256(request.userPublicKey.encode()).hexdigest()[:16]
+            if request.takerPublicKey:
+                wallet_hash = hashlib.sha256(request.takerPublicKey.encode()).hexdigest()[:16]
                 logger.info(
-                    f"Solana Quote | Wallet: {wallet_hash} | "
+                    f"Solana Quote | Cohort: {cohort} | Wallet: {wallet_hash} | "
                     f"Route: {request.inputMint[:6]}→{request.outputMint[:6]} | "
                     f"Amount: ${fee_info.get('amount_in_usd', 'N/A')} | "
                     f"Tier: {fee_info['fee_tier']} | Fee: {fee_info['fee_percent']}% (${fee_info.get('fee_usd', 'N/A')})"
