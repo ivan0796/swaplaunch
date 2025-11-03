@@ -52,8 +52,40 @@ const SwapPageV2 = () => {
 
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_20%_-10%,rgba(129,140,248,.25),transparent),radial-gradient(800px_500px_at_80%_0%,rgba(16,185,129,.18),transparent)]">
-      {/* Navbar */}
-      <Navbar selectedChain={selectedChain} onChainChange={setSelectedChain} />
+      {/* Header */}
+      <header className="sticky top-0 z-40 border-b border-black/5 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+          <div className="flex items-center gap-3">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-400 text-white text-lg">
+              🚀
+            </div>
+            <div className="text-sm font-semibold tracking-tight">SwapLaunch v4.0</div>
+          </div>
+          <nav className="hidden items-center gap-6 text-sm md:flex">
+            <Link className="opacity-80 hover:opacity-100" to="/">Swap</Link>
+            <Link className="opacity-80 hover:opacity-100" to="/portfolio">Portfolio</Link>
+            <Link className="opacity-80 hover:opacity-100" to="/referrals">Referrals 🔥</Link>
+            <Link className="opacity-80 hover:opacity-100" to="/launchpad">Launchpad</Link>
+            <Link className="opacity-80 hover:opacity-100" to="/projects">Projects</Link>
+            <Link className="opacity-80 hover:opacity-100" to="/bridge">Bridge</Link>
+          </nav>
+          <div className="flex items-center gap-2">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+            {/* Network Selector in Header */}
+            <NetworkSelectorDropdown
+              selectedChain={selectedChain}
+              onChainChange={setSelectedChain}
+            />
+            {isConnected && <ReferralWidget walletAddress={walletAddress} />}
+            {selectedChain === 0 ? (
+              <WalletMultiButton />
+            ) : (
+              <WalletButtonWithHistory />
+            )}
+          </div>
+        </div>
+      </header>
 
       {/* Main Content */}
       <main className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-8 lg:grid-cols-3">
