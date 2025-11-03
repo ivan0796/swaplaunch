@@ -174,6 +174,8 @@ const PortfolioPage = () => {
           </div>
         )}
       </div>
+
+      <Footer />
     </div>
   );
 };
