@@ -135,8 +135,8 @@ const SwapPageV2 = () => {
           {/* Features Card */}
           <div className="space-y-3">
             <div>
-              <h2 className="text-lg font-bold tracking-tight">Why SwapLaunch v2.0?</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Best-in-class features</p>
+              <h2 className="text-lg font-bold tracking-tight">{t('features.title')}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('features.subtitle')}</p>
             </div>
             <div className="rounded-2xl border border-black/5 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
               <ul className="space-y-3 text-sm">
@@ -144,37 +144,37 @@ const SwapPageV2 = () => {
                   <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30">
                     ✓
                   </div>
-                  <span>Non-custodial - You control your keys</span>
+                  <span>{t('features.nonCustodial')}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30">
                     ✓
                   </div>
-                  <span>Best rates across multiple DEXs</span>
+                  <span>{t('features.bestRates')}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30">
                     ✓
                   </div>
-                  <span>13+ Chain support: ETH, BSC, Polygon, Solana, XRP, Tron & more</span>
+                  <span>{t('features.multiChain')}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30">
                     ✓
                   </div>
-                  <span>🔍 Advanced token search & security scanner</span>
+                  <span>{t('features.tokenSearch')}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30">
                     ✓
                   </div>
-                  <span>Transparent fee structure (0.2%)</span>
+                  <span>{t('features.transparentFees')}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30">
                     ✓
                   </div>
-                  <span>Referral program - Invite & earn</span>
+                  <span>{t('features.referral')}</span>
                 </li>
               </ul>
             </div>
