@@ -14,6 +14,7 @@ import ProjectsPage from './pages/ProjectsPage';
 import AdvertisePage from './pages/AdvertisePage';
 import PortfolioPage from './pages/PortfolioPage';
 import NFTMintPage from './pages/NFTMintPage';
+import ReferralsPage from './pages/ReferralsPage';
 import { Toaster } from './components/ui/sonner';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/advertise" element={<AdvertisePage />} />
             <Route path="/nft-mint" element={<NFTMintPage />} />
+            <Route path="/referrals" element={<ReferralsPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/risk-disclosure" element={<RiskDisclosure />} />
           </Routes>
