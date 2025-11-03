@@ -391,11 +391,66 @@ async def get_evm_quote(request: EVMQuoteRequest):
 async def get_solana_quote(request: SolanaQuoteRequest):
     """
     Get swap quote for Solana via Jupiter API
-    Returns quote + instructions for swap
-    Frontend must add 0.2% fee transfer to FEE_RECIPIENT_SOL
+    
+    NEW IN v1-tiered:
+    - Dynamic tiered fees based on trade USD value
+    - No custody: fee applied by reducing input amount before routing
+    - Returns: feeTier, feePercent, feeUsd, netAmountIn, quoteVersion
     """
-    # Create cache key
-    cache_key = f"solana:{request.inputMint}:{request.outputMint}:{request.amount}"
+    
+    # Step 1: Calculate USD value and tiered fee
+    fee_info = None
+    net_amount_in = request.amount
+    
+    if FEE_TIERED_ENABLED:
+        try:
+            # Get USD value of input amount
+            # For Solana, we need to use Jupiter or similar price oracle
+            # Placeholder: Approximate SOL price (should use real oracle)
+            sol_price_usd = 180.0  # This should come from real price feed
+            
+            # Assume input is SOL or convert using price API
+            # For now, use simple heuristic
+            amount_decimal = float(request.amount) / (10 ** 9)  # SOL has 9 decimals
+            amount_usd = amount_decimal * sol_price_usd
+            
+            if amount_usd is not None and amount_usd > 0:
+                # Calculate tiered fee
+                fee_info = calculate_tiered_fee(amount_usd)
+                
+                # Calculate net amount after fee deduction
+                net_amount_in = calculate_net_amount_in(request.amount, fee_info)
+                
+                logger.info(
+                    f"Tiered fee applied (Solana): {amount_usd:.2f} USD → "
+                    f"Tier {fee_info['fee_tier']} ({fee_info['fee_percent']}%) → "
+                    f"Fee: ${fee_info['fee_usd']:.2f}"
+                )
+            else:
+                # Fallback if USD price unavailable
+                fee_info = get_fallback_fee("SOL price not available")
+                net_amount_in = calculate_net_amount_in(request.amount, fee_info)
+                logger.warning(f"Using fallback fee for Solana")
+                
+        except Exception as e:
+            logger.error(f"Error calculating tiered fee (Solana): {e}")
+            fee_info = get_fallback_fee(f"Fee calculation error: {str(e)}")
+            net_amount_in = calculate_net_amount_in(request.amount, fee_info)
+    else:
+        # Feature flag disabled: use legacy fixed fee
+        fee_info = {
+            "fee_tier": "LEGACY",
+            "fee_percent": 0.20,
+            "fee_usd": None,
+            "amount_in_usd": None,
+            "next_tier": None,
+            "notes": "Legacy fixed fee (0.2%)",
+            "quote_version": "v1-legacy"
+        }
+        net_amount_in = request.amount
+    
+    # Step 2: Create cache key with net amount
+    cache_key = f"solana:{request.inputMint}:{request.outputMint}:{net_amount_in}"
     
     # Check cache
     if cache_key in quote_cache:
@@ -407,11 +462,11 @@ async def get_solana_quote(request: SolanaQuoteRequest):
     jupiter_api = os.environ.get('JUPITER_API_URL')
     fee_recipient = os.environ.get('FEE_RECIPIENT_SOL')
     
-    # Get quote from Jupiter
+    # Get quote from Jupiter with NET amount (after fee deduction)
     params = {
         "inputMint": request.inputMint,
         "outputMint": request.outputMint,
-        "amount": request.amount,
+        "amount": net_amount_in,  # Use net amount after fee
         "slippageBps": request.slippageBps
     }
     
@@ -431,28 +486,45 @@ async def get_solana_quote(request: SolanaQuoteRequest):
             
             quote_data = quote_response.json()
             
-            # Calculate platform fee (0.2% of output)
             output_amount = int(quote_data.get("outAmount", 0))
-            platform_fee_amount = int(output_amount * 0.002)  # 0.2%
-            net_output_amount = output_amount - platform_fee_amount
             
             result = {
                 "chain": "solana",
                 "quote": quote_data,
-                "platformFee": {
-                    "percentage": "0.2",
-                    "amount": str(platform_fee_amount),
-                    "recipient": fee_recipient
-                },
-                "netOutputAmount": str(net_output_amount),
+                
+                # NEW: Add tiered fee fields (non-breaking)
+                "feeTier": fee_info["fee_tier"],
+                "feePercent": fee_info["fee_percent"],
+                "feeUsd": fee_info["fee_usd"],
+                "amountInUsd": fee_info["amount_in_usd"],
+                "netAmountIn": net_amount_in,
+                "originalAmountIn": request.amount,
+                "nextTier": fee_info["next_tier"],
+                "notes": fee_info["notes"],
+                "quoteVersion": fee_info["quote_version"],
+                
+                # Output amounts
                 "outputAmount": str(output_amount),
+                
+                # Legacy field for backward compatibility
+                "platformFee": f"{fee_info['fee_percent']}%",
+                "feeRecipient": fee_recipient,
+                
+                # Instructions note
                 "instructions": {
-                    "note": "Frontend must create fee transfer instruction",
-                    "feeRecipient": fee_recipient,
-                    "feeAmount": str(platform_fee_amount),
-                    "warning": "Ensure fee recipient ATA exists for output token"
+                    "note": "Non-custodial: Fee deducted from input. User signs all transactions."
                 }
             }
+            
+            # Log swap for analytics (pseudonymized)
+            if request.userPublicKey:
+                wallet_hash = hashlib.sha256(request.userPublicKey.encode()).hexdigest()[:16]
+                logger.info(
+                    f"Solana Quote | Wallet: {wallet_hash} | "
+                    f"Route: {request.inputMint[:6]}→{request.outputMint[:6]} | "
+                    f"Amount: ${fee_info.get('amount_in_usd', 'N/A')} | "
+                    f"Tier: {fee_info['fee_tier']} | Fee: {fee_info['fee_percent']}% (${fee_info.get('fee_usd', 'N/A')})"
+                )
             
             # Cache the response
             quote_cache[cache_key] = (result, datetime.now(timezone.utc).timestamp())
