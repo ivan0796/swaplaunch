@@ -241,7 +241,10 @@ async def get_evm_quote(request: EVMQuoteRequest):
     
     chain_config = CHAIN_CONFIG[chain]
     
-    # Step 1: Calculate USD value and tiered fee
+    # Step 1: Determine A/B cohort
+    cohort = get_user_cohort(request.takerAddress)
+    
+    # Step 2: Calculate USD value and fee based on cohort
     fee_info = None
     net_amount_in = request.sellAmount
     
@@ -255,30 +258,39 @@ async def get_evm_quote(request: EVMQuoteRequest):
             )
             
             if amount_usd is not None:
-                # Calculate tiered fee
-                fee_info = calculate_tiered_fee(amount_usd)
+                # Apply cohort-specific fee logic
+                if cohort == "control":
+                    # Control group: Fixed 0.25% fee
+                    fee_info = get_cohort_fee_info("control", amount_usd)
+                else:
+                    # Tiered group: Dynamic tiered fees
+                    fee_info = calculate_tiered_fee(amount_usd)
+                    fee_info["cohort"] = "tiered"
                 
                 # Calculate net amount after fee deduction
                 net_amount_in = calculate_net_amount_in(request.sellAmount, fee_info)
                 
                 logger.info(
-                    f"Tiered fee applied: {amount_usd:.2f} USD → "
+                    f"A/B Test | Cohort: {cohort} | {amount_usd:.2f} USD → "
                     f"Tier {fee_info['fee_tier']} ({fee_info['fee_percent']}%) → "
                     f"Fee: ${fee_info['fee_usd']:.2f}"
                 )
             else:
                 # Fallback if USD price unavailable
                 fee_info = get_fallback_fee("Token price not available")
+                fee_info["cohort"] = cohort
                 net_amount_in = calculate_net_amount_in(request.sellAmount, fee_info)
                 logger.warning(f"Using fallback fee for {chain}:{request.sellToken}")
                 
         except Exception as e:
             logger.error(f"Error calculating tiered fee: {e}")
             fee_info = get_fallback_fee(f"Fee calculation error: {str(e)}")
+            fee_info["cohort"] = cohort
             net_amount_in = calculate_net_amount_in(request.sellAmount, fee_info)
     else:
         # Feature flag disabled: use legacy fixed fee
         fee_info = {
+            "cohort": "legacy",
             "fee_tier": "LEGACY",
             "fee_percent": 0.20,
             "fee_usd": None,
