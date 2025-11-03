@@ -190,16 +190,7 @@ const SwapPageV2 = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-black/5 bg-white/60 py-8 text-sm text-gray-500 backdrop-blur dark:border-white/10 dark:bg-gray-900/50">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 md:flex-row">
-          <div>© {new Date().getFullYear()} SwapLaunch. Decentralized swaps powered by 0x & Jupiter.</div>
-          <div className="flex items-center gap-4">
-            <Link className="hover:underline" to="/risk-disclosure">Risk Disclosure</Link>
-            <a className="hover:underline cursor-pointer" href="#">Docs</a>
-            <a className="hover:underline cursor-pointer" href="#">Terms</a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
