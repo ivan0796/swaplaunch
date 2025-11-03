@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useAccount } from 'wagmi';
-import { ethers } from 'ethers';
-import { Lock, Calendar, Info, ExternalLink } from 'lucide-react';
+import { Lock, Calendar, Info } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { toast } from 'sonner';
@@ -15,7 +14,7 @@ const TokenLockerPage = () => {
   const [unlockDate, setUnlockDate] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const lockFee = '50'; // 50 USD in native token
+  const lockFee = '50';
 
   const handleLock = async () => {
     if (!isConnected) {
@@ -30,8 +29,7 @@ const TokenLockerPage = () => {
 
     setLoading(true);
     try {
-      toast.info('Lock feature coming soon! Smart contract deployment in progress.');
-      // TODO: Implement actual locking contract
+      toast.info('Lock feature coming soon!');
     } catch (error) {
       toast.error('Failed to lock tokens');
     } finally {
@@ -40,37 +38,25 @@ const TokenLockerPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
-      {/* Navbar */}
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <Navbar selectedChain={selectedChain} onChainChange={setSelectedChain} />
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
-      {/* Navbar */}
-      <Navbar selectedChain={selectedChain} onChainChange={setSelectedChain} />
-
-      {/* Main Content */}
       <div className="max-w-2xl mx-auto px-4 py-12">
-        <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
           <div className="flex items-center gap-3 mb-6">
             <Lock className="w-8 h-8 text-blue-600" />
             <h1 className="text-3xl font-bold">Token Locker</h1>
           </div>
 
-          <p className="text-gray-600 mb-8">
-            Lock your LP tokens or team tokens with time-based vesting. Fully non-custodial and secure.
+          <p className="text-gray-600 dark:text-gray-400 mb-8">
+            Lock your LP tokens or team tokens with time-based vesting.
           </p>
 
-          {/* Info Box */}
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 flex items-start gap-3">
-            <Info className="w-5 h-5 text-blue-600 mt-0.5" />
-            <div className="text-sm text-blue-900">
-              <strong>Lock Fee: ${lockFee} USD</strong><br />
-              Tokens remain in your control. Only you can unlock them after the specified date.
-            </div>
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-xl p-4 mb-6">
+            <Info className="w-5 h-5 text-blue-600 inline mr-2" />
+            <strong>Lock Fee: ${lockFee} USD</strong>
           </div>
 
-          {/* Form */}
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-2">Token Address</label>
@@ -78,31 +64,25 @@ const TokenLockerPage = () => {
                 placeholder="0x..."
                 value={tokenAddress}
                 onChange={(e) => setTokenAddress(e.target.value)}
-                className="w-full"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Amount to Lock</label>
+              <label className="block text-sm font-medium mb-2">Amount</label>
               <Input
                 type="number"
                 placeholder="0.0"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
-                <Calendar className="w-4 h-4 inline mr-2" />
-                Unlock Date
-              </label>
+              <label className="block text-sm font-medium mb-2">Unlock Date</label>
               <Input
                 type="datetime-local"
                 value={unlockDate}
                 onChange={(e) => setUnlockDate(e.target.value)}
-                className="w-full"
                 min={new Date().toISOString().slice(0, 16)}
               />
             </div>
@@ -110,29 +90,10 @@ const TokenLockerPage = () => {
             <Button
               onClick={handleLock}
               disabled={loading || !isConnected}
-              className="w-full py-6 text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="w-full py-6 bg-gradient-to-r from-blue-600 to-purple-600"
             >
-              {loading ? 'Locking...' : isConnected ? `Lock Tokens (Fee: $${lockFee})` : 'Connect Wallet'}
+              {loading ? 'Locking...' : isConnected ? 'Lock Tokens' : 'Connect Wallet'}
             </Button>
-          </div>
-
-          {/* Features */}
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-gray-50 rounded-xl">
-              <div className="text-2xl mb-2">🔒</div>
-              <div className="font-semibold mb-1">Non-Custodial</div>
-              <div className="text-xs text-gray-600">You keep full control</div>
-            </div>
-            <div className="text-center p-4 bg-gray-50 rounded-xl">
-              <div className="text-2xl mb-2">⏰</div>
-              <div className="font-semibold mb-1">Time-Locked</div>
-              <div className="text-xs text-gray-600">Unlock at set date</div>
-            </div>
-            <div className="text-center p-4 bg-gray-50 rounded-xl">
-              <div className="text-2xl mb-2">📊</div>
-              <div className="font-semibold mb-1">Transparent</div>
-              <div className="text-xs text-gray-600">On-chain verification</div>
-            </div>
           </div>
         </div>
       </div>
