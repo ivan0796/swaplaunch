@@ -1,7 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Shield, Info } from 'lucide-react';
 
 const MEVProtectionToggle = ({ enabled, onToggle, slippageMode, onSlippageModeChange }) => {
+  const { t } = useTranslation();
+  
   return (
     <div className="space-y-4">
       {/* MEV Protection Toggle */}
@@ -9,7 +12,7 @@ const MEVProtectionToggle = ({ enabled, onToggle, slippageMode, onSlippageModeCh
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-blue-600" />
-            <span className="font-medium text-sm">MEV Protection</span>
+            <span className="font-medium text-sm">{t('mev.protection')}</span>
           </div>
           <button
             onClick={onToggle}
@@ -25,9 +28,7 @@ const MEVProtectionToggle = ({ enabled, onToggle, slippageMode, onSlippageModeCh
           </button>
         </div>
         <p className="text-xs text-blue-800">
-          {enabled 
-            ? 'Protected: Your transaction is routed through private RPC to prevent front-running.'
-            : 'Not protected: Standard public RPC routing.'}
+          {enabled ? t('mev.protected') : t('mev.notProtected')}
         </p>
       </div>
 
@@ -36,7 +37,7 @@ const MEVProtectionToggle = ({ enabled, onToggle, slippageMode, onSlippageModeCh
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <Info className="w-5 h-5 text-gray-600" />
-            <span className="font-medium text-sm">Slippage</span>
+            <span className="font-medium text-sm">{t('slippage.title')}</span>
           </div>
           <div className="flex gap-2">
             <button
@@ -47,7 +48,7 @@ const MEVProtectionToggle = ({ enabled, onToggle, slippageMode, onSlippageModeCh
                   : 'bg-white text-gray-600 border border-gray-300'
               }`}
             >
-              Auto
+              {t('slippage.auto')}
             </button>
             <button
               onClick={() => onSlippageModeChange('custom')}
@@ -57,14 +58,12 @@ const MEVProtectionToggle = ({ enabled, onToggle, slippageMode, onSlippageModeCh
                   : 'bg-white text-gray-600 border border-gray-300'
               }`}
             >
-              Custom
+              {t('slippage.custom')}
             </button>
           </div>
         </div>
         <p className="text-xs text-gray-600">
-          {slippageMode === 'auto'
-            ? 'Automatically adjusted based on market volatility (0.1-0.5%)'
-            : 'Set your own slippage tolerance'}
+          {slippageMode === 'auto' ? t('slippage.autoDesc') : t('slippage.customDesc')}
         </p>
       </div>
     </div>
