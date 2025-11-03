@@ -20,6 +20,7 @@ const AD_CONTRACT_ABI = [
 const AdvertisePage = () => {
   const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
+  const [selectedChain, setSelectedChain] = useState(1);
   const [slots, setSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [loading, setLoading] = useState(false);
