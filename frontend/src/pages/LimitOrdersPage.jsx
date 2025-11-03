@@ -64,7 +64,9 @@ const LimitOrdersPage = () => {
               <strong>Execution Fee: {executionFee}</strong><br />
               {orderType === 'limit' 
                 ? 'Your order executes automatically when price reaches target.'
-                : 'Automate recurring buys at set intervals.'}
+                : dcaInterval === 'once'
+                ? 'Order wird einmalig ausgeführt, sobald der Zielpreis erreicht wird.'
+                : 'Automate recurring buys at set intervals (DCA strategy).'}
             </div>
           </div>
 
