@@ -24,6 +24,10 @@ const RouteBreakdown = ({ quote, sellToken, buyToken, chainId }) => {
   const routeName = quote.sources?.[0]?.name || '0x Protocol';
   const routeSources = quote.sources?.slice(0, 3).map(s => s.name).join(' → ') || 'Best Route';
   
+  // ETA estimation (in seconds, convert to readable format)
+  const eta = quote.estimatedGas ? Math.ceil(parseInt(quote.estimatedGas) / 21000) * 13 : 30; // ~13s per block
+  const etaText = eta < 60 ? `~${eta}s` : `~${Math.ceil(eta / 60)}m`;
+  
   // Gas estimation (from quote or estimate)
   const gasEstimate = quote.gas ? parseInt(quote.gas) : null;
   const gasPrice = quote.gasPrice ? parseInt(quote.gasPrice) : null;
@@ -38,7 +42,8 @@ const RouteBreakdown = ({ quote, sellToken, buyToken, chainId }) => {
     42161: 'Arbitrum',
     10: 'Optimism',
     8453: 'Base',
-    43114: 'Avalanche'
+    43114: 'Avalanche',
+    0: 'Solana'
   };
   const chainName = chainNames[chainId] || 'EVM Chain';
 
