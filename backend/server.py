@@ -1160,6 +1160,121 @@ async def startup_event():
     await init_ad_slots()
     logger.info("Ad management initialized")
 
+# ========== COMMUNITY RATING SYSTEM ==========
+
+class ProjectRating(BaseModel):
+    project_id: str
+    wallet_address: str
+    rating: int  # 1-5 stars
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+@api_router.post("/projects/{project_id}/rate")
+async def rate_project(project_id: str, wallet_address: str, rating: int):
+    """
+    Rate a launchpad project (1-5 stars)
+    One wallet = One vote
+    """
+    try:
+        if rating < 1 or rating > 5:
+            raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
+        
+        wallet_address = wallet_address.lower()
+        
+        # Check if user already rated this project
+        existing_rating = await db.project_ratings.find_one({
+            "project_id": project_id,
+            "wallet_address": wallet_address
+        })
+        
+        if existing_rating:
+            # Update existing rating
+            await db.project_ratings.update_one(
+                {"project_id": project_id, "wallet_address": wallet_address},
+                {"$set": {"rating": rating, "timestamp": datetime.now(timezone.utc)}}
+            )
+            message = "Rating updated"
+        else:
+            # Create new rating
+            rating_doc = {
+                "project_id": project_id,
+                "wallet_address": wallet_address,
+                "rating": rating,
+                "timestamp": datetime.now(timezone.utc)
+            }
+            await db.project_ratings.insert_one(rating_doc)
+            message = "Rating submitted"
+        
+        # Calculate new average
+        pipeline = [
+            {"$match": {"project_id": project_id}},
+            {"$group": {
+                "_id": "$project_id",
+                "avg_rating": {"$avg": "$rating"},
+                "total_ratings": {"$sum": 1}
+            }}
+        ]
+        
+        stats = await db.project_ratings.aggregate(pipeline).to_list(length=1)
+        avg_rating = round(stats[0]["avg_rating"], 2) if stats else rating
+        total_ratings = stats[0]["total_ratings"] if stats else 1
+        
+        return {
+            "status": "success",
+            "message": message,
+            "project_id": project_id,
+            "avg_rating": avg_rating,
+            "total_ratings": total_ratings
+        }
+    
+    except Exception as e:
+        logger.error(f"Error rating project: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to submit rating")
+
+@api_router.get("/projects/{project_id}/rating")
+async def get_project_rating(project_id: str, wallet_address: Optional[str] = None):
+    """
+    Get project rating statistics and user's rating if wallet provided
+    """
+    try:
+        # Calculate average rating
+        pipeline = [
+            {"$match": {"project_id": project_id}},
+            {"$group": {
+                "_id": "$project_id",
+                "avg_rating": {"$avg": "$rating"},
+                "total_ratings": {"$sum": 1}
+            }}
+        ]
+        
+        stats = await db.project_ratings.aggregate(pipeline).to_list(length=1)
+        
+        if not stats:
+            result = {
+                "project_id": project_id,
+                "avg_rating": 0,
+                "total_ratings": 0
+            }
+        else:
+            result = {
+                "project_id": project_id,
+                "avg_rating": round(stats[0]["avg_rating"], 2),
+                "total_ratings": stats[0]["total_ratings"]
+            }
+        
+        # Get user's rating if wallet provided
+        if wallet_address:
+            user_rating = await db.project_ratings.find_one({
+                "project_id": project_id,
+                "wallet_address": wallet_address.lower()
+            })
+            result["user_rating"] = user_rating["rating"] if user_rating else None
+        
+        return result
+    
+    except Exception as e:
+        logger.error(f"Error fetching project rating: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch rating")
+
 # Include the routers in the main app
 from ad_management import ad_router
 from referral_system import referral_router
