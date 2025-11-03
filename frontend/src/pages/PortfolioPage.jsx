@@ -3,6 +3,7 @@ import { useAccount } from 'wagmi';
 import axios from 'axios';
 import { Wallet, TrendingUp, TrendingDown, DollarSign, PieChart, Clock, Bell } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import SwapHistory from '../components/SwapHistory';
 import PriceAlerts from '../components/PriceAlerts';
 
