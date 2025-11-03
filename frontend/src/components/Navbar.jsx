@@ -146,18 +146,25 @@ const Navbar = ({ selectedChain, onChainChange }) => {
               <div
                 key={idx}
                 className="relative"
-                onMouseEnter={() => setOpenMenu(idx)}
-                onMouseLeave={() => setOpenMenu(null)}
+                onMouseEnter={() => handleMenuEnter(idx)}
+                onMouseLeave={handleMenuLeave}
               >
-                <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <button 
+                  onClick={() => handleMenuClick(idx)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                >
                   {category.icon}
                   <span>{category.name}</span>
-                  <ChevronDown className="w-3 h-3" />
+                  <ChevronDown className={`w-3 h-3 transition-transform ${openMenu === idx ? 'rotate-180' : ''}`} />
                 </button>
 
                 {/* Dropdown */}
                 {openMenu === idx && (
-                  <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden z-50">
+                  <div 
+                    className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden z-50"
+                    onMouseEnter={() => handleMenuEnter(idx)}
+                    onMouseLeave={handleMenuLeave}
+                  >
                     {category.items.map((item, itemIdx) => (
                       <Link
                         key={itemIdx}
@@ -165,6 +172,7 @@ const Navbar = ({ selectedChain, onChainChange }) => {
                         className={`flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
                           isActive(item.path) ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                         }`}
+                        onClick={() => setOpenMenu(null)}
                       >
                         <span className="text-sm">{item.label}</span>
                         {item.badge && (
