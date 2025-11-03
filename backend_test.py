@@ -876,6 +876,18 @@ class SwapLaunchAPITester:
         print("\n📊 Testing DEX Pairs Endpoint...")
         self.test_dex_pairs_endpoint()
         
+        # Priority Tests: Referral System Backend API
+        print("\n🎯 Testing Referral System Backend API...")
+        self.test_referral_track_endpoint()
+        self.test_referral_stats_endpoint()
+        self.test_referral_leaderboard_endpoint()
+        self.test_referral_reward_endpoint()
+        self.test_referral_claim_endpoint()
+        
+        # Test complete referral flow
+        print("\n🔄 Testing Complete Referral Flow...")
+        self.test_referral_system_flow()
+        
         # Print summary
         print("\n" + "=" * 60)
         print(f"📊 Test Summary: {self.tests_passed}/{self.tests_run} tests passed")
