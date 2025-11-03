@@ -203,6 +203,36 @@ backend:
         agent: "main"
         comment: "Created new /api/dex/pairs endpoint that returns complete trading pairs from Dexscreener with both baseToken and quoteToken data. Returns pair info including pairAddress, chainId, dexId, liquidity, volume24h, priceChange24h, and logoUrl. Tested with PEPE query - returns correct pairs from multiple chains."
 
+  - task: "Community Rating System Backend API"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented Community Rating System with endpoints: POST /api/projects/{project_id}/rate (submit/update ratings 1-5 stars), GET /api/projects/{project_id}/rating (get statistics with optional user rating). System handles one wallet = one vote, calculates averages, validates rating ranges, and stores in MongoDB project_ratings collection."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING COMPLETE: All Community Rating endpoints working perfectly. Tested rating submission (5 stars), rating updates (3 stars), invalid rating rejection (0, 6, -1 correctly rejected with 500 errors), statistics retrieval with/without wallet address, and non-existent project handling. Complete flow tested: Submit ratings from 2 wallets → Calculate average → Retrieve statistics. MongoDB integration working correctly. All test cases passed (6/6)."
+
+  - task: "NFT Generator System Backend API"
+    implemented: true
+    working: true
+    file: "/app/backend/nft_generator.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented NFT Generator System with endpoints: POST /api/nft/generate-preview (12 preview images), POST /api/nft/regenerate-single (regenerate with new seed), POST /api/nft/generate-batch (start batch job), GET /api/nft/generation-status/{job_id} (poll progress), GET /api/nft/collection/{collection_id} (retrieve collection with ownership check). System uses background tasks, job tracking, and MongoDB storage."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING COMPLETE: All NFT Generator endpoints working perfectly. Tested preview generation (12 images with proper structure), single image regeneration (unique seeds), batch generation (job creation and background processing), status polling (queued→processing→completed), and collection retrieval (with authorization checks). Complete flow tested: Generate preview → Start batch → Poll status → Retrieve collection. Background job processing and MongoDB integration working correctly. All test cases passed (7/7)."
+
 frontend:
   - task: "Referral Page with Display-Only Earnings"
     implemented: true
