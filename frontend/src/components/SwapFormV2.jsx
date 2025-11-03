@@ -783,28 +783,43 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
 
       {/* Quote Details */}
       {quote && sellToken && buyToken && (
-        <div data-testid="quote-details" className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-2">
-          <div className="flex items-start">
-            <Info className="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-            <div className="flex-1 space-y-1 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Rate:</span>
-                <span className="font-medium">
-                  1 {sellToken.symbol} = {(parseFloat(ethers.formatUnits(quote.buyAmount, buyToken.decimals)) / parseFloat(sellAmount)).toFixed(6)} {buyToken.symbol}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Slippage:</span>
-                <span className="font-medium">{slippageMode === 'auto' ? 'Auto (0.1-0.5%)' : formatSlippage(effectiveSlippage.slippage)}</span>
-              </div>
-              {quote.sources && quote.sources.length > 0 && (
+        <div data-testid="quote-details" className="space-y-3">
+          {/* Basic Quote Info */}
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 space-y-2">
+            <div className="flex items-start">
+              <Info className="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+              <div className="flex-1 space-y-1 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Route:</span>
-                  <span className="font-medium text-xs">{quote.sources.slice(0, 2).map(s => s.name).join(', ')}</span>
+                  <span className="text-gray-600 dark:text-gray-400">Rate:</span>
+                  <span className="font-medium text-gray-800 dark:text-gray-200">
+                    1 {sellToken.symbol} = {(parseFloat(ethers.formatUnits(quote.buyAmount, buyToken.decimals)) / parseFloat(sellAmount)).toFixed(6)} {buyToken.symbol}
+                  </span>
                 </div>
-              )}
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Slippage:</span>
+                  <span className="font-medium text-gray-800 dark:text-gray-200">
+                    {slippageMode === 'auto' ? 'Auto (0.1-0.5%)' : formatSlippage(effectiveSlippage.slippage)}
+                  </span>
+                </div>
+                {quote.sources && quote.sources.length > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Route:</span>
+                    <span className="font-medium text-xs text-gray-800 dark:text-gray-200">
+                      {quote.sources.slice(0, 2).map(s => s.name).join(', ')}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
+
+          {/* Route Breakdown - "Why this route?" */}
+          <RouteBreakdown 
+            quote={quote} 
+            sellToken={sellToken} 
+            buyToken={buyToken} 
+            chainId={chainId} 
+          />
         </div>
       )}
 
