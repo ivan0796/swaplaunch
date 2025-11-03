@@ -72,7 +72,7 @@ const resources = {
       "ad.sponsored": "Sponsored",
       
       // Launchpad
-      "launchpad.title": "Non-Custodial Token Launchpad",
+      "launchpad.title": "Token Launchpad",
       "launchpad.subtitle": "Launch your own token in minutes. No coding required. Fully decentralized.",
       "launchpad.launchYourToken": "Launch Your Token",
       "launchpad.selectBlockchain": "Select Blockchain",
@@ -98,8 +98,8 @@ const resources = {
       "launchpad.tokenDeployed": "Token is deployed",
       "launchpad.addLiquidity": "Add liquidity (optional)",
       "launchpad.startTrading": "Start trading",
-      "launchpad.nonCustodial": "Non-Custodial",
-      "launchpad.nonCustodialDesc": "You maintain full control. We never hold your tokens or funds.",
+      "launchpad.secureTitle": "Secure & Transparent",
+      "launchpad.secureDesc": "You maintain full control. Your private keys never leave your wallet.",
       "launchpad.lowFee": "Low Fee",
       "launchpad.lowFeeDesc": "Only {fee} ETH launch fee. No hidden costs.",
       "launchpad.instantTrading": "Instant Trading",
@@ -113,7 +113,7 @@ const resources = {
       
       // NFT Maker
       "nft.title": "Create Unique NFT Collections",
-      "nft.subtitle": "Turn your ideas into NFTs with AI. Non-custodial, stored on IPFS.",
+      "nft.subtitle": "Turn your ideas into NFTs with AI. Stored on IPFS.",
       "nft.aiGenerator": "AI NFT Generator",
       "nft.collectionName": "Collection Name",
       "nft.describeCollection": "Describe Your Collection",
@@ -128,7 +128,7 @@ const resources = {
       "nft.previewCollection": "Preview Your Collection",
       "nft.backToEdit": "Back to Edit",
       "nft.generateNFTs": "Generate {quantity} NFTs",
-      "nft.nonCustodialNote": "Non-Custodial: You sign all transactions. We never hold your keys.",
+      "nft.securityNote": "You sign all transactions. Your private keys remain secure in your wallet.",
       
       // Referrals
       "referrals.title": "Earn by Sharing",
@@ -142,7 +142,7 @@ const resources = {
       "referrals.totalEarned": "Total Earned",
       "referrals.lifetimeRewards": "Lifetime rewards",
       "referrals.available": "Available",
-      "referrals.withdrawalsSoon": "Withdrawals coming soon — keep earning!",
+      "referrals.withdrawalNote": "Automatic payouts available soon",
       "referrals.howItWorks": "How It Works",
       "referrals.shareLink": "Share Your Link",
       "referrals.shareLinkDesc": "Copy your unique referral link and share it with friends",
@@ -167,13 +167,13 @@ const resources = {
       "portfolio.totalPnL": "Total P&L",
       "portfolio.assets": "Assets",
       "portfolio.yourHoldings": "Your Holdings",
-      "portfolio.nonCustodialNote": "Non-custodial - Read-only data from blockchain",
+      "portfolio.dataNote": "Read-only data from blockchain",
       
       // Bridge
       "bridge.title": "Cross-Chain Bridge",
-      "bridge.comingSoon": "Bridge Integration Coming Soon",
-      "bridge.comingSoonDesc": "Cross-chain asset transfers powered by LI.FI will be available here.",
-      "bridge.bridgeAssets": "Bridge Assets (Coming Soon)",
+      "bridge.integratingPartners": "Integrating bridge partners",
+      "bridge.integratingDesc": "Cross-chain asset transfers will be available here.",
+      "bridge.bridgeAssets": "Bridge Assets",
       
       // Projects/Explore
       "projects.getFeatured": "Get Your Project Featured",
