@@ -1488,6 +1488,29 @@ class SwapLaunchAPITester:
         print("\n🔄 Testing Complete Referral Flow...")
         self.test_referral_system_flow()
         
+        # Priority Tests: Community Rating System
+        print("\n⭐ Testing Community Rating System...")
+        self.test_project_rating_submit()
+        self.test_project_rating_update()
+        self.test_project_rating_invalid()
+        self.test_project_rating_get_with_wallet()
+        self.test_project_rating_get_without_wallet()
+        self.test_project_rating_nonexistent()
+        
+        # Priority Tests: NFT Generator System
+        print("\n🎨 Testing NFT Generator System...")
+        self.test_nft_generate_preview()
+        self.test_nft_regenerate_single()
+        self.test_nft_generate_batch()
+        self.test_nft_generation_status()
+        self.test_nft_collection_get_authorized()
+        self.test_nft_collection_get_unauthorized()
+        
+        # Test complete flows
+        print("\n🔄 Testing Complete System Flows...")
+        self.test_community_rating_flow()
+        self.test_nft_generator_flow()
+        
         # Print summary
         print("\n" + "=" * 60)
         print(f"📊 Test Summary: {self.tests_passed}/{self.tests_run} tests passed")
