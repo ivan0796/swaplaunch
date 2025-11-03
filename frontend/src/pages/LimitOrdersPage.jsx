@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
-import { TrendingUp, Calendar, Info } from 'lucide-react';
+import { TrendingUp, Calendar, Info, AlertCircle } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
 
 const LimitOrdersPage = () => {
+  const { t } = useTranslation();
   const { address, isConnected } = useAccount();
   const [selectedChain, setSelectedChain] = useState(1);
   const [orderType, setOrderType] = useState('limit'); // 'limit' or 'dca'
@@ -23,19 +25,30 @@ const LimitOrdersPage = () => {
       toast.error('Please connect your wallet');
       return;
     }
-    toast.info('Limit Orders & DCA coming soon! Smart contract deployment in progress.');
+    toast.info('Feature in beta testing - Smart contract deployment in progress.');
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Navbar */}
       <Navbar selectedChain={selectedChain} onChainChange={setSelectedChain} />
 
       <div className="max-w-2xl mx-auto px-4 py-12">
-        <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50">
+        <div className="bg-white dark:bg-gray-800 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-6">
             <TrendingUp className="w-8 h-8 text-blue-600" />
-            <h1 className="text-3xl font-bold">Limit Orders & DCA</h1>
+            <h1 className="text-3xl font-bold dark:text-white">Limit Orders & DCA</h1>
+            <span className="px-3 py-1 bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 rounded-full text-sm font-bold">BETA</span>
+          </div>
+
+          {/* Beta Notice */}
+          <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-xl p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0" />
+              <div className="text-sm text-orange-900 dark:text-orange-200">
+                <strong>Beta Feature:</strong> Limit orders and DCA strategies are in beta. Smart contracts are being deployed and tested.
+              </div>
+            </div>
           </div>
 
           {/* Tabs */}
@@ -43,7 +56,7 @@ const LimitOrdersPage = () => {
             <button
               onClick={() => setOrderType('limit')}
               className={`px-6 py-2 rounded-lg font-medium transition ${
-                orderType === 'limit' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'
+                orderType === 'limit' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
               }`}
             >
               Limit Order
