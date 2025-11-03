@@ -73,6 +73,15 @@ const LaunchpadPage = () => {
     }));
   };
 
+  const handleChainSelect = (chainId) => {
+    const chain = chains.find(c => c.id === chainId);
+    setFormData(prev => ({
+      ...prev,
+      selectedChain: chainId,
+      decimals: chain.decimals.toString()
+    }));
+  };
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
