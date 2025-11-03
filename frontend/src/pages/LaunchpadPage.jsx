@@ -235,8 +235,8 @@ const LaunchpadPage = () => {
                       onClick={() => handleChainSelect(chain.id)}
                       className={`p-4 rounded-xl border-2 transition-all ${
                         formData.selectedChain === chain.id
-                          ? 'border-purple-600 bg-purple-50 dark:bg-purple-900/30'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-purple-300'
+                          ? 'border-brand-blue bg-blue-50 dark:bg-blue-900/30'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-blue-300'
                       }`}
                     >
                       <div className="text-3xl mb-2">{chain.logo}</div>
