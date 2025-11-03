@@ -441,10 +441,10 @@ async def log_referral(referral_data: ReferralLogCreate):
     logger.info(f"Referral logged: {referral_obj.referrer_wallet} -> {referral_obj.trader_wallet}")
     return referral_obj
 
-@api_router.get("/referrals/{wallet_address}")
-async def get_referral_stats(wallet_address: str):
+@api_router.get("/legacy-referrals/{wallet_address}")
+async def get_legacy_referral_stats(wallet_address: str):
     """
-    Get referral statistics for a wallet
+    Get legacy referral statistics for a wallet (deprecated - use /api/referrals/stats/{wallet} instead)
     """
     referrals = await db.swap_referrals.find(
         {"referrer_wallet": wallet_address},
