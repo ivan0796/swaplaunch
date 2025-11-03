@@ -2,18 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAccount, useChainId } from 'wagmi';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import WalletButtonWithHistory from '../components/WalletButtonWithHistory';
+import Navbar from '../components/Navbar';
 import SwapFormV2 from '../components/SwapFormV2';
 import SolanaSwapForm from '../components/SolanaSwapForm';
-import NetworkSelectorDropdown from '../components/NetworkSelectorDropdown';
 import TrendingTokensV2 from '../components/TrendingTokensV2';
 import NewListings from '../components/NewListings';
-import SwapHistoryModal from '../components/SwapHistoryModal';
 import ReferralWidget from '../components/ReferralWidget';
 import AdBanner from '../components/AdBanner';
-import LanguageSwitcher from '../components/LanguageSwitcher';
-import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 const SwapPageV2 = () => {
