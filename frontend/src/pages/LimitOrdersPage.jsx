@@ -4,10 +4,11 @@ import { TrendingUp, Calendar, Info } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { toast } from 'sonner';
-import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 const LimitOrdersPage = () => {
   const { address, isConnected } = useAccount();
+  const [selectedChain, setSelectedChain] = useState(1);
   const [orderType, setOrderType] = useState('limit'); // 'limit' or 'dca'
   const [tokenFrom, setTokenFrom] = useState('');
   const [tokenTo, setTokenTo] = useState('');
