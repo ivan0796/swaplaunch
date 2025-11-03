@@ -24,13 +24,13 @@ const TokenCreatorPage = () => {
   const [deployedToken, setDeployedToken] = useState(null);
 
   const chains = [
-    { id: 1, name: 'Ethereum', logo: '⟠', standard: 'ERC-20', gasEst: '~0.05 ETH', decimals: 18 },
-    { id: 56, name: 'BNB Chain', logo: '🟡', standard: 'BEP-20', gasEst: '~0.01 BNB', decimals: 18 },
-    { id: 137, name: 'Polygon', logo: '🟣', standard: 'ERC-20', gasEst: '~0.5 MATIC', decimals: 18 },
-    { id: 42161, name: 'Arbitrum', logo: '🔵', standard: 'ERC-20', gasEst: '~0.001 ETH', decimals: 18 },
-    { id: 8453, name: 'Base', logo: '🔷', standard: 'ERC-20', gasEst: '~0.001 ETH', decimals: 18 },
-    { id: 43114, name: 'Avalanche', logo: '🔺', standard: 'ERC-20', gasEst: '~0.5 AVAX', decimals: 18 },
-    { id: 0, name: 'Solana', logo: '◎', standard: 'SPL', gasEst: '~0.01 SOL', decimals: 9 }
+    { id: 1, name: 'Ethereum', logo: '⟠', standard: 'ERC-20', gasEst: '~$2-5', decimals: 18 },
+    { id: 56, name: 'BNB Chain', logo: '🟡', standard: 'BEP-20', gasEst: '~$2-5', decimals: 18 },
+    { id: 137, name: 'Polygon', logo: '🟣', standard: 'ERC-20', gasEst: '~$2-5', decimals: 18 },
+    { id: 42161, name: 'Arbitrum', logo: '🔵', standard: 'ERC-20', gasEst: '~$2-5', decimals: 18 },
+    { id: 8453, name: 'Base', logo: '🔷', standard: 'ERC-20', gasEst: '~$2-5', decimals: 18 },
+    { id: 43114, name: 'Avalanche', logo: '🔺', standard: 'ERC-20', gasEst: '~$2-5', decimals: 18 },
+    { id: 0, name: 'Solana', logo: '◎', standard: 'SPL', gasEst: '~$2-5', decimals: 9 }
   ];
 
   const selectedChainData = chains.find(c => c.id === selectedChain) || chains[0];
