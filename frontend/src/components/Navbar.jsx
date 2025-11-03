@@ -19,6 +19,7 @@ const Navbar = ({ selectedChain, onChainChange }) => {
   const [openMenu, setOpenMenu] = useState(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const navRef = useRef(null);
+  const closeTimeoutRef = useRef(null);
 
   // Detect touch device
   useEffect(() => {
