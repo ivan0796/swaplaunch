@@ -1,44 +1,119 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAccount } from 'wagmi';
 import { useWallet } from '@solana/wallet-adapter-react';
 import WalletButtonWithHistory from './WalletButtonWithHistory';
 import NetworkSelectorDropdown from './NetworkSelectorDropdown';
 import LanguageSwitcher from './LanguageSwitcher';
+import ThemeToggle from './ThemeToggle';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { ChevronDown, Zap, TrendingUp, Rocket, Image } from 'lucide-react';
 
 const Navbar = ({ selectedChain, onChainChange }) => {
   const { t } = useTranslation();
+  const location = useLocation();
   const { address: evmAddress, isConnected: evmConnected } = useAccount();
   const { publicKey: solanaAddress, connected: solanaConnected } = useWallet();
+  const [openMenu, setOpenMenu] = useState(null);
+
+  const menuCategories = [
+    {
+      name: 'Swap & Trade',
+      icon: <Zap className="w-4 h-4" />,
+      items: [
+        { path: '/', label: t('nav.trade'), badge: 'Basic' },
+        { path: '/limit-orders', label: 'Pro Swap', badge: 'Pro' }
+      ]
+    },
+    {
+      name: 'Portfolio',
+      icon: <TrendingUp className="w-4 h-4" />,
+      items: [
+        { path: '/portfolio', label: 'My Portfolio', badge: 'New' },
+        { path: '/bridge', label: t('nav.bridge') }
+      ]
+    },
+    {
+      name: 'Launchpad',
+      icon: <Rocket className="w-4 h-4" />,
+      items: [
+        { path: '/launchpad', label: t('nav.launchpad') },
+        { path: '/token-locker', label: t('nav.tokenLocker') },
+        { path: '/projects', label: t('nav.projects') }
+      ]
+    },
+    {
+      name: 'NFT Zone',
+      icon: <Image className="w-4 h-4" />,
+      items: [
+        { path: '/nft-mint', label: 'NFT Mintpad', badge: 'Beta' },
+        { path: '/advertise', label: t('nav.advertise') }
+      ]
+    }
+  ];
+
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-50">
-      <div className="mx-auto px-6 py-4">
+    <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+      <div className="mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600">
               <span className="text-xl">🚀</span>
             </div>
-            <div className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent sm:text-2xl">
-              SwapLaunch v2.0
+            <div className="text-xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              SwapLaunch v4.0
             </div>
           </Link>
 
-          {/* Navigation */}
-          <nav className="hidden items-center gap-6 text-sm md:flex">
-            <Link className="opacity-80 hover:opacity-100" to="/">{t('nav.trade')}</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/projects">{t('nav.projects')}</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/launchpad">{t('nav.launchpad')}</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/token-locker">{t('nav.tokenLocker')}</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/limit-orders">{t('nav.limitDCA')}</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/bridge">{t('nav.bridge')}</Link>
+          {/* Navigation - Categorized */}
+          <nav className="hidden items-center gap-1 text-sm md:flex">
+            {menuCategories.map((category, idx) => (
+              <div
+                key={idx}
+                className="relative"
+                onMouseEnter={() => setOpenMenu(idx)}
+                onMouseLeave={() => setOpenMenu(null)}
+              >
+                <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                  {category.icon}
+                  <span>{category.name}</span>
+                  <ChevronDown className="w-3 h-3" />
+                </button>
+
+                {/* Dropdown */}
+                {openMenu === idx && (
+                  <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden">
+                    {category.items.map((item, itemIdx) => (
+                      <Link
+                        key={itemIdx}
+                        to={item.path}
+                        className={`flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
+                          isActive(item.path) ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                        }`}
+                      >
+                        <span className="text-sm">{item.label}</span>
+                        {item.badge && (
+                          <span className="px-2 py-0.5 text-xs bg-blue-600 text-white rounded">
+                            {item.badge}
+                          </span>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </nav>
 
           {/* Right Side */}
           <div className="flex items-center gap-2">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+            
             {/* Language Switcher */}
             <LanguageSwitcher />
             
