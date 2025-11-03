@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getTrendingTokens } from '../services/coingecko';
+import { getTrendingTokens } from '../services/coinmarketcap';
 import { TrendingUp, ExternalLink } from 'lucide-react';
-import { formatPriceChange, getPriceChangeColor } from '../services/coingecko';
+import { formatPriceChange, getPriceChangeColor } from '../services/coinmarketcap';
 
 const TrendingTokens = ({ onTokenSelect }) => {
   const [trending, setTrending] = useState([]);
