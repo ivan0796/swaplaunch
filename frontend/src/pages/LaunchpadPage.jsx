@@ -186,10 +186,10 @@ const LaunchpadPage = () => {
               <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30">
                 <Shield className="w-5 h-5 text-purple-600" />
               </div>
-              <h3 className="font-semibold">Non-Custodial</h3>
+              <h3 className="font-semibold">{t('launchpad.nonCustodial')}</h3>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              You maintain full control. We never hold your tokens or funds.
+              {t('launchpad.nonCustodialDesc')}
             </p>
           </div>
 
@@ -198,10 +198,10 @@ const LaunchpadPage = () => {
               <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30">
                 <Coins className="w-5 h-5 text-green-600" />
               </div>
-              <h3 className="font-semibold">Low Fee</h3>
+              <h3 className="font-semibold">{t('launchpad.lowFee')}</h3>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Only {LAUNCH_FEE} ETH launch fee. No hidden costs.
+              {t('launchpad.lowFeeDesc', { fee: LAUNCH_FEE })}
             </p>
           </div>
 
@@ -210,7 +210,7 @@ const LaunchpadPage = () => {
               <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30">
                 <TrendingUp className="w-5 h-5 text-blue-600" />
               </div>
-              <h3 className="font-semibold">Instant Trading</h3>
+              <h3 className="font-semibold">{t('launchpad.instantTrading')}</h3>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Token is immediately tradable on all DEXs after launch.
