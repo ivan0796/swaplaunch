@@ -96,9 +96,9 @@ const SwapPageV2 = () => {
           <div className="space-y-3">
             <div className="flex items-end justify-between">
               <div>
-                <h2 className="text-lg font-bold tracking-tight">Swap Tokens</h2>
+                <h2 className="text-lg font-bold tracking-tight">{t('swap.title')}</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Trade crypto across multiple blockchains with advanced security
+                  {t('swap.subtitle')}
                 </p>
               </div>
             </div>
