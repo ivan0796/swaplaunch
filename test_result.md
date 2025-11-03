@@ -252,27 +252,33 @@ backend:
 
   - task: "A/B Testing for Fee Tier Rollout"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/ab_testing.py, /app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implemented A/B testing module with cohort determination based on wallet hashing (SHA256). Config: 20% tiered fees (dynamic tiers), 80% control (fixed 0.25% M1 fee). Stable bucket assignment using wallet+salt hash mod 100. Integrated into both /evm/quote and /solana/quote endpoints. Added cohort logging to MongoDB (ab_test_events collection) for analytics. Response includes 'cohort' field ('tiered' or 'control'). Created /admin/ab-stats endpoint with token auth for viewing metrics: quotes, executions, conversion, revenue, volume by cohort."
+      - working: true
+        agent: "testing"
+        comment: "✅ A/B TESTING SYSTEM COMPREHENSIVE TESTING COMPLETE: All 6 priority tests passed (100% success rate). **EVM Quote Cohort Assignment**: Tested 8 wallets with proper cohort distribution and fee assignment. Control cohort correctly gets 0.25% fee, tiered cohort gets variable fees (0.10-0.35%). **Solana Quote Cohort Assignment**: Tested 5 Solana wallets with correct cohort logic. **Cohort Stickiness**: Same wallet consistently gets same cohort across multiple requests (deterministic hashing working). **MongoDB Event Logging**: A/B test fields (cohort, feeTier, feePercent) properly included in responses, logging structure verified. **Admin A/B Stats Endpoint**: Authentication working (401 without token, 400 for invalid window, 200 with valid token), response structure includes cohorts (tiered/control) with all required metrics (quotes, executed, conversion, revenue_usd, volume_usd, avg_fee_percent). **Complete A/B Testing Flow**: All components integrated and working together. System ready for production rollout."
 
   - task: "Admin A/B Stats Endpoint"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Created GET /admin/ab-stats endpoint with ADMIN_API_TOKEN authentication. Returns aggregated metrics for tiered vs control cohorts: quotes requested, executed swaps, conversion rate (%), total revenue USD, total volume USD, avg fee percent. Supports time windows: 7d, 30d, all. Aggregates from MongoDB ab_test_events collection. Response includes chains list and rollout percentage."
+      - working: true
+        agent: "testing"
+        comment: "✅ ADMIN A/B STATS ENDPOINT TESTING COMPLETE: All authentication and validation tests passed. Valid request with token returns 200 OK with proper structure (cohorts, metrics, rollout_percent). Request without token correctly returns 401 Unauthorized. Invalid window parameter correctly returns 400 Bad Request. Response includes both 'tiered' and 'control' cohorts with all required metrics: quotes, executed, conversion, revenue_usd, volume_usd, avg_fee_percent. Admin endpoint ready for production monitoring."
 
 frontend:
   - task: "Navigation Consistency - Unified Navbar Across All Pages"
