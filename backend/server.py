@@ -465,54 +465,35 @@ async def get_legacy_referral_stats(wallet_address: str):
         "referrals": referrals[:50]  # Last 50
     }
 
-@api_router.get("/coingecko/trending")
+from coinmarketcap_service import cmc_service
+
+# ==============================================
+# PRICE DATA ENDPOINTS (CoinMarketCap)
+# ==============================================
+
+@api_router.get("/cmc/trending")
 async def get_trending_tokens():
     """
-    Proxy to CoinGecko trending tokens API
+    Get trending tokens from CoinMarketCap
     """
     try:
-        async with httpx.AsyncClient(timeout=10.0) as http_client:
-            response = await http_client.get(
-                "https://api.coingecko.com/api/v3/search/trending"
-            )
-            if response.status_code == 200:
-                return response.json()
-            else:
-                raise HTTPException(status_code=response.status_code, detail="CoinGecko API error")
+        data = await cmc_service.get_trending_tokens()
+        return data
     except Exception as e:
         logger.error(f"Error fetching trending tokens: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@api_router.get("/coingecko/price/{coin_id}")
-async def get_coin_price(coin_id: str):
+@api_router.get("/cmc/price/{symbol}")
+async def get_coin_price(symbol: str):
     """
-    Proxy to CoinGecko coin price API with sparkline
+    Get coin price from CoinMarketCap by symbol
     """
     try:
-        async with httpx.AsyncClient(timeout=10.0) as http_client:
-            response = await http_client.get(
-                f"https://api.coingecko.com/api/v3/coins/{coin_id}",
-                params={
-                    "localization": "false",
-                    "tickers": "false",
-                    "market_data": "true",
-                    "community_data": "false",
-                    "developer_data": "false",
-                    "sparkline": "true"
-                }
-            )
-            if response.status_code == 200:
-                data = response.json()
-                return {
-                    "id": data.get("id"),
-                    "symbol": data.get("symbol"),
-                    "name": data.get("name"),
-                    "current_price": data.get("market_data", {}).get("current_price", {}).get("usd"),
-                    "price_change_24h": data.get("market_data", {}).get("price_change_percentage_24h"),
-                    "sparkline_7d": data.get("market_data", {}).get("sparkline_7d", {}).get("price", [])
-                }
-            else:
-                raise HTTPException(status_code=response.status_code, detail="CoinGecko API error")
+        data = await cmc_service.get_coin_price(symbol)
+        if data:
+            return data
+        else:
+            raise HTTPException(status_code=404, detail="Token not found")
     except Exception as e:
         logger.error(f"Error fetching coin price: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
