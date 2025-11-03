@@ -72,13 +72,13 @@ const NFTMintPage = () => {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-brand-blue to-brand-purple text-white rounded-full mb-4">
             <Sparkles className="w-4 h-4" />
-            <span className="text-sm font-semibold">AI NFT Generator</span>
+            <span className="text-sm font-semibold">{t('nft.aiGenerator')}</span>
           </div>
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-brand-blue to-brand-purple bg-clip-text text-transparent">
-            Create Unique NFT Collections
+            {t('nft.title')}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300">
-            Turn your ideas into NFTs with AI. Non-custodial, stored on IPFS.
+            {t('nft.subtitle')}
           </p>
         </div>
 
