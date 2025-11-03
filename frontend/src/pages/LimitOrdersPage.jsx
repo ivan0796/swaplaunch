@@ -92,24 +92,37 @@ const LimitOrdersPage = () => {
                 <Input type="number" placeholder="0.0" value={targetPrice} onChange={(e) => setTargetPrice(e.target.value)} />
               </div>
             ) : (
-              <div>
-                <label className="block text-sm font-medium mb-2">Interval</label>
-                <select
-                  value={dcaInterval}
-                  onChange={(e) => setDcaInterval(e.target.value)}
-                  className="w-full px-4 py-2 border rounded-lg"
-                >
-                  <option value="once">Einmalig (One-Time)</option>
-                  <option value="daily">Täglich (Daily)</option>
-                  <option value="weekly">Wöchentlich (Weekly)</option>
-                  <option value="monthly">Monatlich (Monthly)</option>
-                </select>
+              <>
                 {dcaInterval === 'once' && (
-                  <p className="text-xs text-gray-500 mt-2">
-                    Order wird nur einmal ausgeführt, sobald der Zielpreis erreicht wird.
-                  </p>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Target Price (Optional)</label>
+                    <Input 
+                      type="number" 
+                      placeholder="Leer lassen für Market Order" 
+                      value={targetPrice} 
+                      onChange={(e) => setTargetPrice(e.target.value)} 
+                    />
+                  </div>
                 )}
-              </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Interval</label>
+                  <select
+                    value={dcaInterval}
+                    onChange={(e) => setDcaInterval(e.target.value)}
+                    className="w-full px-4 py-2 border rounded-lg"
+                  >
+                    <option value="once">Einmalig (One-Time)</option>
+                    <option value="daily">Täglich (Daily)</option>
+                    <option value="weekly">Wöchentlich (Weekly)</option>
+                    <option value="monthly">Monatlich (Monthly)</option>
+                  </select>
+                  {dcaInterval === 'once' && (
+                    <p className="text-xs text-gray-500 mt-2">
+                      Order wird nur einmal ausgeführt. Mit Zielpreis = Limit Order, ohne = Market Order.
+                    </p>
+                  )}
+                </div>
+              </>
             )}
 
             <Button
