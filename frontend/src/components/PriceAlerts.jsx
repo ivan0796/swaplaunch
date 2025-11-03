@@ -210,7 +210,7 @@ const PriceAlerts = ({ walletAddress }) => {
       {/* Info Note */}
       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-3 text-sm text-blue-900 dark:text-blue-200">
         <Bell className="w-4 h-4 inline mr-2" />
-        Alerts are checked every 5 minutes. You'll receive browser notifications.
+        <strong>No wallet needed!</strong> Alerts saved locally. Enable browser notifications for real-time alerts. Alerts checked every 5 minutes.
       </div>
     </div>
   );
