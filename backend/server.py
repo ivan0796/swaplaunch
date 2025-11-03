@@ -1155,9 +1155,15 @@ async def clean_cache():
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(clean_cache())
+    # Initialize ad slots
+    from ad_management import init_ad_slots
+    await init_ad_slots()
+    logger.info("Ad management initialized")
 
-# Include the router in the main app
+# Include the routers in the main app
+from ad_management import ad_router
 app.include_router(api_router)
+app.include_router(ad_router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,
