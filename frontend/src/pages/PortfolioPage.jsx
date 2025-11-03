@@ -54,64 +54,121 @@ const PortfolioPage = () => {
           <div className="text-center py-20">Loading portfolio...</div>
         ) : (
           <div className="space-y-6">
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <DollarSign className="w-5 h-5 text-blue-600" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Total Value</span>
-                </div>
-                <div className="text-3xl font-bold">${portfolio.totalValue.toLocaleString()}</div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <TrendingUp className="w-5 h-5 text-green-600" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Total P&L</span>
-                </div>
-                <div className="text-3xl font-bold text-green-600">
-                  +${portfolio.pnl.toLocaleString()}
-                </div>
-                <div className="text-sm text-green-600">+{portfolio.pnlPercent}%</div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <PieChart className="w-5 h-5 text-purple-600" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Assets</span>
-                </div>
-                <div className="text-3xl font-bold">{portfolio.tokens.length}</div>
-              </div>
+            {/* Tabs */}
+            <div className="flex gap-2 bg-white dark:bg-gray-800 rounded-xl p-2 shadow-lg">
+              <button
+                onClick={() => setActiveTab('assets')}
+                className={`flex-1 px-4 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
+                  activeTab === 'assets' 
+                    ? 'bg-blue-600 text-white' 
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }`}
+              >
+                <PieChart className="w-4 h-4" />
+                My Assets
+              </button>
+              <button
+                onClick={() => setActiveTab('history')}
+                className={`flex-1 px-4 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
+                  activeTab === 'history' 
+                    ? 'bg-blue-600 text-white' 
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }`}
+              >
+                <Clock className="w-4 h-4" />
+                History
+              </button>
+              <button
+                onClick={() => setActiveTab('alerts')}
+                className={`flex-1 px-4 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
+                  activeTab === 'alerts' 
+                    ? 'bg-blue-600 text-white' 
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }`}
+              >
+                <Bell className="w-4 h-4" />
+                Price Alerts
+              </button>
             </div>
 
-            {/* Token List */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold mb-4">Your Holdings</h3>
-              <div className="space-y-3">
-                {portfolio.tokens.map((token, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
-                    <div className="flex items-center gap-3">
-                      <img src={token.logo} alt={token.symbol} className="w-10 h-10 rounded-full" />
-                      <div>
-                        <div className="font-bold">{token.symbol}</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">{token.balance} {token.symbol}</div>
-                      </div>
+            {/* Assets Tab */}
+            {activeTab === 'assets' && (
+              <>
+                {/* Summary Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <DollarSign className="w-5 h-5 text-blue-600" />
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Total Value</span>
                     </div>
-                    <div className="text-right">
-                      <div className="font-bold">${token.value.toLocaleString()}</div>
-                      <div className={`text-sm flex items-center gap-1 ${token.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {token.change24h >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                        {Math.abs(token.change24h)}%
-                      </div>
-                    </div>
+                    <div className="text-3xl font-bold dark:text-white">${portfolio.totalValue.toLocaleString()}</div>
                   </div>
-                ))}
+
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <TrendingUp className="w-5 h-5 text-green-600" />
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Total P&L</span>
+                    </div>
+                    <div className="text-3xl font-bold text-green-600">
+                      +${portfolio.pnl.toLocaleString()}
+                    </div>
+                    <div className="text-sm text-green-600">+{portfolio.pnlPercent}%</div>
+                  </div>
+
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <PieChart className="w-5 h-5 text-purple-600" />
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Assets</span>
+                    </div>
+                    <div className="text-3xl font-bold dark:text-white">{portfolio.tokens.length}</div>
+                  </div>
+                </div>
+
+                {/* Token List */}
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+                  <h3 className="text-xl font-bold mb-4 dark:text-white">Your Holdings</h3>
+                  <div className="space-y-3">
+                    {portfolio.tokens.map((token, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+                        <div className="flex items-center gap-3">
+                          <img src={token.logo} alt={token.symbol} className="w-10 h-10 rounded-full" />
+                          <div>
+                            <div className="font-bold dark:text-white">{token.symbol}</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-400">{token.balance} {token.symbol}</div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-bold dark:text-white">${token.value.toLocaleString()}</div>
+                          <div className={`text-sm flex items-center gap-1 ${token.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {token.change24h >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                            {Math.abs(token.change24h)}%
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* History Tab */}
+            {activeTab === 'history' && (
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+                <h3 className="text-xl font-bold mb-4 dark:text-white">Swap History</h3>
+                <SwapHistory walletAddress={address} />
               </div>
-            </div>
+            )}
+
+            {/* Alerts Tab */}
+            {activeTab === 'alerts' && (
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+                <PriceAlerts walletAddress={address} />
+              </div>
+            )}
 
             {/* Data Source Note */}
             <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-              ✓ {t('portfolio.dataNote')}
+              ✓ Non-custodial tracking. Your wallet, your data.
             </div>
           </div>
         )}
