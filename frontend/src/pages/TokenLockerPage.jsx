@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
-import { Lock, Calendar, Info } from 'lucide-react';
+import { Lock, Calendar, Info, AlertCircle } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
 
 const TokenLockerPage = () => {
+  const { t } = useTranslation();
   const { address, isConnected } = useAccount();
   const [selectedChain, setSelectedChain] = useState(1);
   const [tokenAddress, setTokenAddress] = useState('');
