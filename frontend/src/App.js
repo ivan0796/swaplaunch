@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '@/App.css';
+import './i18n'; // Import i18n configuration
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SwapPageV2 from './pages/SwapPageV2';
 import BridgePage from './pages/BridgePage';
