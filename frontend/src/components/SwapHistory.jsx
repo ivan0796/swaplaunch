@@ -1,112 +1,145 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Clock } from 'lucide-react';
-import { ScrollArea } from './ui/scroll-area';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import { Clock, ArrowRight, ExternalLink, CheckCircle, XCircle } from 'lucide-react';
 
 const SwapHistory = ({ walletAddress }) => {
-  const [swaps, setSwaps] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchSwapHistory();
+    if (walletAddress) {
+      loadHistory();
+    }
   }, [walletAddress]);
 
-  const fetchSwapHistory = async () => {
-    if (!walletAddress) return;
-
+  const loadHistory = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API}/swaps`, {
-        params: { wallet_address: walletAddress }
-      });
-      setSwaps(response.data);
+      // Mock data - In production: fetch from backend API
+      const mockHistory = [
+        {
+          id: '1',
+          fromToken: { symbol: 'ETH', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
+          toToken: { symbol: 'USDC', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png' },
+          fromAmount: '1.5',
+          toAmount: '4850.25',
+          status: 'completed',
+          timestamp: Date.now() - 3600000,
+          txHash: '0x1234...5678',
+          chain: 'Ethereum',
+          fee: '0.15%'
+        },
+        {
+          id: '2',
+          fromToken: { symbol: 'BNB', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png' },
+          toToken: { symbol: 'USDT', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png' },
+          fromAmount: '10',
+          toAmount: '2150.50',
+          status: 'completed',
+          timestamp: Date.now() - 7200000,
+          txHash: '0xabcd...efgh',
+          chain: 'BSC',
+          fee: '0.20%'
+        }
+      ];
+      setHistory(mockHistory);
     } catch (error) {
-      console.error('Failed to fetch swap history:', error);
+      console.error('Failed to load history:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const formatDate = (timestamp) => {
-    return new Date(timestamp).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  const getExplorerUrl = (chain, txHash) => {
+    const explorers = {
+      'Ethereum': `https://etherscan.io/tx/${txHash}`,
+      'BSC': `https://bscscan.com/tx/${txHash}`,
+      'Polygon': `https://polygonscan.com/tx/${txHash}`,
+      'Solana': `https://solscan.io/tx/${txHash}`
+    };
+    return explorers[chain] || '#';
   };
 
-  const truncateAddress = (address) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
-
-  const getChainName = (chainId) => {
-    const chains = { 1: 'ETH', 56: 'BSC', 137: 'Polygon' };
-    return chains[chainId] || `Chain ${chainId}`;
+  const formatTime = (timestamp) => {
+    const diff = Date.now() - timestamp;
+    const hours = Math.floor(diff / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    
+    if (hours > 24) {
+      const days = Math.floor(hours / 24);
+      return `${days}d ago`;
+    }
+    if (hours > 0) return `${hours}h ago`;
+    return `${minutes}m ago`;
   };
 
   if (loading) {
     return (
-      <div className="glass-card rounded-2xl p-6">
-        <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: 'Space Grotesk' }}>
-          Recent Swaps
-        </h3>
-        <div className="text-center py-8 text-gray-500">
-          Loading...
-        </div>
+      <div className="text-center py-8">
+        <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto"></div>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-3">Loading history...</p>
+      </div>
+    );
+  }
+
+  if (history.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <Clock className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+        <p className="text-gray-600 dark:text-gray-400">No swap history yet</p>
+        <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">Your completed swaps will appear here</p>
       </div>
     );
   }
 
   return (
-    <div data-testid="swap-history" className="glass-card rounded-2xl p-6 shadow-xl">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold" style={{ fontFamily: 'Space Grotesk' }}>
-          Recent Swaps
-        </h3>
-        <Clock className="w-5 h-5 text-gray-400" />
-      </div>
-
-      {swaps.length === 0 ? (
-        <div className="text-center py-8 text-gray-500 text-sm">
-          No swap history yet
-        </div>
-      ) : (
-        <ScrollArea className="h-[300px]">
-          <div className="space-y-3">
-            {swaps.map((swap) => (
-              <div
-                key={swap.id}
-                data-testid="swap-history-item"
-                className="bg-white rounded-lg p-3 border border-gray-200 hover:border-blue-300 transition-colors"
-              >
-                <div className="flex justify-between items-start mb-2">
-                  <div className="text-xs text-gray-500">
-                    {formatDate(swap.timestamp)}
-                  </div>
-                  <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
-                    {getChainName(swap.chain_id)}
-                  </span>
+    <div className="space-y-3">
+      {history.map((swap) => (
+        <div key={swap.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <img src={swap.fromToken.logo} alt={swap.fromToken.symbol} className="w-6 h-6 rounded-full" />
+              <span className="font-medium dark:text-white">{swap.fromAmount} {swap.fromToken.symbol}</span>
+              <ArrowRight className="w-4 h-4 text-gray-400" />
+              <img src={swap.toToken.logo} alt={swap.toToken.symbol} className="w-6 h-6 rounded-full" />
+              <span className="font-medium dark:text-white">{swap.toAmount} {swap.toToken.symbol}</span>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              {swap.status === 'completed' ? (
+                <div className="flex items-center gap-1 text-green-600 text-sm">
+                  <CheckCircle className="w-4 h-4" />
+                  Completed
                 </div>
-                <div className="text-sm font-medium mb-1">
-                  {parseFloat(swap.amount_in).toFixed(4)} → {parseFloat(swap.amount_out).toFixed(4)}
+              ) : (
+                <div className="flex items-center gap-1 text-red-600 text-sm">
+                  <XCircle className="w-4 h-4" />
+                  Failed
                 </div>
-                {swap.tx_hash && (
-                  <div className="text-xs text-gray-500 font-mono">
-                    TX: {truncateAddress(swap.tx_hash)}
-                  </div>
-                )}
-                <div className="text-xs text-gray-400 mt-1">
-                  Fee: {parseFloat(swap.fee_amount).toFixed(6)}
-                </div>
-              </div>
-            ))}
+              )}
+            </div>
           </div>
-        </ScrollArea>
-      )}
+
+          <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex items-center gap-4">
+              <span>{swap.chain}</span>
+              <span>•</span>
+              <span>Fee: {swap.fee}</span>
+              <span>•</span>
+              <span>{formatTime(swap.timestamp)}</span>
+            </div>
+            
+            <a
+              href={getExplorerUrl(swap.chain, swap.txHash)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-blue-600 hover:underline"
+            >
+              <ExternalLink className="w-3 h-3" />
+              View
+            </a>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
