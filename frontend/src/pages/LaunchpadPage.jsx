@@ -213,7 +213,7 @@ const LaunchpadPage = () => {
               <h3 className="font-semibold">{t('launchpad.instantTrading')}</h3>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Token is immediately tradable on all DEXs after launch.
+              {t('launchpad.instantTradingDesc')}
             </p>
           </div>
         </div>
@@ -221,7 +221,7 @@ const LaunchpadPage = () => {
         {/* Launch Form or Success */}
         {!launchSuccess ? (
           <div className="rounded-2xl border border-black/5 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
-            <h2 className="text-2xl font-bold mb-6">Launch Your Token</h2>
+            <h2 className="text-2xl font-bold mb-6">{t('launchpad.launchYourToken')}</h2>
 
             <div className="space-y-4">
               {/* Chain Selection */}
