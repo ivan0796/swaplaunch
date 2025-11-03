@@ -363,8 +363,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Community Rating System Backend API"
-    - "NFT Generator System Backend API"
+    - "Dynamic Tiered Fee System Testing Complete"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
