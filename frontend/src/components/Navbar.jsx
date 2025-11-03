@@ -110,12 +110,6 @@ const Navbar = ({ selectedChain, onChainChange }) => {
     }
   };
 
-  const handleMenuLeave = () => {
-    if (!isTouchDevice) {
-      setOpenMenu(null);
-    }
-  };
-
   const handleMenuClick = (idx) => {
     if (isTouchDevice) {
       setOpenMenu(openMenu === idx ? null : idx);
