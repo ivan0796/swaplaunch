@@ -45,29 +45,38 @@ const LaunchpadPage = () => {
 
   const [launching, setLaunching] = useState(false);
   const [launchSuccess, setLaunchSuccess] = useState(null);
-  const [estimatedFee, setEstimatedFee] = useState({ eth: '0.025', usd: '25' }); // Dynamic based on gas
+  const [estimatedFee, setEstimatedFee] = useState({ amount: '0.007', currency: 'ETH', usd: '25' });
   const [selectedChain, setSelectedChain] = useState(1); // For Navbar
 
-  // Estimate fee based on current gas prices (simplified)
+  // Calculate fee based on selected chain and additional features
   useEffect(() => {
-    const estimateGasFee = async () => {
-      // In production, fetch real gas prices from etherscan or similar
-      // For now, simulate dynamic pricing between 20-50 EUR
-      const baseFeEth = 0.02;
-      const additionalFees = 
-        (formData.enableAntiBot ? 0.005 : 0) +
-        (formData.enableLiquidityLock ? 0.01 : 0);
+    const calculateFee = () => {
+      const chainData = chains.find(c => c.id === formData.selectedChain) || chains[0];
       
-      const totalEth = baseFeEth + additionalFees;
-      const estimatedUsd = (totalEth * 1250).toFixed(0); // ETH @ ~1250 USD
+      // Base fee from chain configuration
+      let baseFee = parseFloat(chainData.launchFee);
+      let baseUsd = chainData.feeUSD;
       
-      setEstimatedFee({ eth: totalEth.toFixed(3), usd: estimatedUsd });
+      // Additional fees for extra features (10% extra per feature)
+      const additionalFeeMultiplier = 
+        (formData.enableAntiBot ? 0.10 : 0) +
+        (formData.enableLiquidityLock ? 0.15 : 0);
+      
+      const totalFee = baseFee * (1 + additionalFeeMultiplier);
+      const totalUsd = baseUsd * (1 + additionalFeeMultiplier);
+      
+      setEstimatedFee({ 
+        amount: totalFee.toFixed(chainData.decimals === 9 ? 2 : 3),
+        currency: chainData.currency,
+        usd: totalUsd.toFixed(0)
+      });
     };
     
-    estimateGasFee();
-  }, [formData.enableAntiBot, formData.enableLiquidityLock]);
+    calculateFee();
+  }, [formData.selectedChain, formData.enableAntiBot, formData.enableLiquidityLock]);
 
-  const LAUNCH_FEE = estimatedFee.eth; // Dynamic fee
+  const LAUNCH_FEE = estimatedFee.amount;
+  const LAUNCH_CURRENCY = estimatedFee.currency;
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
