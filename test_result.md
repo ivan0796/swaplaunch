@@ -338,9 +338,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Referral System Backend API"
-    - "Referral Page with Display-Only Earnings"
-    - "Add Referrals Link to Navigation"
+    - "Community Rating System Backend API"
+    - "NFT Generator System Backend API"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
