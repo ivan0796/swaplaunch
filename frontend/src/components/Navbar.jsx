@@ -105,10 +105,29 @@ const Navbar = ({ selectedChain, onChainChange }) => {
 
   const isActive = (path) => location.pathname === path;
 
+  // Handle menu interaction (hover for desktop, click for mobile)
+  const handleMenuEnter = (idx) => {
+    if (!isTouchDevice) {
+      setOpenMenu(idx);
+    }
+  };
+
+  const handleMenuLeave = () => {
+    if (!isTouchDevice) {
+      setOpenMenu(null);
+    }
+  };
+
+  const handleMenuClick = (idx) => {
+    if (isTouchDevice) {
+      setOpenMenu(openMenu === idx ? null : idx);
+    }
+  };
+
   return (
     <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
       <div className="mx-auto px-6 py-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between" ref={navRef}>
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
             <img 
