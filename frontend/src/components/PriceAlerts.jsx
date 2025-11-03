@@ -14,32 +14,37 @@ const PriceAlerts = ({ walletAddress }) => {
   });
 
   useEffect(() => {
-    if (walletAddress) {
-      loadAlerts();
-    }
-  }, [walletAddress]);
+    loadAlerts();
+  }, []);
 
   const loadAlerts = async () => {
-    // Mock data - In production: fetch from backend
-    const mockAlerts = [
-      {
-        id: '1',
-        token: { symbol: 'ETH', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
-        currentPrice: 3234.56,
-        targetPrice: 3500,
-        condition: 'above',
-        active: true
-      },
-      {
-        id: '2',
-        token: { symbol: 'BNB', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png' },
-        currentPrice: 215.30,
-        targetPrice: 200,
-        condition: 'below',
-        active: true
+    // Load from localStorage (works without wallet)
+    try {
+      const stored = localStorage.getItem('swapLaunchAlerts');
+      if (stored) {
+        setAlerts(JSON.parse(stored));
+      } else {
+        // Demo alerts
+        const mockAlerts = [
+          {
+            id: '1',
+            token: { symbol: 'ETH', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
+            currentPrice: 3234.56,
+            targetPrice: 3500,
+            condition: 'above',
+            active: true
+          }
+        ];
+        setAlerts(mockAlerts);
       }
-    ];
-    setAlerts(mockAlerts);
+    } catch (error) {
+      console.error('Failed to load alerts:', error);
+    }
+  };
+
+  const saveAlerts = (updatedAlerts) => {
+    localStorage.setItem('swapLaunchAlerts', JSON.stringify(updatedAlerts));
+    setAlerts(updatedAlerts);
   };
 
   const handleAddAlert = async () => {
@@ -48,18 +53,32 @@ const PriceAlerts = ({ walletAddress }) => {
       return;
     }
 
-    // In production: Save to backend
-    toast.success('Price alert created!');
-    toast.info('You\'ll receive notifications when price target is reached');
+    const alert = {
+      id: Date.now().toString(),
+      token: { 
+        symbol: newAlert.token.toUpperCase(), 
+        logo: `https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png` // Generic
+      },
+      currentPrice: 0, // Will be updated by price feed
+      targetPrice: parseFloat(newAlert.targetPrice),
+      condition: newAlert.condition,
+      active: true,
+      createdAt: new Date().toISOString()
+    };
+
+    const updatedAlerts = [...alerts, alert];
+    saveAlerts(updatedAlerts);
+    
+    toast.success('Price alert created! 🔔');
+    toast.info('Alerts are checked every 5 minutes. Enable browser notifications to get alerts.');
     
     setNewAlert({ token: '', targetPrice: '', condition: 'above' });
     setShowAddForm(false);
-    loadAlerts();
   };
 
   const handleDeleteAlert = async (alertId) => {
-    // In production: Delete from backend
-    setAlerts(alerts.filter(a => a.id !== alertId));
+    const updatedAlerts = alerts.filter(a => a.id !== alertId);
+    saveAlerts(updatedAlerts);
     toast.success('Alert deleted');
   };
 
