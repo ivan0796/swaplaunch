@@ -144,7 +144,7 @@ const resources = {
   zh: {
     translation: {
       // Navigation
-      "nav.trade": "交易",
+      "nav.trade": "兑换",
       "nav.projects": "项目",
       "nav.launchpad": "启动台",
       "nav.tokenLocker": "代币锁定",
