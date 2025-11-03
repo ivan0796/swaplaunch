@@ -9,11 +9,13 @@ import RiskDisclosure from './pages/RiskDisclosure';
 import FAQPage from './pages/FAQPage';
 import LaunchpadPage from './pages/LaunchpadPage';
 import TokenLockerPage from './pages/TokenLockerPage';
+import TokenCreatorPage from './pages/TokenCreatorPage';
 import LimitOrdersPage from './pages/LimitOrdersPage';
 import ProjectsPage from './pages/ProjectsPage';
 import AdvertisePage from './pages/AdvertisePage';
 import PortfolioPage from './pages/PortfolioPage';
 import NFTMintPage from './pages/NFTMintPage';
+import MyNFTCollectionsPage from './pages/MyNFTCollectionsPage';
 import ReferralsPage from './pages/ReferralsPage';
 import { Toaster } from './components/ui/sonner';
 
@@ -23,16 +25,39 @@ function App() {
       <div className="App">
         <BrowserRouter>
           <Routes>
+            {/* TRADE */}
             <Route path="/" element={<SwapPageV2 />} />
-            <Route path="/bridge" element={<BridgePage />} />
+            <Route path="/trade/swap" element={<SwapPageV2 />} />
+            <Route path="/trade/pro-swap" element={<LimitOrdersPage />} />
+            <Route path="/trade/bridge" element={<BridgePage />} />
+            
+            {/* LAUNCHPAD */}
+            <Route path="/launchpad/explore" element={<ProjectsPage />} />
+            <Route path="/launchpad/create" element={<LaunchpadPage />} />
+            <Route path="/launchpad/token-creator" element={<TokenCreatorPage />} />
+            <Route path="/launchpad/nft-maker" element={<NFTMintPage />} />
+            <Route path="/launchpad/my-nft-collections" element={<MyNFTCollectionsPage />} />
+            <Route path="/launchpad/token-locker" element={<TokenLockerPage />} />
+            
+            {/* EARN */}
+            <Route path="/earn/referrals" element={<ReferralsPage />} />
+            
+            {/* PORTFOLIO */}
             <Route path="/portfolio" element={<PortfolioPage />} />
-            <Route path="/launchpad" element={<LaunchpadPage />} />
-            <Route path="/token-locker" element={<TokenLockerPage />} />
+            
+            {/* Advertise */}
+            <Route path="/advertise" element={<AdvertisePage />} />
+            
+            {/* Legacy routes for backward compatibility */}
+            <Route path="/bridge" element={<BridgePage />} />
             <Route path="/limit-orders" element={<LimitOrdersPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/advertise" element={<AdvertisePage />} />
+            <Route path="/launchpad" element={<LaunchpadPage />} />
+            <Route path="/token-locker" element={<TokenLockerPage />} />
             <Route path="/nft-mint" element={<NFTMintPage />} />
             <Route path="/referrals" element={<ReferralsPage />} />
+            
+            {/* Info pages */}
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/risk-disclosure" element={<RiskDisclosure />} />
           </Routes>
