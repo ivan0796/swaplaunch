@@ -258,7 +258,7 @@ const resources = {
       "ad.sponsored": "Gesponsert",
       
       // Launchpad
-      "launchpad.title": "Non-Custodial Token Launchpad",
+      "launchpad.title": "Token Launchpad",
       "launchpad.subtitle": "Starten Sie Ihren eigenen Token in Minuten. Keine Programmierung erforderlich. Vollständig dezentralisiert.",
       "launchpad.launchYourToken": "Starten Sie Ihren Token",
       "launchpad.selectBlockchain": "Blockchain auswählen",
@@ -284,8 +284,8 @@ const resources = {
       "launchpad.tokenDeployed": "Token wird bereitgestellt",
       "launchpad.addLiquidity": "Liquidität hinzufügen (optional)",
       "launchpad.startTrading": "Handel starten",
-      "launchpad.nonCustodial": "Non-Custodial",
-      "launchpad.nonCustodialDesc": "Sie behalten die volle Kontrolle. Wir halten niemals Ihre Token oder Gelder.",
+      "launchpad.secureTitle": "Sicher & Transparent",
+      "launchpad.secureDesc": "Sie behalten die volle Kontrolle. Ihre privaten Schlüssel verlassen niemals Ihr Wallet.",
       "launchpad.lowFee": "Niedrige Gebühr",
       "launchpad.lowFeeDesc": "Nur {fee} ETH Launch-Gebühr. Keine versteckten Kosten.",
       "launchpad.instantTrading": "Sofortiger Handel",
@@ -299,7 +299,7 @@ const resources = {
       
       // NFT Maker
       "nft.title": "Erstellen Sie einzigartige NFT-Kollektionen",
-      "nft.subtitle": "Verwandeln Sie Ihre Ideen mit KI in NFTs. Non-custodial, gespeichert auf IPFS.",
+      "nft.subtitle": "Verwandeln Sie Ihre Ideen mit KI in NFTs. Gespeichert auf IPFS.",
       "nft.aiGenerator": "KI NFT Generator",
       "nft.collectionName": "Kollektionsname",
       "nft.describeCollection": "Beschreiben Sie Ihre Kollektion",
@@ -314,7 +314,7 @@ const resources = {
       "nft.previewCollection": "Vorschau Ihrer Kollektion",
       "nft.backToEdit": "Zurück zum Bearbeiten",
       "nft.generateNFTs": "{quantity} NFTs erstellen",
-      "nft.nonCustodialNote": "Non-Custodial: Sie signieren alle Transaktionen. Wir halten niemals Ihre Schlüssel.",
+      "nft.securityNote": "Sie signieren alle Transaktionen. Ihre privaten Schlüssel bleiben sicher in Ihrem Wallet.",
       
       // Referrals
       "referrals.title": "Verdienen durch Teilen",
@@ -328,7 +328,7 @@ const resources = {
       "referrals.totalEarned": "Gesamt verdient",
       "referrals.lifetimeRewards": "Lebenslange Belohnungen",
       "referrals.available": "Verfügbar",
-      "referrals.withdrawalsSoon": "Auszahlungen kommen bald — verdienen Sie weiter!",
+      "referrals.withdrawalNote": "Automatische Auszahlungen bald verfügbar",
       "referrals.howItWorks": "So funktioniert's",
       "referrals.shareLink": "Teilen Sie Ihren Link",
       "referrals.shareLinkDesc": "Kopieren Sie Ihren einzigartigen Empfehlungslink und teilen Sie ihn mit Freunden",
@@ -353,13 +353,13 @@ const resources = {
       "portfolio.totalPnL": "Gesamt-P&L",
       "portfolio.assets": "Vermögenswerte",
       "portfolio.yourHoldings": "Ihre Bestände",
-      "portfolio.nonCustodialNote": "Non-custodial - Nur-Lese-Daten von der Blockchain",
+      "portfolio.dataNote": "Nur-Lese-Daten von der Blockchain",
       
       // Bridge
       "bridge.title": "Cross-Chain Bridge",
-      "bridge.comingSoon": "Bridge-Integration kommt bald",
-      "bridge.comingSoonDesc": "Cross-Chain-Asset-Transfers powered by LI.FI werden hier verfügbar sein.",
-      "bridge.bridgeAssets": "Assets überbrücken (Kommt bald)",
+      "bridge.integratingPartners": "Bridge-Partner werden integriert",
+      "bridge.integratingDesc": "Cross-Chain-Asset-Transfers werden hier verfügbar sein.",
+      "bridge.bridgeAssets": "Assets überbrücken",
       
       // Projects/Explore
       "projects.getFeatured": "Lassen Sie Ihr Projekt featuren",
