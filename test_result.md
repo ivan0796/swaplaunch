@@ -428,7 +428,105 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: |
-      ✅ SwapLaunch v4.0 - Referral System Implementation (Phase 1: Display-Only):
+      ✅ SwapLaunch v7.0 - Quick-Wins Phase Implementation (IN PROGRESS):
+      
+      **Completed Tasks:**
+      
+      **1. A/B Testing System for Fee Tier Rollout**
+      
+      **Backend Implementation:**
+      - Created `/app/backend/ab_testing.py` module:
+        * `get_user_cohort(wallet)`: Determines cohort using SHA256(wallet+salt) % 100
+        * `get_cohort_fee_info(cohort, amount_usd)`: Returns fee info based on cohort
+        * `log_cohort_event()`: Creates MongoDB log entry for analytics
+        * Control fee: Fixed 0.25% (M1 "Balanced" tier)
+        * Tiered fee: Dynamic 0.10%-0.35% based on USD amount
+      
+      - Updated `/app/backend/.env` with new flags:
+        * FEE_TIERED_ROLLOUT_PERCENT=20 (20% get tiered, 80% get control)
+        * FEE_TIERED_BUCKET_SEED=swaplaunch-2025-fee-tier-test-v1
+        * ADMIN_API_TOKEN=swaplaunch-admin-2025-secure-token-change-in-production
+      
+      - Modified `/app/backend/server.py`:
+        * Integrated A/B testing into `/evm/quote` and `/solana/quote` endpoints
+        * Added cohort determination at start of quote request
+        * Control cohort: Gets fixed 0.25% fee
+        * Tiered cohort: Gets dynamic tiered fees (0.10%-0.35%)
+        * Response includes `cohort` field ("tiered" or "control")
+        * Logs cohort events to MongoDB `ab_test_events` collection
+        * Each event includes: wallet_hash, cohort, event_type, amount_usd, fee_usd, chain, timestamp
+      
+      **2. Admin A/B Stats Endpoint**
+      - Created `GET /admin/ab-stats?window=7d&token=<ADMIN_TOKEN>`
+      - Returns aggregated metrics by cohort:
+        * `quotes`: Number of quotes requested
+        * `executed`: Number of executed swaps
+        * `conversion`: Conversion rate (executed/quotes * 100)
+        * `revenue_usd`: Total platform fees collected
+        * `volume_usd`: Total trade volume
+        * `avg_fee_percent`: Average fee percentage
+      - Supports time windows: 7d, 30d, all
+      - Token authentication via ADMIN_API_TOKEN env var
+      - No PII exposed (uses hashed wallets)
+      
+      **3. Route Breakdown Component Enhancements**
+      - Updated `/app/frontend/src/components/RouteBreakdown.jsx`:
+        * Added ETA calculation: gasEstimate / 21000 * 13s per block
+        * Format: "~30s" or "~2m" for user readability
+        * Added inline non-custodial tooltip on "Why this route?" header
+        * Tooltip text: "We show route, gas, protocol fees and our platform fee. You sign in your own wallet — we never hold funds."
+        * Displays: Route name, sources, ETA, chain, gas, DEX fees, platform fee with tier badge
+        * Security note at bottom with Shield icon
+      
+      **4. Verified Existing Features**
+      - ✅ Referral Teaser visible on homepage (screenshot confirmed)
+      - ✅ Token Logo Resolver already in place and working
+      - ✅ Global navigation consistent across all pages
+      
+      **Technical Details:**
+      
+      **A/B Test Flow:**
+      1. User requests quote with wallet address
+      2. Backend hashes wallet with salt: SHA256(lowercase(wallet) + seed)
+      3. Bucket = hash[:8] converted to int % 100
+      4. If bucket < 20: Tiered cohort (dynamic fees)
+      5. Else: Control cohort (fixed 0.25%)
+      6. Apply appropriate fee calculation
+      7. Log event to MongoDB: cohort, amount_usd, fee_usd, chain
+      8. Return quote with `cohort` field
+      
+      **Cohort Stickiness:**
+      - Same wallet → same cohort (deterministic hashing)
+      - Change BUCKET_SEED to re-shuffle cohorts
+      
+      **Non-Custodial Security:**
+      - Fee deducted from input amount (netAmountIn = originalAmountIn - fee)
+      - User signs transaction with net amount only
+      - No funds held by platform
+      - All transactions routed through 0x/Jupiter APIs
+      
+      **Services Status:**
+      ✅ Backend restarted and running on http://0.0.0.0:8001
+      ✅ Frontend hot reload active
+      ✅ MongoDB collections: ab_test_events (new), others intact
+      
+      **Ready for Backend Testing:**
+      Priority endpoints to test:
+      1. POST /api/evm/quote - Verify cohort assignment and logging
+      2. POST /api/solana/quote - Verify cohort assignment and logging
+      3. GET /admin/ab-stats?window=7d&token=<ADMIN_TOKEN> - Verify metrics aggregation
+      
+      **Test Scenarios:**
+      - Quote with same wallet multiple times (should get same cohort)
+      - Quote with different wallets (should distribute ~20/80)
+      - Verify control gets 0.25% fee
+      - Verify tiered gets dynamic fees (0.10%-0.35%)
+      - Check MongoDB ab_test_events has logged entries
+      - Verify admin endpoint returns sane metrics
+      
+      **Next Steps (after testing):**
+      - If A/B tests pass: Move to Phase b. Monetarisierung
+      - Implement: Ads Buy-Now (on-chain), Featured Slots, Launchpad Pay-to-List
       
       **User Strategy Confirmed:**
       Priority: Referral first (drives growth) → Badges later (builds trust)
