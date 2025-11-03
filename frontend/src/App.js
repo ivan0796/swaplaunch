@@ -53,18 +53,23 @@ function App() {
             {/* Advertise */}
             <Route path="/advertise" element={<AdvertisePage />} />
             
+            {/* Legal & Info Pages */}
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/risk" element={<RiskDisclosurePage />} />
+            <Route path="/getting-started" element={<GettingStartedPage />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/risk-disclosure" element={<RiskDisclosure />} />
+            
             {/* Legacy routes for backward compatibility */}
             <Route path="/bridge" element={<BridgePage />} />
+            <Route path="/trade/limit-orders" element={<LimitOrdersPage />} />
             <Route path="/limit-orders" element={<LimitOrdersPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/launchpad" element={<LaunchpadPage />} />
             <Route path="/token-locker" element={<TokenLockerPage />} />
             <Route path="/nft-mint" element={<NFTMintPage />} />
             <Route path="/referrals" element={<ReferralsPage />} />
-            
-            {/* Info pages */}
-            <Route path="/faq" element={<FAQPage />} />
-            <Route path="/risk-disclosure" element={<RiskDisclosure />} />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-right" />
