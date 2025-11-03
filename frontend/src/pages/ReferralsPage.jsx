@@ -98,144 +98,255 @@ const ReferralsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <Navbar selectedChain={selectedChain} onChainChange={setSelectedChain} />
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        {!isConnected ? (
-          <div className="text-center py-20">
-            <Users className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-            <h2 className="text-2xl font-bold mb-2">Connect Your Wallet</h2>
-            <p className="text-gray-600 dark:text-gray-400">View your referral stats and earn rewards</p>
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full mb-4">
+            <Sparkles className="w-4 h-4" />
+            <span className="text-sm font-semibold">Referral Program</span>
           </div>
-        ) : loading ? (
-          <div className="text-center py-20">Loading...</div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Earn by Sharing
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Invite friends to SwapLaunch and earn a percentage of platform fees from every swap they make. 
+            The more you share, the more you earn!
+          </p>
+        </div>
+
+        {/* Wallet Connection Required */}
+        {!isConnected ? (
+          <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 text-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Users className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold mb-2 dark:text-white">Connect Your Wallet</h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Connect your wallet to access your referral dashboard and start earning rewards
+            </p>
+          </div>
         ) : (
-          <div className="space-y-6">
-            {/* Header */}
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold mb-2">My Referrals</h1>
-              <p className="text-gray-600 dark:text-gray-400">Earn 10% of platform fees from your referrals!</p>
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Users className="w-5 h-5 text-blue-600" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Total Referrals</span>
-                </div>
-                <div className="text-3xl font-bold">{stats?.total_referrals || 0}</div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <DollarSign className="w-5 h-5 text-green-600" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Total Earned</span>
-                </div>
-                <div className="text-3xl font-bold text-green-600">
-                  ${stats?.total_earned?.toFixed(2) || '0.00'}
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Gift className="w-5 h-5 text-purple-600" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Unclaimed</span>
-                </div>
-                <div className="text-3xl font-bold text-purple-600">
-                  ${stats?.unclaimed_amount?.toFixed(2) || '0.00'}
-                </div>
-              </div>
-            </div>
-
-            {/* Referral Link */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold mb-4">Your Referral Link</h3>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={referralLink}
-                  readOnly
-                  className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 text-sm"
-                />
-                <Button
-                  onClick={copyLink}
-                  className="px-6 bg-blue-600 hover:bg-blue-700"
-                >
-                  {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                </Button>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                ✓ Share this link and earn 10% of platform fees from your referrals' swaps
-              </p>
-            </div>
-
-            {/* Claim Rewards */}
-            {stats?.unclaimed_amount > 0 && (
-              <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 text-white">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xl font-bold mb-1">Rewards Available!</h3>
-                    <p className="text-purple-100">You have ${stats.unclaimed_amount.toFixed(2)} ready to claim</p>
-                  </div>
+          <>
+            {/* Referral Link Box */}
+            <div className="max-w-3xl mx-auto mb-8">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg">
+                <h3 className="text-xl font-bold mb-4 dark:text-white flex items-center gap-2">
+                  <Share2 className="w-5 h-5 text-blue-600" />
+                  Your Referral Link
+                </h3>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={referralLink}
+                    readOnly
+                    className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl text-sm dark:text-white"
+                  />
                   <Button
-                    onClick={handleClaim}
-                    disabled={claiming}
-                    className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 text-lg font-bold"
+                    onClick={copyLink}
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-lg transition-all flex items-center gap-2"
                   >
-                    {claiming ? 'Claiming...' : 'Claim Rewards'}
+                    {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                    {copied ? 'Copied!' : 'Copy'}
                   </Button>
                 </div>
               </div>
-            )}
+            </div>
 
-            {/* Referral List */}
-            {stats?.referees && stats.referees.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-                <h3 className="text-xl font-bold mb-4">Your Referrals</h3>
-                <div className="space-y-3">
-                  {stats.referees.map((referee, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
-                      <div>
-                        <div className="font-mono text-sm">
-                          {referee.address.slice(0, 6)}...{referee.address.slice(-4)}
-                        </div>
-                        <div className="text-xs text-gray-600 dark:text-gray-400">
-                          Joined {new Date(referee.joined_at).toLocaleDateString()}
-                        </div>
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              </div>
+            ) : (
+              <>
+                {/* Stats Section */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  {/* Total Referrals */}
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg">
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                        <Users className="w-6 h-6 text-blue-600" />
                       </div>
-                      <div className="text-right">
-                        <div className="font-bold">{referee.total_swaps} swaps</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          ${referee.total_volume?.toFixed(0) || 0} volume
+                      <div>
+                        <div className="text-3xl font-bold dark:text-white">
+                          {stats?.total_referrals || 0}
                         </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Referrals</div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
+                    <div className="text-xs text-gray-500 dark:text-gray-500">
+                      Users invited
+                    </div>
+                  </div>
 
-            {/* How it works */}
-            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-6 border border-blue-200 dark:border-blue-700">
-              <h3 className="text-lg font-bold mb-3">How Referrals Work</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">1.</span>
-                  <span>Share your unique referral link with friends</span>
+                  {/* Total Earned */}
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg">
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+                        <DollarSign className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <div className="text-3xl font-bold dark:text-white">
+                          {formatCurrency(stats?.total_earned || 0)}
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Total Earned</div>
+                      </div>
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-500">
+                      Lifetime rewards
+                    </div>
+                  </div>
+
+                  {/* Unclaimed Amount */}
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg">
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+                        <Gift className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <div className="text-3xl font-bold dark:text-white">
+                          {formatCurrency(stats?.unclaimed_amount || 0)}
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Available</div>
+                      </div>
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-500">
+                      Display only (claiming coming soon)
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">2.</span>
-                  <span>When they swap, you earn 10% of the platform fee (0.02% of swap amount)</span>
+
+                {/* How It Works */}
+                <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 mb-8 shadow-lg">
+                  <h3 className="text-2xl font-bold mb-6 dark:text-white text-center">How It Works</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                        1
+                      </div>
+                      <h4 className="font-semibold mb-2 dark:text-white">Share Your Link</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Copy your unique referral link and share it with friends
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                        2
+                      </div>
+                      <h4 className="font-semibold mb-2 dark:text-white">Friends Trade</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Your referrals connect wallet and start trading on SwapLaunch
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                        3
+                      </div>
+                      <h4 className="font-semibold mb-2 dark:text-white">Earn Rewards</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        You earn 10% of platform fees from every swap they make
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">3.</span>
-                  <span>Claim your rewards anytime - fully non-custodial!</span>
-                </div>
-              </div>
-            </div>
-          </div>
+
+                {/* Referral List */}
+                {stats?.referees && stats.referees.length > 0 && (
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-8 shadow-lg">
+                    <h3 className="text-xl font-bold mb-4 dark:text-white flex items-center gap-2">
+                      <Users className="w-5 h-5 text-blue-600" />
+                      Your Referrals ({stats.referees.length})
+                    </h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-gray-200 dark:border-gray-700">
+                            <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Address</th>
+                            <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Joined</th>
+                            <th className="text-right py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Swaps</th>
+                            <th className="text-right py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Volume</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {stats.referees.map((referee, idx) => (
+                            <tr key={idx} className="border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                              <td className="py-3 px-4 text-sm dark:text-white font-mono">
+                                {formatAddress(referee.address)}
+                              </td>
+                              <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
+                                {referee.joined_at ? new Date(referee.joined_at).toLocaleDateString() : 'N/A'}
+                              </td>
+                              <td className="py-3 px-4 text-sm text-right dark:text-white">
+                                {referee.total_swaps || 0}
+                              </td>
+                              <td className="py-3 px-4 text-sm text-right dark:text-white">
+                                {formatCurrency(referee.total_volume || 0)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Leaderboard */}
+                {leaderboard.length > 0 && (
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg">
+                    <h3 className="text-xl font-bold mb-4 dark:text-white flex items-center gap-2">
+                      <Trophy className="w-5 h-5 text-yellow-500" />
+                      Top Referrers
+                    </h3>
+                    <div className="space-y-3">
+                      {leaderboard.map((entry, idx) => (
+                        <div 
+                          key={idx}
+                          className={`flex items-center justify-between p-4 rounded-xl ${
+                            entry.rank === 1 
+                              ? 'bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border border-yellow-200 dark:border-yellow-700' 
+                              : entry.rank === 2
+                              ? 'bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700/20 dark:to-gray-600/20 border border-gray-200 dark:border-gray-600'
+                              : entry.rank === 3
+                              ? 'bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border border-orange-200 dark:border-orange-700'
+                              : 'bg-gray-50 dark:bg-gray-700/30 border border-gray-100 dark:border-gray-700'
+                          }`}
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
+                              entry.rank === 1 ? 'bg-yellow-500 text-white' :
+                              entry.rank === 2 ? 'bg-gray-400 text-white' :
+                              entry.rank === 3 ? 'bg-orange-500 text-white' :
+                              'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
+                            }`}>
+                              {entry.rank}
+                            </div>
+                            <div>
+                              <div className="font-mono text-sm dark:text-white">
+                                {formatAddress(entry.wallet)}
+                              </div>
+                              <div className="text-xs text-gray-600 dark:text-gray-400">
+                                {entry.total_referrals} referrals
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-bold text-green-600 dark:text-green-400">
+                              {formatCurrency(entry.total_earned)}
+                            </div>
+                            <div className="text-xs text-gray-600 dark:text-gray-400">
+                              {formatCurrency(entry.total_volume)} volume
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </>
         )}
       </div>
     </div>
