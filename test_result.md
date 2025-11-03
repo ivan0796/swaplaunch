@@ -243,6 +243,18 @@ backend:
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETE: All NFT Generator endpoints working perfectly. Tested preview generation (12 images with proper structure), single image regeneration (unique seeds), batch generation (job creation and background processing), status polling (queued→processing→completed), and collection retrieval (with authorization checks). Complete flow tested: Generate preview → Start batch → Poll status → Retrieve collection. Background job processing and MongoDB integration working correctly. All test cases passed (7/7)."
 
+  - task: "Dynamic Tiered Fee System"
+    implemented: true
+    working: true
+    file: "/app/backend/fee_calculator.py, /app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "🎯 COMPREHENSIVE TIERED FEE SYSTEM TESTING COMPLETE: All 17 tests passed (100% success rate). Validated all 6 tier boundaries ($900→0.35%, $1.5K→0.30%, $6K→0.25%, $12K→0.20%, $55K→0.15%, $120K→0.10%). API response fields complete and mathematically consistent. Non-custodial security verified (fee deducted from input, no custody). Edge cases handled correctly (small amounts, large amounts, exact boundaries). Error handling robust (422 for missing params, 400 for invalid chain). Feature flag behavior correct (FEE_TIERED_ENABLED=true active). System ready for production with dynamic USD-based fee calculation."
+
 frontend:
   - task: "Navigation Consistency - Unified Navbar Across All Pages"
     implemented: true
