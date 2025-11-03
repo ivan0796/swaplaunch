@@ -12,6 +12,7 @@ import { calculateAutoSlippage, formatSlippage, shouldShowSlippageWarning } from
 import { saveSwapToHistory } from '../utils/localHistory';
 import { getExplorerUrl, getExplorerName } from '../utils/explorer';
 import { getReferrerFromStorage } from '../utils/referral';
+import { TokenLogo } from '../utils/tokenLogoResolver';
 import TokenSearchModal from './TokenSearchModal';
 import TokenSecurityPanel from './TokenSecurityPanel';
 import TokenSearchAutocomplete from './TokenSearchAutocomplete';
