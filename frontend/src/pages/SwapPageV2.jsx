@@ -56,9 +56,11 @@ const SwapPageV2 = () => {
       <header className="sticky top-0 z-40 border-b border-black/5 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-400 text-white text-lg">
-              🚀
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="SwapLaunch" 
+              className="h-9 w-9 object-contain"
+            />
             <div className="text-sm font-semibold tracking-tight">SwapLaunch v4.0</div>
           </div>
           <nav className="hidden items-center gap-1 text-sm md:flex">
