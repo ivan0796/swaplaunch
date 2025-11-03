@@ -18,16 +18,20 @@ const ProjectsPage = () => {
     enterprise: '$499/month'
   };
 
-  // Mock featured projects
+  // Mock featured projects with badges
   const featuredProjects = [
     {
-      id: 1,
+      id: 'example-defi-1',
       name: 'Example DeFi',
       description: 'Revolutionary DeFi protocol with 10x yield',
       logo: '🚀',
       category: 'DeFi',
       tvl: '$5M',
-      featured: 'premium'
+      featured: true,
+      liquidityLocked: true,
+      auditProvided: true,
+      contractVerified: true,
+      url: 'https://example.com'
     }
   ];
 
