@@ -11,6 +11,7 @@ const PortfolioPage = () => {
   const [selectedChain, setSelectedChain] = useState(1);
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('assets'); // 'assets', 'history', 'alerts'
 
   useEffect(() => {
     if (isConnected && address) {
