@@ -121,15 +121,18 @@ const ReferralsPage = () => {
           </p>
         </div>
 
-        {/* Wallet Connection Required */}
+        {/* Wallet Connection Required for Personal Stats */}
         {!isConnected ? (
-          <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 text-center">
+          <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <Users className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-2xl font-bold mb-2 dark:text-white">{t('referrals.connectWallet')}</h2>
-            <p className="text-gray-600 dark:text-gray-300">
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
               {t('referrals.connectWalletDesc')}
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Connect your wallet to get your personal referral link and track earnings.
             </p>
           </div>
         ) : (
@@ -222,40 +225,6 @@ const ReferralsPage = () => {
                   </div>
                 </div>
 
-                {/* How It Works */}
-                <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 mb-8 shadow-lg">
-                  <h3 className="text-2xl font-bold mb-6 dark:text-white text-center">How It Works</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-                        1
-                      </div>
-                      <h4 className="font-semibold mb-2 dark:text-white">Share Your Link</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Copy your unique referral link and share it with friends
-                      </p>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-                        2
-                      </div>
-                      <h4 className="font-semibold mb-2 dark:text-white">Friends Trade</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Your referrals connect wallet and start trading on SwapLaunch
-                      </p>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-                        3
-                      </div>
-                      <h4 className="font-semibold mb-2 dark:text-white">Earn Rewards</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        You earn 10% of platform fees from every swap they make
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Referral List */}
                 {stats?.referees && stats.referees.length > 0 && (
                   <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-8 shadow-lg">
@@ -295,62 +264,99 @@ const ReferralsPage = () => {
                     </div>
                   </div>
                 )}
-
-                {/* Leaderboard */}
-                {leaderboard.length > 0 && (
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg">
-                    <h3 className="text-xl font-bold mb-4 dark:text-white flex items-center gap-2">
-                      <Trophy className="w-5 h-5 text-yellow-500" />
-                      Top Referrers
-                    </h3>
-                    <div className="space-y-3">
-                      {leaderboard.map((entry, idx) => (
-                        <div 
-                          key={idx}
-                          className={`flex items-center justify-between p-4 rounded-xl ${
-                            entry.rank === 1 
-                              ? 'bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border border-yellow-200 dark:border-yellow-700' 
-                              : entry.rank === 2
-                              ? 'bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700/20 dark:to-gray-600/20 border border-gray-200 dark:border-gray-600'
-                              : entry.rank === 3
-                              ? 'bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border border-orange-200 dark:border-orange-700'
-                              : 'bg-gray-50 dark:bg-gray-700/30 border border-gray-100 dark:border-gray-700'
-                          }`}
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                              entry.rank === 1 ? 'bg-yellow-500 text-white' :
-                              entry.rank === 2 ? 'bg-gray-400 text-white' :
-                              entry.rank === 3 ? 'bg-orange-500 text-white' :
-                              'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
-                            }`}>
-                              {entry.rank}
-                            </div>
-                            <div>
-                              <div className="font-mono text-sm dark:text-white">
-                                {formatAddress(entry.wallet)}
-                              </div>
-                              <div className="text-xs text-gray-600 dark:text-gray-400">
-                                {entry.total_referrals} referrals
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <div className="font-bold text-green-600 dark:text-green-400">
-                              {formatCurrency(entry.total_earned)}
-                            </div>
-                            <div className="text-xs text-gray-600 dark:text-gray-400">
-                              {formatCurrency(entry.total_volume)} volume
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </>
             )}
           </>
+        )}
+
+        {/* How It Works - Always Visible */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 mb-8 shadow-lg">
+          <h3 className="text-2xl font-bold mb-6 dark:text-white text-center">How It Works</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                1
+              </div>
+              <h4 className="font-semibold mb-2 dark:text-white">Share Your Link</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Copy your unique referral link and share it with friends
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                2
+              </div>
+              <h4 className="font-semibold mb-2 dark:text-white">Friends Trade</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Your referrals connect wallet and start trading on SwapLaunch
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                3
+              </div>
+              <h4 className="font-semibold mb-2 dark:text-white">Earn Rewards</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                You earn 10% of platform fees from every swap they make
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Leaderboard - Always Visible */}
+        {leaderboard.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg">
+            <h3 className="text-xl font-bold mb-4 dark:text-white flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              Top Referrers Leaderboard
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              See who's earning the most from referrals. No wallet connection needed to view.
+            </p>
+            <div className="space-y-3">
+              {leaderboard.map((entry, idx) => (
+                <div 
+                  key={idx}
+                  className={`flex items-center justify-between p-4 rounded-xl ${
+                    entry.rank === 1 
+                      ? 'bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border border-yellow-200 dark:border-yellow-700' 
+                      : entry.rank === 2
+                      ? 'bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700/20 dark:to-gray-600/20 border border-gray-200 dark:border-gray-600'
+                      : entry.rank === 3
+                      ? 'bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border border-orange-200 dark:border-orange-700'
+                      : 'bg-gray-50 dark:bg-gray-700/30 border border-gray-100 dark:border-gray-700'
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
+                      entry.rank === 1 ? 'bg-yellow-500 text-white' :
+                      entry.rank === 2 ? 'bg-gray-400 text-white' :
+                      entry.rank === 3 ? 'bg-orange-500 text-white' :
+                      'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
+                    }`}>
+                      {entry.rank}
+                    </div>
+                    <div>
+                      <div className="font-mono text-sm dark:text-white">
+                        {formatAddress(entry.wallet)}
+                      </div>
+                      <div className="text-xs text-gray-600 dark:text-gray-400">
+                        {entry.total_referrals} referrals
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-bold text-green-600 dark:text-green-400">
+                      {formatCurrency(entry.total_earned)}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400">
+                      {formatCurrency(entry.total_volume)} volume
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>
