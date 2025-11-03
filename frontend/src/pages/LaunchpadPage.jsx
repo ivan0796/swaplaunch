@@ -163,7 +163,7 @@ const LaunchpadPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_20%_-10%,rgba(129,140,248,.25),transparent),radial-gradient(800px_500px_at_80%_0%,rgba(16,185,129,.18),transparent)]">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950">
       {/* Navbar */}
       <Navbar selectedChain={selectedChain} onChainChange={setSelectedChain} />
 
