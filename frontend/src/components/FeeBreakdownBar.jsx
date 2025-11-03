@@ -1,7 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Info, TrendingDown } from 'lucide-react';
 
 const FeeBreakdownBar = ({ quote, platformFeeBps = 20 }) => {
+  const { t } = useTranslation();
+  
   if (!quote) return null;
 
   // Calculate fees
