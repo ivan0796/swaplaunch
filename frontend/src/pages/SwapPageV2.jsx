@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAccount, useChainId } from 'wagmi';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
@@ -11,10 +12,12 @@ import NewListings from '../components/NewListings';
 import SwapHistoryModal from '../components/SwapHistoryModal';
 import ReferralWidget from '../components/ReferralWidget';
 import AdBanner from '../components/AdBanner';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 const SwapPageV2 = () => {
+  const { t } = useTranslation();
   const { address: evmAddress, isConnected: evmConnected } = useAccount();
   const chainId = useChainId();
   const { publicKey: solanaPublicKey, connected: solanaConnected } = useWallet();
