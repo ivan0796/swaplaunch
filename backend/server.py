@@ -296,22 +296,21 @@ async def get_evm_quote(request: EVMQuoteRequest):
     if chain == "polygon":
         fee_recipient = os.environ.get('FEE_RECIPIENT_POLY', fee_recipient)
     
-    buy_token_percentage_fee = "0.2"  # 0.2%
+    # NOTE: We no longer use buyTokenPercentageFee in 0x API
+    # Instead, we reduce the input amount by our fee
+    # This ensures non-custodial behavior: user signs tx with net amount
     
-    # Build 0x API request
-    # Note: 0x API v2 uses /swap/allowance-holder/price for quotes
+    # Build 0x API request with NET amount (after fee deduction)
     params = {
         "chainId": str(chain_config["chain_id"]),
         "sellToken": request.sellToken,
         "buyToken": request.buyToken,
-        "sellAmount": request.sellAmount,
-        "taker": request.takerAddress,
-        "feeRecipient": fee_recipient,
-        "buyTokenPercentageFee": buy_token_percentage_fee
+        "sellAmount": net_amount_in,  # Use net amount after fee
+        "taker": request.takerAddress
     }
     
     headers = {
-        "0x-version": "v2"  # Required for v2 API
+        "0x-version": "v2"
     }
     api_key = os.environ.get('ZEROX_API_KEY')
     if api_key:
@@ -319,8 +318,6 @@ async def get_evm_quote(request: EVMQuoteRequest):
     
     try:
         async with httpx.AsyncClient(timeout=30.0) as http_client:
-            # Use v2 API endpoint - /quote für vollständige Transaction-Data
-            # /price gibt nur Preis zurück, /quote gibt transaction data
             api_url = f"{chain_config['api_base']}/swap/allowance-holder/quote"
             
             logger.info(f"Requesting 0x v2 quote: {api_url}")
@@ -335,10 +332,25 @@ async def get_evm_quote(request: EVMQuoteRequest):
             
             if response.status_code == 200:
                 quote_data = response.json()
+                
+                # Add tiered fee information to response
                 quote_data["chain"] = chain
                 quote_data["chain_id"] = chain_config["chain_id"]
                 quote_data["feeRecipient"] = fee_recipient
-                quote_data["platformFee"] = buy_token_percentage_fee
+                
+                # NEW: Add tiered fee fields (non-breaking)
+                quote_data["feeTier"] = fee_info["fee_tier"]
+                quote_data["feePercent"] = fee_info["fee_percent"]
+                quote_data["feeUsd"] = fee_info["fee_usd"]
+                quote_data["amountInUsd"] = fee_info["amount_in_usd"]
+                quote_data["netAmountIn"] = net_amount_in
+                quote_data["originalAmountIn"] = request.sellAmount
+                quote_data["nextTier"] = fee_info["next_tier"]
+                quote_data["notes"] = fee_info["notes"]
+                quote_data["quoteVersion"] = fee_info["quote_version"]
+                
+                # Legacy field for backward compatibility
+                quote_data["platformFee"] = f"{fee_info['fee_percent']}%"
                 
                 # Ensure critical fields exist
                 if not quote_data.get("transaction") or not quote_data["transaction"].get("data"):
@@ -346,6 +358,16 @@ async def get_evm_quote(request: EVMQuoteRequest):
                     raise HTTPException(
                         status_code=500,
                         detail="Invalid quote response from 0x API - missing transaction data"
+                    )
+                
+                # Log swap for analytics (pseudonymized)
+                if request.takerAddress:
+                    wallet_hash = hashlib.sha256(request.takerAddress.encode()).hexdigest()[:16]
+                    logger.info(
+                        f"EVM Quote | Wallet: {wallet_hash} | Chain: {chain} | "
+                        f"Route: {request.sellToken[:6]}→{request.buyToken[:6]} | "
+                        f"Amount: ${fee_info.get('amount_in_usd', 'N/A')} | "
+                        f"Tier: {fee_info['fee_tier']} | Fee: {fee_info['fee_percent']}% (${fee_info.get('fee_usd', 'N/A')})"
                     )
                 
                 # Cache the response
