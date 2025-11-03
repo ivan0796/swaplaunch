@@ -115,6 +115,9 @@ const SwapPageV2 = () => {
 
         {/* Sidebar */}
         <aside className="space-y-6">
+          {/* Ad Banner */}
+          <AdBanner position="banner" />
+
           {/* Trending Tokens V2 */}
           <TrendingTokensV2 onTokenSelect={handleTrendingTokenSelect} />
 
