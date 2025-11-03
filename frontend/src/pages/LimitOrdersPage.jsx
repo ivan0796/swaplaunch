@@ -28,23 +28,8 @@ const LimitOrdersPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              SwapLaunch v2.0
-            </div>
-          </Link>
-          <nav className="flex items-center gap-6">
-            <Link to="/" className="text-gray-600 hover:text-blue-600">Trade</Link>
-            <Link to="/launchpad" className="text-gray-600 hover:text-blue-600">Launchpad</Link>
-            <Link to="/token-locker" className="text-gray-600 hover:text-blue-600">Token Locker</Link>
-            <Link to="/limit-orders" className="text-blue-600 font-semibold">Limit & DCA</Link>
-            <Link to="/bridge" className="text-gray-600 hover:text-blue-600">Bridge</Link>
-          </nav>
-        </div>
-      </div>
+      {/* Navbar */}
+      <Navbar selectedChain={selectedChain} onChainChange={setSelectedChain} />
 
       <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50">
