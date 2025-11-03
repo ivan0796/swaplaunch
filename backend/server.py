@@ -359,6 +359,7 @@ async def get_evm_quote(request: EVMQuoteRequest):
                 quote_data["feeRecipient"] = fee_recipient
                 
                 # NEW: Add tiered fee fields (non-breaking)
+                quote_data["cohort"] = cohort  # A/B test cohort
                 quote_data["feeTier"] = fee_info["fee_tier"]
                 quote_data["feePercent"] = fee_info["fee_percent"]
                 quote_data["feeUsd"] = fee_info["fee_usd"]
@@ -380,11 +381,25 @@ async def get_evm_quote(request: EVMQuoteRequest):
                         detail="Invalid quote response from 0x API - missing transaction data"
                     )
                 
+                # Log cohort event to database for A/B analysis
+                try:
+                    cohort_log = log_cohort_event(
+                        wallet_address=request.takerAddress,
+                        cohort=cohort,
+                        event_type="quote",
+                        amount_usd=fee_info.get("amount_in_usd"),
+                        fee_usd=fee_info.get("fee_usd"),
+                        chain=chain
+                    )
+                    await db.ab_test_events.insert_one(cohort_log)
+                except Exception as e:
+                    logger.error(f"Failed to log cohort event: {e}")
+                
                 # Log swap for analytics (pseudonymized)
                 if request.takerAddress:
                     wallet_hash = hashlib.sha256(request.takerAddress.encode()).hexdigest()[:16]
                     logger.info(
-                        f"EVM Quote | Wallet: {wallet_hash} | Chain: {chain} | "
+                        f"EVM Quote | Cohort: {cohort} | Wallet: {wallet_hash} | Chain: {chain} | "
                         f"Route: {request.sellToken[:6]}→{request.buyToken[:6]} | "
                         f"Amount: ${fee_info.get('amount_in_usd', 'N/A')} | "
                         f"Tier: {fee_info['fee_tier']} | Fee: {fee_info['fee_percent']}% (${fee_info.get('fee_usd', 'N/A')})"
