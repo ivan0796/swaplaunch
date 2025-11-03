@@ -32,7 +32,8 @@ const Navbar = ({ selectedChain, onChainChange }) => {
       icon: <TrendingUp className="w-4 h-4" />,
       items: [
         { path: '/portfolio', label: 'My Portfolio', badge: 'New' },
-        { path: '/bridge', label: t('nav.bridge') }
+        { path: '/bridge', label: t('nav.bridge') },
+        { path: '/referrals', label: 'My Referrals', badge: '🔥' }
       ]
     },
     {
