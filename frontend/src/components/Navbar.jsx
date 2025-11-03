@@ -112,6 +112,9 @@ const Navbar = ({ selectedChain, onChainChange }) => {
 
           {/* Right Side */}
           <div className="flex items-center gap-2">
+            {/* Gas Tracker */}
+            {selectedChain !== 0 && <GasTracker chainId={selectedChain} />}
+            
             {/* Theme Toggle */}
             <ThemeToggle />
             
