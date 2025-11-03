@@ -1,195 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Shield, Zap, Globe, ExternalLink } from 'lucide-react';
+import { ArrowLeftRight, Info } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { toast } from 'sonner';
+import Navbar from '../components/Navbar';
 
 const BridgePage = () => {
   const { address, isConnected } = useAccount();
+  const [selectedChain, setSelectedChain] = useState(1);
+
+  const handleBridge = () => {
+    if (!isConnected) {
+      toast.error('Please connect your wallet');
+      return;
+    }
+    toast.info('Bridge feature coming soon!');
+  };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_20%_-10%,rgba(129,140,248,.25),transparent),radial-gradient(800px_500px_at_80%_0%,rgba(16,185,129,.18),transparent)]">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-black/5 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2 opacity-80 hover:opacity-100">
-              <ArrowLeft className="w-5 h-5" />
-              <span className="text-sm">Back to Swap</span>
-            </Link>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <Navbar selectedChain={selectedChain} onChainChange={setSelectedChain} />
+
+      <div className="max-w-2xl mx-auto px-4 py-12">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+          <div className="flex items-center gap-3 mb-6">
+            <ArrowLeftRight className="w-8 h-8 text-blue-600" />
+            <h1 className="text-3xl font-bold dark:text-white">Cross-Chain Bridge</h1>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-400 text-white text-lg">
-              🌉
+
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-blue-900 dark:text-blue-200">
+                <strong>Bridge Integration Coming Soon</strong><br />
+                Cross-chain asset transfers powered by LI.FI will be available here.
+              </div>
             </div>
-            <div className="text-sm font-semibold tracking-tight">Bridge</div>
           </div>
-          <div className="flex items-center gap-2">
-            <ConnectButton />
-          </div>
+
+          <Button
+            onClick={handleBridge}
+            disabled
+            className="w-full py-6 text-lg bg-gradient-to-r from-blue-600 to-purple-600"
+          >
+            Bridge Assets (Coming Soon)
+          </Button>
         </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="mx-auto max-w-5xl px-4 py-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Cross-Chain Bridge</h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Bridge your assets across multiple blockchains - powered by industry-leading bridges
-          </p>
-        </div>
-
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="rounded-2xl border border-black/5 bg-white/70 p-4 backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                <Shield className="w-5 h-5 text-blue-600" />
-              </div>
-              <h3 className="font-semibold">Non-Custodial</h3>
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Your keys, your crypto. We never have access to your funds.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-black/5 bg-white/70 p-4 backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30">
-                <Zap className="w-5 h-5 text-green-600" />
-              </div>
-              <h3 className="font-semibold">Best Routes</h3>
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Automatically finds the fastest and cheapest bridge route.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-black/5 bg-white/70 p-4 backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30">
-                <Globe className="w-5 h-5 text-purple-600" />
-              </div>
-              <h3 className="font-semibold">15+ Chains</h3>
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Ethereum, BSC, Polygon, Arbitrum, Optimism, Base, Avalanche & more.
-            </p>
-          </div>
-        </div>
-
-        {/* Bridge Options */}
-        <div className="rounded-2xl border border-black/5 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
-          <h2 className="text-xl font-bold mb-4">Select Bridge Provider</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Synapse Bridge */}
-            <a
-              href="https://synapseprotocol.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 transition-colors group"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-lg">Synapse Protocol</h3>
-                <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-indigo-500" />
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                Fast cross-chain bridge supporting 15+ chains
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Ethereum</span>
-                <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">BSC</span>
-                <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">Polygon</span>
-                <span className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">Arbitrum</span>
-              </div>
-            </a>
-
-            {/* Stargate */}
-            <a
-              href="https://stargate.finance"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 transition-colors group"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-lg">Stargate Finance</h3>
-                <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-indigo-500" />
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                LayerZero-powered bridge with instant finality
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Ethereum</span>
-                <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">BSC</span>
-                <span className="px-2 py-1 text-xs bg-cyan-100 text-cyan-700 rounded-full">Optimism</span>
-                <span className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Avalanche</span>
-              </div>
-            </a>
-
-            {/* Across */}
-            <a
-              href="https://across.to"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 transition-colors group"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-lg">Across Protocol</h3>
-                <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-indigo-500" />
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                Fast & cheap bridging with optimistic verification
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Ethereum</span>
-                <span className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">Arbitrum</span>
-                <span className="px-2 py-1 text-xs bg-cyan-100 text-cyan-700 rounded-full">Base</span>
-                <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">Polygon</span>
-              </div>
-            </a>
-
-            {/* Wormhole */}
-            <a
-              href="https://portalbridge.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 transition-colors group"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-lg">Wormhole (Portal)</h3>
-                <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-indigo-500" />
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                Cross-chain bridge supporting 30+ chains including Solana
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Ethereum</span>
-                <span className="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">Solana</span>
-                <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">BSC</span>
-                <span className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Avalanche</span>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        {/* Info Section */}
-        <div className="mt-8 rounded-2xl border border-black/5 bg-white/70 p-6 backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
-          <h3 className="font-semibold mb-3">ℹ️ How it works</h3>
-          <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-            <p>1. Click on your preferred bridge provider above</p>
-            <p>2. Connect your wallet on their platform</p>
-            <p>3. Select source and destination chains</p>
-            <p>4. Enter the amount and confirm the transaction</p>
-            <p>5. Wait for the bridge to complete (typically 2-30 minutes)</p>
-          </div>
-          <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-            <p className="text-xs text-yellow-800 dark:text-yellow-200">
-              ⚠️ Always verify the destination address before bridging. Bridge transactions cannot be reversed.
-            </p>
-          </div>
-        </div>
-      </main>
+      </div>
     </div>
   );
 };
