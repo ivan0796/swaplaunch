@@ -479,10 +479,23 @@ const LaunchpadPage = () => {
                   <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div className="flex-1 text-sm">
                     <p className="font-medium text-blue-900 dark:text-blue-100 mb-1">
-                      Total Launch Fee: {LAUNCH_FEE} ETH (~${estimatedFee.usd})
+                      {t('launchpad.launchFee')}: {LAUNCH_FEE} {LAUNCH_CURRENCY} (~${estimatedFee.usd})
                     </p>
                     <div className="text-blue-700 dark:text-blue-300 space-y-1">
-                      <p>• Base Fee: 0.02 ETH (~$25)</p>
+                      <p>• {t('launchpad.baseFee')}: {selectedChainData.launchFee} {LAUNCH_CURRENCY} (~${selectedChainData.feeUSD})</p>
+                      {formData.enableAntiBot && (
+                        <p>• Anti-Bot Protection: +10%</p>
+                      )}
+                      {formData.enableLiquidityLock && (
+                        <p>• Liquidity Lock: +15%</p>
+                      )}
+                    </div>
+                    <p className="text-xs text-blue-600 dark:text-blue-400 mt-2">
+                      💡 Fee adjusts based on selected blockchain and features
+                    </p>
+                  </div>
+                </div>
+              </div>
                       {formData.enableAntiBot && <p>• Anti-Bot: +0.005 ETH (~$6)</p>}
                       {formData.enableLiquidityLock && <p>• Liquidity Lock: +0.01 ETH (~$13)</p>}
                       <p className="mt-2 text-xs">
