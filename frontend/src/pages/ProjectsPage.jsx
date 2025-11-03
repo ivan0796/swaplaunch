@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Star, Search, TrendingUp, DollarSign, ExternalLink } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import Navbar from '../components/Navbar';
 
 const ProjectsPage = () => {
+  const [selectedChain, setSelectedChain] = useState(1);
   const [projects, setProjects] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
