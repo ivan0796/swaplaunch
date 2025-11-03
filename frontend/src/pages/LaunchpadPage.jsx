@@ -237,6 +237,39 @@ const LaunchpadPage = () => {
             <h2 className="text-2xl font-bold mb-6">Launch Your Token</h2>
 
             <div className="space-y-4">
+              {/* Chain Selection */}
+              <div>
+                <label className="block text-sm font-medium mb-3">
+                  Select Blockchain <span className="text-red-500">*</span>
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                  {chains.map((chain) => (
+                    <button
+                      key={chain.id}
+                      type="button"
+                      onClick={() => handleChainSelect(chain.id)}
+                      className={`p-4 rounded-xl border-2 transition-all ${
+                        formData.selectedChain === chain.id
+                          ? 'border-purple-600 bg-purple-50 dark:bg-purple-900/30'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-purple-300'
+                      }`}
+                    >
+                      <div className="text-3xl mb-2">{chain.logo}</div>
+                      <div className="text-sm font-semibold dark:text-white">{chain.name}</div>
+                      <div className="text-xs text-gray-500">{chain.standard}</div>
+                    </button>
+                  ))}
+                </div>
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-3">
+                  <div className="text-sm text-blue-900 dark:text-blue-200">
+                    <strong>Selected:</strong> {selectedChainData.name} ({selectedChainData.standard})
+                  </div>
+                  <div className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                    Estimated Gas: ~$2-5
+                  </div>
+                </div>
+              </div>
+
               {/* Token Name */}
               <div>
                 <label className="block text-sm font-medium mb-2">
