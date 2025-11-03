@@ -227,11 +227,11 @@ const NFTMintPage = () => {
                 </Button>
               </div>
             </div>
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-xl p-6">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-6">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
-                <div className="text-sm text-yellow-800 dark:text-yellow-300">
-                  <strong>Non-Custodial:</strong> You sign all transactions. We never hold your keys.
+                <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                <div className="text-sm text-blue-900 dark:text-blue-200">
+                  <strong>{t('nft.securityNote')}</strong>
                 </div>
               </div>
             </div>
