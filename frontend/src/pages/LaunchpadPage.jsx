@@ -4,7 +4,7 @@ import { useAccount, useWalletClient } from 'wagmi';
 import { ArrowLeft, Rocket, Shield, TrendingUp, Coins, AlertCircle, CheckCircle, X } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { toast } from 'sonner';
-import WalletButtonWithHistory from '../components/WalletButtonWithHistory';
+import Navbar from '../components/Navbar';
 
 const LaunchpadPage = () => {
   const { address, isConnected } = useAccount();
