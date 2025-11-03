@@ -28,6 +28,7 @@ const BridgePage = () => {
           <div className="flex items-center gap-3 mb-6">
             <ArrowLeftRight className="w-8 h-8 text-blue-600" />
             <h1 className="text-3xl font-bold dark:text-white">{t('bridge.title')}</h1>
+            <span className="px-3 py-1 bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 rounded-full text-sm font-bold">BETA</span>
           </div>
 
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 mb-6">
