@@ -42,15 +42,46 @@ const TokenSearchModal = ({ isOpen, onClose, onSelectToken, chainId, excludeToke
         
         let results = response.data.results || [];
         
-        // Map to expected format
-        results = results.map(token => ({
-          address: token.address,
-          symbol: token.symbol,
-          name: token.name,
-          decimals: token.decimals,
-          logoURI: token.logoURL,
-          chain: token.chain
-        }));
+        // Map to expected format with logo fallback
+        results = results.map(token => {
+          let logoURI = token.logoURL;
+          
+          // If no logo, try to get from CMC or TrustWallet based on symbol
+          if (!logoURI || logoURI === 'null') {
+            const symbolUpper = token.symbol?.toUpperCase();
+            const cmcIds = {
+              'XRP': '52',
+              'ETH': '1027',
+              'BTC': '1',
+              'BNB': '1839',
+              'SOL': '5426',
+              'USDT': '825',
+              'USDC': '3408',
+              'MATIC': '3890',
+              'AVAX': '5805',
+              'TRX': '1958',
+              'ADA': '2010',
+              'DOGE': '74',
+              'DOT': '6636',
+              'DAI': '4943',
+              'WETH': '2396',
+              'WBTC': '3717'
+            };
+            
+            if (cmcIds[symbolUpper]) {
+              logoURI = `https://s2.coinmarketcap.com/static/img/coins/64x64/${cmcIds[symbolUpper]}.png`;
+            }
+          }
+          
+          return {
+            address: token.address,
+            symbol: token.symbol,
+            name: token.name,
+            decimals: token.decimals,
+            logoURI: logoURI,
+            chain: token.chain
+          };
+        });
         
         // Filter by current chain
         const chainMap = { 1: 'ethereum', 56: 'bsc', 137: 'polygon', 0: 'solana' };
