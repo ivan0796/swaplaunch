@@ -20,8 +20,6 @@ const Navbar = ({ selectedChain, onChainChange }) => {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const navRef = useRef(null);
 
-  const navRef = useRef(null);
-
   // Detect touch device
   useEffect(() => {
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
