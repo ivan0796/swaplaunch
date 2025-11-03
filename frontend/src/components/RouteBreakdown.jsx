@@ -59,6 +59,9 @@ const RouteBreakdown = ({ quote, sellToken, buyToken, chainId }) => {
           <span className="font-medium text-sm text-gray-800 dark:text-gray-200">
             Why this route?
           </span>
+          <span className="text-xs text-gray-500 dark:text-gray-400 italic">
+            (We show route, gas, protocol fees and our platform fee. You sign in your own wallet — we never hold funds.)
+          </span>
         </div>
         {isExpanded ? (
           <ChevronUp className="w-4 h-4 text-gray-600 dark:text-gray-400" />
