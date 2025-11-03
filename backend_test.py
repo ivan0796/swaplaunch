@@ -567,6 +567,273 @@ class SwapLaunchAPITester:
             self.log_test("DEX Pairs Endpoint", False, "", str(e))
             return False
 
+    # ========================================
+    # REFERRAL SYSTEM TESTS
+    # ========================================
+
+    def test_referral_track_endpoint(self):
+        """Test POST /api/referrals/track - Track new referral relationship"""
+        try:
+            # Use realistic wallet addresses
+            alice_wallet = "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0"  # Referrer
+            bob_wallet = "0x8ba1f109551bD432803012645Hac136c22C177ec"    # Referee
+            
+            response = requests.post(
+                f"{self.api_url}/referrals/track",
+                params={"referrer": alice_wallet, "referee": bob_wallet},
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                expected_keys = ["status", "referrer"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if has_expected_structure:
+                    status = data.get("status")
+                    success = status in ["success", "already_tracked"]
+                    details = f"Referral tracking: {status}. Referrer: {data.get('referrer')}"
+                else:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("Referral Track Endpoint", success, details,
+                         "" if success else f"Failed to track referral")
+            return success, alice_wallet, bob_wallet
+            
+        except Exception as e:
+            self.log_test("Referral Track Endpoint", False, "", str(e))
+            return False, None, None
+
+    def test_referral_stats_endpoint(self, wallet=None):
+        """Test GET /api/referrals/stats/{wallet} - Get referral statistics"""
+        try:
+            test_wallet = wallet or "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0"
+            
+            response = requests.get(
+                f"{self.api_url}/referrals/stats/{test_wallet}",
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                expected_keys = ["wallet", "total_referrals", "total_earned", "unclaimed_amount", "referees"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if has_expected_structure:
+                    total_referrals = data.get("total_referrals", 0)
+                    total_earned = data.get("total_earned", 0)
+                    unclaimed_amount = data.get("unclaimed_amount", 0)
+                    referees = data.get("referees", [])
+                    
+                    success = isinstance(total_referrals, int) and isinstance(total_earned, (int, float)) and isinstance(unclaimed_amount, (int, float))
+                    details = f"Stats for {test_wallet}: {total_referrals} referrals, ${total_earned:.4f} earned, ${unclaimed_amount:.4f} unclaimed, {len(referees)} referee records"
+                else:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("Referral Stats Endpoint", success, details,
+                         "" if success else f"Failed to get referral stats")
+            return success
+            
+        except Exception as e:
+            self.log_test("Referral Stats Endpoint", False, "", str(e))
+            return False
+
+    def test_referral_leaderboard_endpoint(self):
+        """Test GET /api/referrals/leaderboard - Get top referrers"""
+        try:
+            response = requests.get(
+                f"{self.api_url}/referrals/leaderboard",
+                params={"limit": 10},
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                expected_keys = ["leaderboard"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if has_expected_structure:
+                    leaderboard = data.get("leaderboard", [])
+                    success = isinstance(leaderboard, list)
+                    
+                    if leaderboard and len(leaderboard) > 0:
+                        # Check first entry structure
+                        first_entry = leaderboard[0]
+                        entry_keys = ["rank", "wallet", "total_referrals", "total_volume", "total_earned"]
+                        has_entry_structure = all(key in first_entry for key in entry_keys)
+                        
+                        if has_entry_structure:
+                            details = f"Leaderboard working. Found {len(leaderboard)} entries. Top referrer: {first_entry.get('wallet')} with ${first_entry.get('total_earned', 0):.4f} earned"
+                        else:
+                            success = False
+                            details = f"Leaderboard entry structure incomplete. Got: {list(first_entry.keys())}"
+                    else:
+                        details = f"Leaderboard endpoint working. Found {len(leaderboard)} entries (empty is normal for new system)"
+                else:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("Referral Leaderboard Endpoint", success, details,
+                         "" if success else f"Failed to get leaderboard")
+            return success
+            
+        except Exception as e:
+            self.log_test("Referral Leaderboard Endpoint", False, "", str(e))
+            return False
+
+    def test_referral_reward_endpoint(self, referee_wallet=None):
+        """Test POST /api/referrals/reward - Record swap rewards"""
+        try:
+            test_referee = referee_wallet or "0x8ba1f109551bD432803012645Hac136c22C177ec"
+            test_tx_hash = f"0x{''.join([f'{i:02x}' for i in range(32)])}"  # Mock tx hash
+            test_swap_amount = 1000.0  # $1000 swap
+            
+            response = requests.post(
+                f"{self.api_url}/referrals/reward",
+                params={
+                    "swap_tx_hash": test_tx_hash,
+                    "referee": test_referee,
+                    "swap_amount_usd": test_swap_amount
+                },
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                status = data.get("status")
+                
+                if status == "success":
+                    expected_keys = ["status", "referrer", "reward_amount"]
+                    has_expected_structure = all(key in data for key in expected_keys)
+                    
+                    if has_expected_structure:
+                        reward_amount = data.get("reward_amount", 0)
+                        referrer = data.get("referrer")
+                        
+                        # Verify reward calculation: 10% of 0.2% platform fee = 0.02% of swap amount
+                        expected_reward = test_swap_amount * 0.0002  # 0.02% of $1000 = $0.20
+                        calculation_correct = abs(reward_amount - expected_reward) < 0.001
+                        
+                        success = calculation_correct
+                        details = f"Reward recorded: ${reward_amount:.4f} for referrer {referrer}. Expected: ${expected_reward:.4f}. Calculation correct: {calculation_correct}"
+                    else:
+                        success = False
+                        details = f"Missing expected keys. Got: {list(data.keys())}"
+                elif status == "no_referrer":
+                    success = True  # This is expected behavior for non-referred users
+                    details = f"No referrer found for {test_referee} - expected behavior"
+                else:
+                    success = False
+                    details = f"Unexpected status: {status}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("Referral Reward Endpoint", success, details,
+                         "" if success else f"Failed to record reward")
+            return success
+            
+        except Exception as e:
+            self.log_test("Referral Reward Endpoint", False, "", str(e))
+            return False
+
+    def test_referral_claim_endpoint(self, wallet=None):
+        """Test POST /api/referrals/claim/{wallet} - Claim rewards"""
+        try:
+            test_wallet = wallet or "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0"
+            
+            response = requests.post(
+                f"{self.api_url}/referrals/claim/{test_wallet}",
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                status = data.get("status")
+                
+                if status in ["success", "no_rewards"]:
+                    if status == "success":
+                        expected_keys = ["status", "amount", "count", "message"]
+                        has_expected_structure = all(key in data for key in expected_keys)
+                        
+                        if has_expected_structure:
+                            amount = data.get("amount", 0)
+                            count = data.get("count", 0)
+                            details = f"Rewards claimed: ${amount:.4f} from {count} rewards"
+                        else:
+                            success = False
+                            details = f"Missing expected keys. Got: {list(data.keys())}"
+                    else:  # no_rewards
+                        amount = data.get("amount", 0)
+                        details = f"No rewards to claim for {test_wallet} - expected behavior"
+                else:
+                    success = False
+                    details = f"Unexpected status: {status}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("Referral Claim Endpoint", success, details,
+                         "" if success else f"Failed to claim rewards")
+            return success
+            
+        except Exception as e:
+            self.log_test("Referral Claim Endpoint", False, "", str(e))
+            return False
+
+    def test_referral_system_flow(self):
+        """Test complete referral system flow"""
+        try:
+            print("\n🔄 Testing Complete Referral System Flow...")
+            
+            # Step 1: Track a referral (Alice refers Bob)
+            track_success, alice_wallet, bob_wallet = self.test_referral_track_endpoint()
+            
+            if not track_success:
+                self.log_test("Referral System Flow", False, "", "Failed to track referral")
+                return False
+            
+            # Step 2: Record rewards for Bob's swaps
+            reward_success = self.test_referral_reward_endpoint(bob_wallet)
+            
+            # Step 3: Check Alice's stats (should show rewards)
+            stats_success = self.test_referral_stats_endpoint(alice_wallet)
+            
+            # Step 4: Check leaderboard (Alice should appear if she has rewards)
+            leaderboard_success = self.test_referral_leaderboard_endpoint()
+            
+            # Step 5: Claim Alice's rewards
+            claim_success = self.test_referral_claim_endpoint(alice_wallet)
+            
+            # Overall success
+            overall_success = all([track_success, reward_success, stats_success, leaderboard_success, claim_success])
+            
+            details = f"Flow test: Track={track_success}, Reward={reward_success}, Stats={stats_success}, Leaderboard={leaderboard_success}, Claim={claim_success}"
+            
+            self.log_test("Referral System Complete Flow", overall_success, details,
+                         "" if overall_success else "One or more flow steps failed")
+            return overall_success
+            
+        except Exception as e:
+            self.log_test("Referral System Complete Flow", False, "", str(e))
+            return False
+
     def run_all_tests(self):
         """Run all backend API tests"""
         print("🚀 Starting SwapLaunch v3.0 Backend API Tests")
