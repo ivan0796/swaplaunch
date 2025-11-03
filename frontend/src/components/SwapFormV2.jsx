@@ -719,6 +719,67 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       {/* Fee Breakdown Bar */}
       {quote && <FeeBreakdownBar quote={quote} platformFeeBps={20} />}
 
+      {/* Tiered Fee Info - Simple display for user (UI styling by user) */}
+      {quote && quote.feeTier && (
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-700 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Zap className="w-4 h-4 text-purple-600" />
+              <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">
+                Platform Fee: {quote.feePercent}%
+              </span>
+            </div>
+            {quote.feeUsd && (
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                ${quote.feeUsd.toFixed(2)}
+              </span>
+            )}
+          </div>
+          
+          {/* Tier Info */}
+          <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+            <div className="flex justify-between">
+              <span>Your Tier:</span>
+              <span className="font-medium text-purple-600 dark:text-purple-400">
+                {quote.feeTier.replace(/_/g, ' ')}
+              </span>
+            </div>
+            
+            {quote.amountInUsd && (
+              <div className="flex justify-between">
+                <span>Trade Amount:</span>
+                <span className="font-medium">${quote.amountInUsd.toFixed(2)}</span>
+              </div>
+            )}
+            
+            {/* Next Tier Progress */}
+            {quote.nextTier && (
+              <div className="mt-2 pt-2 border-t border-purple-200 dark:border-purple-700">
+                <div className="flex justify-between mb-1">
+                  <span>Next Tier ({quote.nextTier.fee_percent}%):</span>
+                  <span className="font-medium">${quote.nextTier.amount_needed_usd.toFixed(0)} more</span>
+                </div>
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                  <div 
+                    className="bg-purple-600 h-1.5 rounded-full transition-all"
+                    style={{ 
+                      width: `${Math.min(100, ((quote.amountInUsd || 0) / (quote.nextTier.threshold_usd || 1)) * 100)}%` 
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Note */}
+          {quote.notes && (
+            <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 italic">
+              💡 {quote.notes}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Quote Details */}
       {quote && sellToken && buyToken && (
         <div data-testid="quote-details" className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-2">
