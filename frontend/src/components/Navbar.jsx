@@ -66,7 +66,9 @@ const Navbar = ({ selectedChain, onChainChange }) => {
       name: 'Trade',
       icon: <Zap className="w-4 h-4" />,
       items: [
-        { path: '/', label: 'Swap' }
+        { path: '/', label: 'Swap' },
+        { path: '/trade/pro-swap', label: 'Pro Swap', badge: 'Beta' },
+        { path: '/trade/bridge', label: 'Bridge', badge: 'Beta' }
       ]
     },
     {
@@ -74,7 +76,10 @@ const Navbar = ({ selectedChain, onChainChange }) => {
       icon: <Rocket className="w-4 h-4" />,
       items: [
         { path: '/launchpad/explore', label: 'Explore Projects' },
-        { path: '/launchpad/create', label: 'Create Project' }
+        { path: '/launchpad/create', label: 'Create Project' },
+        { path: '/launchpad/nft-maker', label: 'NFT Maker', badge: 'Beta' },
+        { path: '/launchpad/my-nft-collections', label: 'My NFT Collections', badge: 'Beta' },
+        { path: '/launchpad/token-locker', label: 'Token Locker', badge: 'Beta' }
       ]
     },
     {
@@ -89,7 +94,9 @@ const Navbar = ({ selectedChain, onChainChange }) => {
       name: 'Portfolio',
       icon: <TrendingUp className="w-4 h-4" />,
       items: [
-        { path: '/portfolio', label: 'My Assets' }
+        { path: '/portfolio', label: 'My Assets' },
+        { path: '/portfolio#history', label: 'History', badge: 'Beta' },
+        { path: '/portfolio#alerts', label: 'Price Alerts', badge: 'Beta' }
       ]
     }
   ];
