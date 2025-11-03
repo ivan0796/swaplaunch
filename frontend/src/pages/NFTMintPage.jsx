@@ -84,11 +84,11 @@ const NFTMintPage = () => {
 
         {currentStep === 'input' && (
           <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 shadow-lg">
-            <h2 className="text-2xl font-bold mb-6 dark:text-white">Describe Your Collection</h2>
+            <h2 className="text-2xl font-bold mb-6 dark:text-white">{t('nft.describeCollection')}</h2>
 
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-2 dark:text-white">Collection Name</label>
+                <label className="block text-sm font-medium mb-2 dark:text-white">{t('nft.collectionName')}</label>
                 <Input
                   placeholder="e.g., Cyber Cats"
                   value={collectionName}
