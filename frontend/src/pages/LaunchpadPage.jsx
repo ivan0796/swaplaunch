@@ -11,6 +11,8 @@ const LaunchpadPage = () => {
   const { data: walletClient } = useWalletClient();
 
   const [formData, setFormData] = useState({
+    // Chain selection
+    selectedChain: 1, // Default Ethereum
     tokenName: '',
     tokenSymbol: '',
     totalSupply: '',
@@ -24,6 +26,19 @@ const LaunchpadPage = () => {
     lockDuration: '30', // days
     maxWalletPercent: '2', // % of supply
   });
+
+  // Chain configurations
+  const chains = [
+    { id: 1, name: 'Ethereum', logo: '⟠', standard: 'ERC-20', decimals: 18 },
+    { id: 56, name: 'BNB Chain', logo: '🟡', standard: 'BEP-20', decimals: 18 },
+    { id: 137, name: 'Polygon', logo: '🟣', standard: 'ERC-20', decimals: 18 },
+    { id: 42161, name: 'Arbitrum', logo: '🔵', standard: 'ERC-20', decimals: 18 },
+    { id: 8453, name: 'Base', logo: '🔷', standard: 'ERC-20', decimals: 18 },
+    { id: 43114, name: 'Avalanche', logo: '🔺', standard: 'ERC-20', decimals: 18 },
+    { id: 0, name: 'Solana', logo: '◎', standard: 'SPL', decimals: 9 }
+  ];
+
+  const selectedChainData = chains.find(c => c.id === formData.selectedChain) || chains[0];
 
   const [launching, setLaunching] = useState(false);
   const [launchSuccess, setLaunchSuccess] = useState(null);
