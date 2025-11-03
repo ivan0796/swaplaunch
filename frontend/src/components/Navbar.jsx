@@ -34,7 +34,6 @@ const Navbar = ({ selectedChain, onChainChange }) => {
       items: [
         { path: '/launchpad/explore', label: 'Explore Projects' },
         { path: '/launchpad/create', label: 'Create Project' },
-        { path: '/launchpad/token-creator', label: 'Token Creator', badge: 'New' },
         { path: '/launchpad/nft-maker', label: 'NFT Maker' },
         { path: '/launchpad/my-nft-collections', label: 'My NFT Collections' },
         { path: '/launchpad/token-locker', label: 'Token Locker' }
