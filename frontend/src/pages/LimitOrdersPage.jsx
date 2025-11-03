@@ -14,7 +14,7 @@ const LimitOrdersPage = () => {
   const [tokenTo, setTokenTo] = useState('');
   const [amount, setAmount] = useState('');
   const [targetPrice, setTargetPrice] = useState('');
-  const [dcaInterval, setDcaInterval] = useState('daily');
+  const [dcaInterval, setDcaInterval] = useState('once');
 
   const executionFee = '0.1%';
 
