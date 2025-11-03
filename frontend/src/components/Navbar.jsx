@@ -78,53 +78,35 @@ const Navbar = ({ selectedChain, onChainChange }) => {
               <div
                 key={idx}
                 className="relative"
-                onMouseEnter={() => !category.single && setOpenMenu(idx)}
+                onMouseEnter={() => setOpenMenu(idx)}
                 onMouseLeave={() => setOpenMenu(null)}
               >
-                {category.single ? (
-                  // Single link without dropdown
-                  <Link
-                    to={category.path}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                      isActive(category.path)
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600'
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-800'
-                    }`}
-                  >
-                    {category.icon}
-                    <span>{category.name}</span>
-                  </Link>
-                ) : (
-                  // Category with dropdown
-                  <>
-                    <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                      {category.icon}
-                      <span>{category.name}</span>
-                      <ChevronDown className="w-3 h-3" />
-                    </button>
+                <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                  {category.icon}
+                  <span>{category.name}</span>
+                  <ChevronDown className="w-3 h-3" />
+                </button>
 
-                    {/* Dropdown */}
-                    {openMenu === idx && (
-                      <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden z-50">
-                        {category.items.map((item, itemIdx) => (
-                          <Link
-                            key={itemIdx}
-                            to={item.path}
-                            className={`flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
-                              isActive(item.path) ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-                            }`}
-                          >
-                            <span className="text-sm">{item.label}</span>
-                            {item.badge && (
-                              <span className="px-2 py-0.5 text-xs bg-blue-600 text-white rounded">
-                                {item.badge}
-                              </span>
-                            )}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </>
+                {/* Dropdown */}
+                {openMenu === idx && (
+                  <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden z-50">
+                    {category.items.map((item, itemIdx) => (
+                      <Link
+                        key={itemIdx}
+                        to={item.path}
+                        className={`flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
+                          isActive(item.path) ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                        }`}
+                      >
+                        <span className="text-sm">{item.label}</span>
+                        {item.badge && (
+                          <span className="px-2 py-0.5 text-xs bg-blue-600 text-white rounded">
+                            {item.badge}
+                          </span>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
                 )}
               </div>
             ))}
