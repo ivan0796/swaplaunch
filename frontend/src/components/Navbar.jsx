@@ -20,6 +20,49 @@ const Navbar = ({ selectedChain, onChainChange }) => {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const navRef = useRef(null);
 
+  const navRef = useRef(null);
+
+  // Detect touch device
+  useEffect(() => {
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
+
+  // Close menu on route change
+  useEffect(() => {
+    setOpenMenu(null);
+  }, [location.pathname]);
+
+  // Close menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setOpenMenu(null);
+      }
+    };
+
+    if (openMenu !== null) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [openMenu]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && openMenu !== null) {
+        setOpenMenu(null);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [openMenu]);
+
   const menuCategories = [
     {
       name: 'Trade',
