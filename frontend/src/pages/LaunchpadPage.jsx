@@ -496,15 +496,6 @@ const LaunchpadPage = () => {
                   </div>
                 </div>
               </div>
-                      {formData.enableAntiBot && <p>• Anti-Bot: +0.005 ETH (~$6)</p>}
-                      {formData.enableLiquidityLock && <p>• Liquidity Lock: +0.01 ETH (~$13)</p>}
-                      <p className="mt-2 text-xs">
-                        Fee adjusts based on current gas prices (€20-50 range)
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               {/* Launch Button */}
               <Button
