@@ -5,7 +5,44 @@ import { Lock, Calendar, Info, ExternalLink } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { toast } from 'sonner';
-import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+
+const TokenLockerPage = () => {
+  const { address, isConnected } = useAccount();
+  const [selectedChain, setSelectedChain] = useState(1);
+  const [tokenAddress, setTokenAddress] = useState('');
+  const [amount, setAmount] = useState('');
+  const [unlockDate, setUnlockDate] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const lockFee = '50'; // 50 USD in native token
+
+  const handleLock = async () => {
+    if (!isConnected) {
+      toast.error('Please connect your wallet');
+      return;
+    }
+
+    if (!tokenAddress || !amount || !unlockDate) {
+      toast.error('Please fill all fields');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      toast.info('Lock feature coming soon! Smart contract deployment in progress.');
+      // TODO: Implement actual locking contract
+    } catch (error) {
+      toast.error('Failed to lock tokens');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
+      {/* Navbar */}
+      <Navbar selectedChain={selectedChain} onChainChange={setSelectedChain} />
 
 const TokenLockerPage = () => {
   const { address, isConnected } = useAccount();
