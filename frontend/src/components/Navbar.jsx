@@ -68,8 +68,8 @@ const Navbar = ({ selectedChain, onChainChange }) => {
       icon: <Zap className="w-4 h-4" />,
       items: [
         { path: '/', label: 'Swap' },
-        { path: '/trade/pro-swap', label: 'Pro Swap', badge: 'Beta' },
-        { path: '/trade/bridge', label: 'Bridge', badge: 'Beta' }
+        { path: '/trade/pro-swap', label: 'Pro Swap' },
+        { path: '/trade/bridge', label: 'Bridge' }
       ]
     },
     {
