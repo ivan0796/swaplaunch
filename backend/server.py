@@ -22,6 +22,14 @@ from fee_calculator import (
     FEE_TIERED_ENABLED
 )
 
+# Import A/B testing module
+from ab_testing import (
+    get_user_cohort,
+    get_cohort_fee_info,
+    log_cohort_event,
+    CONTROL_FEE_PERCENT
+)
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
