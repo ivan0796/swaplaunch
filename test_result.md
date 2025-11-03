@@ -103,20 +103,26 @@
 #====================================================================================================
 
 user_problem_statement: |
-  SwapLaunch v3.0 - Multi-Chain Expansion & Enhanced Features
+  SwapLaunch v4.0 - Referral System & Enhanced Features
   
   Previous issues (COMPLETED):
   1. ✅ Token logos from TrustWallet
   2. ✅ Dexscreener integration for contract search
   3. ✅ Trading pair selection
+  4. ✅ Multi-chain support (XRP, Tron)
+  5. ✅ Chain-prioritized token search
   
-  New Requirements:
-  1. Add more Layer-1 chains (XRP, Tron, etc.) with native DEXs
-  2. Implement chain filtering (EVM chains → show only EVM-compatible networks)
-  3. Chain-prioritized token search (prioritize tokens from selected chain)
-  4. Add "Token Sniffer" button in TokenSecurityPanel
-  5. Trending data from CoinMarketCap (NO API key available - keeping existing implementation)
-  6. Ensure token logos for WETH, DAI, etc. (already using CMC logos in DEFAULT_TOKENS)
+  Current Implementation:
+  1. Referral System - Build comprehensive referral page with display-only earnings
+  2. Launchpad Badges - Add "Audit Provided" & "Contract Verified", remove "Team KYC"
+  
+  Requirements:
+  - Display-only earnings (no withdrawal yet - Phase 1)
+  - Referral link with copy functionality
+  - Stats: Total Referrals, Total Earned, Unclaimed Amount
+  - "How It Works" section with 3-step explanation
+  - List of referrals with details
+  - Leaderboard showing top referrers
 
 backend:
   - task: "Add XRP and Tron Chain Support"
