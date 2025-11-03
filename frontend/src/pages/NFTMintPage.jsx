@@ -73,6 +73,7 @@ const NFTMintPage = () => {
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-brand-blue to-brand-purple text-white rounded-full mb-4">
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-semibold">{t('nft.aiGenerator')}</span>
+            <span className="px-2 py-0.5 bg-orange-500 rounded text-xs font-bold">BETA</span>
           </div>
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-brand-blue to-brand-purple bg-clip-text text-transparent">
             {t('nft.title')}
