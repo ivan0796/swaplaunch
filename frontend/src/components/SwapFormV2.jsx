@@ -21,6 +21,7 @@ import TokenRiskDisclaimer from './TokenRiskDisclaimer';
 import FeeBreakdownBar from './FeeBreakdownBar';
 import MEVProtectionToggle from './MEVProtectionToggle';
 import ExplorerLink from './ExplorerLink';
+import RouteBreakdown from './RouteBreakdown';
 import { CMC_TOP_TOKENS } from '../utils/cmcTokens';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
