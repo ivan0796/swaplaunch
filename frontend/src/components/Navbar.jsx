@@ -24,25 +24,28 @@ const Navbar = ({ selectedChain, onChainChange }) => {
       icon: <Zap className="w-4 h-4" />,
       items: [
         { path: '/', label: 'Swap' },
-        { path: '/limit-orders', label: 'Pro Swap' },
-        { path: '/bridge', label: 'Bridge' }
+        { path: '/trade/pro-swap', label: 'Pro Swap' },
+        { path: '/trade/bridge', label: 'Bridge' }
       ]
     },
     {
       name: 'Launchpad',
       icon: <Rocket className="w-4 h-4" />,
       items: [
-        { path: '/projects', label: 'Explore Projects' },
-        { path: '/launchpad', label: 'Create Launch' },
-        { path: '/token-locker', label: 'Token Locker' }
+        { path: '/launchpad/explore', label: 'Explore Projects' },
+        { path: '/launchpad/create', label: 'Create Project' },
+        { path: '/launchpad/token-creator', label: 'Token Creator', badge: 'New' },
+        { path: '/launchpad/nft-maker', label: 'NFT Maker' },
+        { path: '/launchpad/my-nft-collections', label: 'My NFT Collections' },
+        { path: '/launchpad/token-locker', label: 'Token Locker' }
       ]
     },
     {
       name: 'Earn',
       icon: <Gift className="w-4 h-4" />,
       items: [
-        { path: '/referrals', label: 'Referral Program', badge: '🔥' },
-        { path: '/referrals#leaderboard', label: 'Leaderboard' }
+        { path: '/earn/referrals', label: 'Referral Dashboard', badge: '🔥' },
+        { path: '/earn/referrals#leaderboard', label: 'Leaderboard' }
       ]
     },
     {
