@@ -595,11 +595,11 @@ const LaunchpadPage = () => {
             </div>
             <div className="flex gap-3">
               <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 font-bold text-xs">2</span>
-              <p><strong>Pay launch fee:</strong> One-time {LAUNCH_FEE} ETH fee for deployment</p>
+              <p><strong>Pay launch fee:</strong> One-time {LAUNCH_FEE} {LAUNCH_CURRENCY} (~${estimatedFee.usd}) fee for deployment</p>
             </div>
             <div className="flex gap-3">
               <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 font-bold text-xs">3</span>
-              <p><strong>Token is deployed:</strong> ERC-20 contract deployed via Factory</p>
+              <p><strong>Token is deployed:</strong> {selectedChainData.standard} contract deployed to {selectedChainData.name}</p>
             </div>
             <div className="flex gap-3">
               <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 font-bold text-xs">4</span>
