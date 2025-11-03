@@ -53,8 +53,21 @@ const MyNFTCollectionsPage = () => {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 dark:text-white">My NFT Collections</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-4xl font-bold dark:text-white">My NFT Collections</h1>
+            <span className="px-3 py-1 bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 rounded-full text-sm font-bold">BETA</span>
+          </div>
           <p className="text-gray-600 dark:text-gray-300">Manage your AI-generated NFT collections</p>
+        </div>
+
+        {/* Beta Notice */}
+        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-xl p-4 mb-6">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0" />
+            <div className="text-sm text-orange-900 dark:text-orange-200">
+              <strong>Beta Feature:</strong> NFT collection management is currently in beta. Full deployment features coming soon.
+            </div>
+          </div>
         </div>
 
         {!isConnected ? (
