@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
 import { ArrowLeftRight, Info } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -6,6 +7,7 @@ import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
 
 const BridgePage = () => {
+  const { t } = useTranslation();
   const { address, isConnected } = useAccount();
   const [selectedChain, setSelectedChain] = useState(1);
 
@@ -14,7 +16,7 @@ const BridgePage = () => {
       toast.error('Please connect your wallet');
       return;
     }
-    toast.info('Bridge feature coming soon!');
+    toast.info(t('bridge.integratingPartners'));
   };
 
   return (
@@ -25,15 +27,15 @@ const BridgePage = () => {
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
           <div className="flex items-center gap-3 mb-6">
             <ArrowLeftRight className="w-8 h-8 text-blue-600" />
-            <h1 className="text-3xl font-bold dark:text-white">Cross-Chain Bridge</h1>
+            <h1 className="text-3xl font-bold dark:text-white">{t('bridge.title')}</h1>
           </div>
 
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 mb-6">
             <div className="flex items-start gap-3">
               <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-blue-900 dark:text-blue-200">
-                <strong>Bridge Integration Coming Soon</strong><br />
-                Cross-chain asset transfers powered by LI.FI will be available here.
+                <strong>{t('bridge.integratingPartners')}</strong><br />
+                {t('bridge.integratingDesc')}
               </div>
             </div>
           </div>
@@ -41,9 +43,9 @@ const BridgePage = () => {
           <Button
             onClick={handleBridge}
             disabled
-            className="w-full py-6 text-lg bg-gradient-to-r from-blue-600 to-purple-600"
+            className="w-full py-6 text-lg bg-gradient-to-r from-blue-600 to-purple-600 opacity-50 cursor-not-allowed"
           >
-            Bridge Assets (Coming Soon)
+            {t('bridge.bridgeAssets')}
           </Button>
         </div>
       </div>
