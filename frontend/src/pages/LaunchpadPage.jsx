@@ -164,24 +164,8 @@ const LaunchpadPage = () => {
 
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_20%_-10%,rgba(129,140,248,.25),transparent),radial-gradient(800px_500px_at_80%_0%,rgba(16,185,129,.18),transparent)]">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-black/5 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-gray-900/60">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-          <Link to="/" className="flex items-center gap-2 opacity-80 hover:opacity-100">
-            <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm">Back to Swap</span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white text-lg">
-              🚀
-            </div>
-            <div className="text-sm font-semibold tracking-tight">Launchpad</div>
-          </div>
-          <div className="flex items-center gap-2">
-            <WalletButtonWithHistory />
-          </div>
-        </div>
-      </header>
+      {/* Navbar */}
+      <Navbar selectedChain={selectedChain} onChainChange={setSelectedChain} />
 
       {/* Main Content */}
       <main className="mx-auto max-w-4xl px-4 py-8">
