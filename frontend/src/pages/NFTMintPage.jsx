@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
 import { Sparkles, RefreshCw, Check, AlertCircle } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -10,6 +11,7 @@ import axios from 'axios';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const NFTMintPage = () => {
+  const { t } = useTranslation();
   const { address, isConnected } = useAccount();
   const [selectedChain, setSelectedChain] = useState(1);
   
