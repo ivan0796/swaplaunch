@@ -20,38 +20,37 @@ const Navbar = ({ selectedChain, onChainChange }) => {
 
   const menuCategories = [
     {
-      name: 'Swap & Trade',
+      name: 'Trade',
       icon: <Zap className="w-4 h-4" />,
       items: [
-        { path: '/', label: t('nav.trade'), badge: 'Basic' },
-        { path: '/limit-orders', label: 'Pro Swap', badge: 'Pro' }
-      ]
-    },
-    {
-      name: 'Portfolio',
-      icon: <TrendingUp className="w-4 h-4" />,
-      items: [
-        { path: '/portfolio', label: 'My Portfolio', badge: 'New' },
-        { path: '/bridge', label: t('nav.bridge') },
-        { path: '/referrals', label: 'My Referrals', badge: '🔥' }
+        { path: '/', label: 'Swap' },
+        { path: '/limit-orders', label: 'Limit Orders', badge: 'Pro' },
+        { path: '/bridge', label: t('nav.bridge') }
       ]
     },
     {
       name: 'Launchpad',
       icon: <Rocket className="w-4 h-4" />,
       items: [
-        { path: '/launchpad', label: t('nav.launchpad') },
-        { path: '/token-locker', label: t('nav.tokenLocker') },
-        { path: '/projects', label: t('nav.projects') }
+        { path: '/launchpad', label: 'Token Launch' },
+        { path: '/token-locker', label: 'Token Locker' },
+        { path: '/nft-mint', label: 'NFT Launch', badge: 'Beta' },
+        { path: '/projects', label: 'All Projects' }
       ]
     },
     {
-      name: 'NFT Zone',
-      icon: <Image className="w-4 h-4" />,
+      name: 'Earn',
+      icon: <Gift className="w-4 h-4" />,
       items: [
-        { path: '/nft-mint', label: 'NFT Mintpad', badge: 'Beta' },
-        { path: '/advertise', label: t('nav.advertise') }
+        { path: '/referrals', label: 'Referrals', badge: '🔥' },
+        { path: '/advertise', label: 'Advertise' }
       ]
+    },
+    {
+      name: 'Portfolio',
+      icon: <TrendingUp className="w-4 h-4" />,
+      single: true,
+      path: '/portfolio'
     }
   ];
 
