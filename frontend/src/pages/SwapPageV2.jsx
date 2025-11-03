@@ -63,14 +63,16 @@ const SwapPageV2 = () => {
             <div className="text-sm font-semibold tracking-tight">SwapLaunch v2.0</div>
           </div>
           <nav className="hidden items-center gap-6 text-sm md:flex">
-            <Link className="opacity-80 hover:opacity-100" to="/">Trade</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/projects">Projects</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/launchpad">Launchpad</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/token-locker">Token Locker</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/limit-orders">Limit/DCA</Link>
-            <Link className="opacity-80 hover:opacity-100" to="/bridge">Bridge</Link>
+            <Link className="opacity-80 hover:opacity-100" to="/">{t('nav.trade')}</Link>
+            <Link className="opacity-80 hover:opacity-100" to="/projects">{t('nav.projects')}</Link>
+            <Link className="opacity-80 hover:opacity-100" to="/launchpad">{t('nav.launchpad')}</Link>
+            <Link className="opacity-80 hover:opacity-100" to="/token-locker">{t('nav.tokenLocker')}</Link>
+            <Link className="opacity-80 hover:opacity-100" to="/limit-orders">{t('nav.limitDCA')}</Link>
+            <Link className="opacity-80 hover:opacity-100" to="/bridge">{t('nav.bridge')}</Link>
           </nav>
           <div className="flex items-center gap-2">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
             {/* Network Selector in Header */}
             <NetworkSelectorDropdown
               selectedChain={selectedChain}
