@@ -176,7 +176,7 @@ const NFTMintPage = () => {
               <Button
                 onClick={generatePreview}
                 disabled={isGenerating || !prompt}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-6 text-lg"
+                className="w-full bg-gradient-to-r from-brand-blue to-brand-purple hover:from-blue-700 hover:to-purple-700 py-6 text-lg"
               >
                 {isGenerating ? (
                   <>
