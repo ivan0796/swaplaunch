@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
-import { Image as ImageIcon, ExternalLink } from 'lucide-react';
+import { Image as ImageIcon, ExternalLink, AlertCircle } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
@@ -8,6 +9,7 @@ import axios from 'axios';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const MyNFTCollectionsPage = () => {
+  const { t } = useTranslation();
   const { address, isConnected } = useAccount();
   const [selectedChain, setSelectedChain] = useState(1);
   const [collections, setCollections] = useState([]);
