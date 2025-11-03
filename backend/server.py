@@ -1278,9 +1278,11 @@ async def get_project_rating(project_id: str, wallet_address: Optional[str] = No
 # Include the routers in the main app
 from ad_management import ad_router
 from referral_system import referral_router
+from nft_generator import nft_router
 app.include_router(api_router)
 app.include_router(ad_router, prefix="/api")
 app.include_router(referral_router, prefix="/api")
+app.include_router(nft_router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,
