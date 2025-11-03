@@ -113,7 +113,7 @@ const NFTMintPage = () => {
                       onClick={() => setStyle(preset.value)}
                       className={`p-4 rounded-xl border-2 transition-all ${
                         style === preset.value
-                          ? 'border-purple-600 bg-purple-50 dark:bg-purple-900/30'
+                          ? 'border-brand-blue bg-blue-50 dark:bg-blue-900/30'
                           : 'border-gray-200 dark:border-gray-700'
                       }`}
                     >
