@@ -9,6 +9,7 @@ import LaunchpadPage from './pages/LaunchpadPage';
 import TokenLockerPage from './pages/TokenLockerPage';
 import LimitOrdersPage from './pages/LimitOrdersPage';
 import ProjectsPage from './pages/ProjectsPage';
+import AdvertisePage from './pages/AdvertisePage';
 import { Toaster } from './components/ui/sonner';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/token-locker" element={<TokenLockerPage />} />
           <Route path="/limit-orders" element={<LimitOrdersPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/advertise" element={<AdvertisePage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/risk-disclosure" element={<RiskDisclosure />} />
         </Routes>
