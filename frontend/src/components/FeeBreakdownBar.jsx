@@ -24,19 +24,19 @@ const FeeBreakdownBar = ({ quote, platformFeeBps = 20 }) => {
     <div className="bg-gray-50 rounded-xl p-4 space-y-3 border border-gray-200">
       <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
         <Info className="w-4 h-4" />
-        <span>Fee Breakdown</span>
+        <span>{t('fees.breakdown')}</span>
       </div>
       
       <div className="space-y-2 text-sm">
         {/* DEX Fee */}
         <div className="flex justify-between items-center">
-          <span className="text-gray-600">DEX Fee</span>
+          <span className="text-gray-600">{t('fees.dex')}</span>
           <span className="font-medium">~0.3%</span>
         </div>
         
         {/* Platform Fee */}
         <div className="flex justify-between items-center">
-          <span className="text-gray-600">Platform Fee</span>
+          <span className="text-gray-600">{t('fees.platform')}</span>
           <span className="font-medium">{platformFeePercent}%</span>
         </div>
         
@@ -44,14 +44,14 @@ const FeeBreakdownBar = ({ quote, platformFeeBps = 20 }) => {
         <div className="flex justify-between items-center">
           <span className="text-gray-600 flex items-center gap-1">
             <TrendingDown className="w-3 h-3" />
-            Price Impact
+            {t('fees.priceImpact')}
           </span>
           <span className={`font-medium ${priceImpactColor}`}>{priceImpact}%</span>
         </div>
         
         {/* Gas Cost */}
         <div className="flex justify-between items-center pt-2 border-t border-gray-200">
-          <span className="text-gray-600">Estimated Gas</span>
+          <span className="text-gray-600">{t('fees.gas')}</span>
           <span className="font-medium">{gasPrice} Gwei</span>
         </div>
       </div>
@@ -60,7 +60,7 @@ const FeeBreakdownBar = ({ quote, platformFeeBps = 20 }) => {
       {parseFloat(priceImpact) > 3 && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-2 flex items-center gap-2 text-xs text-red-800">
           <Info className="w-4 h-4" />
-          <span>High price impact! Consider reducing swap amount.</span>
+          <span>{t('fees.highImpactWarning')}</span>
         </div>
       )}
     </div>
