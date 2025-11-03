@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAccount, useWalletClient } from 'wagmi';
 import { ArrowLeft, Rocket, Shield, TrendingUp, Coins, AlertCircle, CheckCircle, X } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -7,6 +8,7 @@ import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
 
 const LaunchpadPage = () => {
+  const { t } = useTranslation();
   const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
 
