@@ -7,6 +7,7 @@ import WalletButtonWithHistory from './WalletButtonWithHistory';
 import NetworkSelectorDropdown from './NetworkSelectorDropdown';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeToggle from './ThemeToggle';
+import GasTracker from './GasTracker';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { ChevronDown, Zap, TrendingUp, Rocket, Image } from 'lucide-react';
 
