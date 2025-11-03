@@ -148,7 +148,7 @@ const ReferralsPage = () => {
                     className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-lg transition-all flex items-center gap-2"
                   >
                     {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                    {copied ? 'Copied!' : 'Copy'}
+                    {copied ? t('referrals.copied') : t('referrals.copy')}
                   </Button>
                 </div>
               </div>
