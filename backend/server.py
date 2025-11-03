@@ -12,6 +12,15 @@ import uuid
 from datetime import datetime, timezone
 import httpx
 import asyncio
+import hashlib
+
+# Import tiered fee calculator
+from fee_calculator import (
+    calculate_tiered_fee,
+    get_fallback_fee,
+    calculate_net_amount_in,
+    FEE_TIERED_ENABLED
+)
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
