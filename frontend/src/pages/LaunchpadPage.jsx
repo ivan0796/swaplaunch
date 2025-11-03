@@ -211,7 +211,7 @@ const LaunchpadPage = () => {
               <h3 className="font-semibold">{t('launchpad.lowFee')}</h3>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              {t('launchpad.lowFeeDesc', { fee: LAUNCH_FEE })}
+              Only {LAUNCH_FEE} {LAUNCH_CURRENCY} (~${estimatedFee.usd}). No hidden costs.
             </p>
           </div>
 
