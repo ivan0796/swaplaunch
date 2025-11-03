@@ -163,9 +163,9 @@ const SwapPageV2 = () => {
                 <div className="flex items-start gap-3">
                   <div className="mt-0.5 text-blue-500">🛡️</div>
                   <div>
-                    <div className="font-medium mb-1">Non-Custodial</div>
+                    <div className="font-medium mb-1">Secure Transactions</div>
                     <div className="text-gray-600 dark:text-gray-400 text-xs">
-                      Your private keys never leave your wallet. We never have access to your funds.
+                      Your private keys never leave your wallet. Sign all transactions directly.
                     </div>
                   </div>
                 </div>
