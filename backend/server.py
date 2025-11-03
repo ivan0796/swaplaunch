@@ -1495,6 +1495,124 @@ async def get_project_rating(project_id: str, wallet_address: Optional[str] = No
         logger.error(f"Error fetching project rating: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to fetch rating")
 
+@api_router.get("/admin/ab-stats")
+async def get_ab_stats(
+    window: str = Query("7d", description="Time window: 7d, 30d, or all"),
+    token: str = Query(None, description="Admin API token")
+):
+    """
+    Get A/B test statistics for tiered fee rollout.
+    
+    Requires ADMIN_API_TOKEN for authentication.
+    
+    Returns aggregated metrics for tiered vs. control cohorts:
+    - Quotes requested
+    - Executed swaps
+    - Conversion rate
+    - Total revenue (USD)
+    - Total volume (USD)
+    - Average fee percentage
+    """
+    # Authentication
+    admin_token = os.getenv('ADMIN_API_TOKEN')
+    if not admin_token or token != admin_token:
+        raise HTTPException(status_code=401, detail="Unauthorized: Invalid admin token")
+    
+    # Parse time window
+    now = datetime.now(timezone.utc)
+    if window == "7d":
+        start_time = now - timedelta(days=7)
+    elif window == "30d":
+        start_time = now - timedelta(days=30)
+    elif window == "all":
+        start_time = datetime(2020, 1, 1, tzinfo=timezone.utc)  # Far past
+    else:
+        raise HTTPException(status_code=400, detail="Invalid window parameter")
+    
+    try:
+        # Aggregate quote events by cohort
+        quote_pipeline = [
+            {
+                "$match": {
+                    "timestamp": {"$gte": start_time.isoformat()},
+                    "event_type": "quote"
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$cohort",
+                    "quotes": {"$sum": 1},
+                    "total_volume_usd": {"$sum": "$amount_usd"},
+                    "total_fee_usd": {"$sum": "$fee_usd"},
+                    "chains": {"$addToSet": "$chain"}
+                }
+            }
+        ]
+        
+        quote_stats = await db.ab_test_events.aggregate(quote_pipeline).to_list(length=None)
+        
+        # Aggregate execution events by cohort
+        execution_pipeline = [
+            {
+                "$match": {
+                    "timestamp": {"$gte": start_time.isoformat()},
+                    "event_type": "execution"
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$cohort",
+                    "executed": {"$sum": 1}
+                }
+            }
+        ]
+        
+        execution_stats = await db.ab_test_events.aggregate(execution_pipeline).to_list(length=None)
+        
+        # Build cohort stats
+        cohorts = {}
+        for cohort_name in ["tiered", "control"]:
+            # Get quote stats
+            quote_data = next((item for item in quote_stats if item["_id"] == cohort_name), None)
+            
+            # Get execution stats
+            exec_data = next((item for item in execution_stats if item["_id"] == cohort_name), None)
+            
+            quotes = quote_data["quotes"] if quote_data else 0
+            executed = exec_data["executed"] if exec_data else 0
+            conversion = (executed / quotes * 100) if quotes > 0 else 0.0
+            
+            revenue_usd = quote_data["total_fee_usd"] if quote_data else 0.0
+            volume_usd = quote_data["total_volume_usd"] if quote_data else 0.0
+            avg_fee_percent = (revenue_usd / volume_usd * 100) if volume_usd > 0 else 0.0
+            
+            cohorts[cohort_name] = {
+                "quotes": quotes,
+                "executed": executed,
+                "conversion": round(conversion, 2),
+                "revenue_usd": round(revenue_usd, 2),
+                "volume_usd": round(volume_usd, 2),
+                "avg_fee_percent": round(avg_fee_percent, 3)
+            }
+        
+        # Get unique chains
+        all_chains = set()
+        for item in quote_stats:
+            all_chains.update(item.get("chains", []))
+        
+        return {
+            "window": window,
+            "start_date": start_time.isoformat(),
+            "generated_at": now.isoformat(),
+            "cohorts": cohorts,
+            "chains": sorted(list(all_chains)),
+            "rollout_percent": int(os.getenv('FEE_TIERED_ROLLOUT_PERCENT', '20'))
+        }
+    
+    except Exception as e:
+        logger.error(f"Error fetching A/B stats: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch A/B test statistics")
+
 # Include the routers in the main app
 from ad_management import ad_router
 from referral_system import referral_router
