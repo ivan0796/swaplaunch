@@ -212,8 +212,8 @@ const ReferralsPage = () => {
                         <div className="text-sm text-gray-600 dark:text-gray-400">Available</div>
                       </div>
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-500">
-                      Display only (claiming coming soon)
+                    <div className="text-xs bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg px-3 py-2 text-yellow-700 dark:text-yellow-400">
+                      💰 Withdrawals coming soon — keep earning!
                     </div>
                   </div>
                 </div>
