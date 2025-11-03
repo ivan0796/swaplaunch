@@ -250,6 +250,30 @@ backend:
         agent: "testing"
         comment: "🎯 COMPREHENSIVE TIERED FEE SYSTEM TESTING COMPLETE: All 17 tests passed (100% success rate). Validated all 6 tier boundaries ($900→0.35%, $1.5K→0.30%, $6K→0.25%, $12K→0.20%, $55K→0.15%, $120K→0.10%). API response fields complete and mathematically consistent. Non-custodial security verified (fee deducted from input, no custody). Edge cases handled correctly (small amounts, large amounts, exact boundaries). Error handling robust (422 for missing params, 400 for invalid chain). Feature flag behavior correct (FEE_TIERED_ENABLED=true active). System ready for production with dynamic USD-based fee calculation."
 
+  - task: "A/B Testing for Fee Tier Rollout"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/ab_testing.py, /app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented A/B testing module with cohort determination based on wallet hashing (SHA256). Config: 20% tiered fees (dynamic tiers), 80% control (fixed 0.25% M1 fee). Stable bucket assignment using wallet+salt hash mod 100. Integrated into both /evm/quote and /solana/quote endpoints. Added cohort logging to MongoDB (ab_test_events collection) for analytics. Response includes 'cohort' field ('tiered' or 'control'). Created /admin/ab-stats endpoint with token auth for viewing metrics: quotes, executions, conversion, revenue, volume by cohort."
+
+  - task: "Admin A/B Stats Endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created GET /admin/ab-stats endpoint with ADMIN_API_TOKEN authentication. Returns aggregated metrics for tiered vs control cohorts: quotes requested, executed swaps, conversion rate (%), total revenue USD, total volume USD, avg fee percent. Supports time windows: 7d, 30d, all. Aggregates from MongoDB ab_test_events collection. Response includes chains list and rollout percentage."
+
 frontend:
   - task: "Navigation Consistency - Unified Navbar Across All Pages"
     implemented: true
