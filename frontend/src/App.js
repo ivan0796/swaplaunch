@@ -4,6 +4,7 @@ import './i18n'; // Import i18n configuration
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import SwapPageV2 from './pages/SwapPageV2';
+import ProSwapPage from './pages/ProSwapPage';
 import BridgePage from './pages/BridgePage';
 import RiskDisclosure from './pages/RiskDisclosure';
 import FAQPage from './pages/FAQPage';
@@ -28,7 +29,7 @@ function App() {
             {/* TRADE */}
             <Route path="/" element={<SwapPageV2 />} />
             <Route path="/trade/swap" element={<SwapPageV2 />} />
-            <Route path="/trade/pro-swap" element={<LimitOrdersPage />} />
+            <Route path="/trade/pro-swap" element={<ProSwapPage />} />
             <Route path="/trade/bridge" element={<BridgePage />} />
             
             {/* LAUNCHPAD */}
