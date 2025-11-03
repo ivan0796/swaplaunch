@@ -1162,8 +1162,10 @@ async def startup_event():
 
 # Include the routers in the main app
 from ad_management import ad_router
+from referral_system import referral_router
 app.include_router(api_router)
 app.include_router(ad_router, prefix="/api")
+app.include_router(referral_router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,
