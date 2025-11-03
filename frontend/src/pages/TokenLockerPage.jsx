@@ -47,12 +47,23 @@ const TokenLockerPage = () => {
         <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
           <div className="flex items-center gap-3 mb-6">
             <Lock className="w-8 h-8 text-blue-600" />
-            <h1 className="text-3xl font-bold">Token Locker</h1>
+            <h1 className="text-3xl font-bold dark:text-white">Token Locker</h1>
+            <span className="px-3 py-1 bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 rounded-full text-sm font-bold">BETA</span>
           </div>
 
-          <p className="text-gray-600 dark:text-gray-400 mb-8">
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
             Lock your LP tokens or team tokens with time-based vesting.
           </p>
+
+          {/* Beta Notice */}
+          <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-xl p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0" />
+              <div className="text-sm text-orange-900 dark:text-orange-200">
+                <strong>Beta Feature:</strong> This feature is currently in beta testing. Smart contracts are being audited. Use with caution.
+              </div>
+            </div>
+          </div>
 
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-xl p-4 mb-6">
             <Info className="w-5 h-5 text-blue-600 inline mr-2" />
