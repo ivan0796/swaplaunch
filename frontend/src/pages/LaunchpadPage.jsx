@@ -503,13 +503,6 @@ const LaunchpadPage = () => {
                   </>
                 )}
               </Button>
-
-              {/* Demo Notice */}
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-4 border border-yellow-200 dark:border-yellow-800">
-                <p className="text-xs text-yellow-800 dark:text-yellow-200">
-                  ⚠️ <strong>Demo Mode:</strong> This is a demonstration interface. In production, a Factory Contract would deploy your ERC-20 token on-chain with proper security audits and gas optimization.
-                </p>
-              </div>
             </div>
           </div>
         ) : (
