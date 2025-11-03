@@ -104,10 +104,24 @@ const Navbar = ({ selectedChain, onChainChange }) => {
 
   const isActive = (path) => location.pathname === path;
 
-  // Handle menu interaction (hover for desktop, click for mobile)
+  // Handle menu interaction with delay (hover for desktop, click for mobile)
   const handleMenuEnter = (idx) => {
     if (!isTouchDevice) {
+      // Clear any pending close timeout
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
       setOpenMenu(idx);
+    }
+  };
+
+  const handleMenuLeave = () => {
+    if (!isTouchDevice) {
+      // Add a small delay before closing to allow moving to dropdown
+      closeTimeoutRef.current = setTimeout(() => {
+        setOpenMenu(null);
+      }, 150); // 150ms grace period
     }
   };
 
@@ -116,6 +130,15 @@ const Navbar = ({ selectedChain, onChainChange }) => {
       setOpenMenu(openMenu === idx ? null : idx);
     }
   };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
