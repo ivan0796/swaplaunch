@@ -103,25 +103,7 @@ const ProjectsPage = () => {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {featuredProjects.map(project => (
-              <div key={project.id} className="bg-white rounded-2xl p-6 shadow-lg border-2 border-yellow-400">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="text-4xl">{project.logo}</div>
-                  <div>
-                    <h4 className="font-bold text-lg">{project.name}</h4>
-                    <div className="text-xs text-gray-500">{project.category}</div>
-                  </div>
-                </div>
-                <p className="text-gray-600 text-sm mb-4">{project.description}</p>
-                <div className="flex items-center justify-between">
-                  <div className="text-sm">
-                    <div className="text-gray-500">TVL</div>
-                    <div className="font-bold">{project.tvl}</div>
-                  </div>
-                  <Button size="sm" className="bg-blue-600">
-                    Visit <ExternalLink className="w-4 h-4 ml-1" />
-                  </Button>
-                </div>
-              </div>
+              <ProjectCard key={project.id} project={project} featured={true} />
             ))}
           </div>
         </div>
