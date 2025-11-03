@@ -106,14 +106,13 @@ const ReferralsPage = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full mb-4">
             <Sparkles className="w-4 h-4" />
-            <span className="text-sm font-semibold">Referral Program</span>
+            <span className="text-sm font-semibold">{t('referrals.program')}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Earn by Sharing
+            {t('referrals.title')}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Invite friends to SwapLaunch and earn a percentage of platform fees from every swap they make. 
-            The more you share, the more you earn!
+            {t('referrals.subtitle')}
           </p>
         </div>
 
