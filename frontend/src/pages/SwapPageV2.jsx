@@ -72,8 +72,8 @@ const SwapPageV2 = () => {
               </button>
               <div className="absolute top-full left-0 mt-1 w-40 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                 <Link to="/" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Swap</Link>
-                <Link to="/limit-orders" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Pro Swap</Link>
-                <Link to="/bridge" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Bridge</Link>
+                <Link to="/trade/pro-swap" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Pro Swap</Link>
+                <Link to="/trade/bridge" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Bridge</Link>
               </div>
             </div>
 
@@ -85,10 +85,16 @@ const SwapPageV2 = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                <Link to="/projects" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Explore Projects</Link>
-                <Link to="/launchpad" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Create Launch</Link>
-                <Link to="/token-locker" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Token Locker</Link>
+              <div className="absolute top-full left-0 mt-1 w-56 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <Link to="/launchpad/explore" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Explore Projects</Link>
+                <Link to="/launchpad/create" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Create Project</Link>
+                <Link to="/launchpad/token-creator" className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">
+                  Token Creator
+                  <span className="px-2 py-0.5 text-xs bg-blue-600 text-white rounded">New</span>
+                </Link>
+                <Link to="/launchpad/nft-maker" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">NFT Maker</Link>
+                <Link to="/launchpad/my-nft-collections" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">My NFT Collections</Link>
+                <Link to="/launchpad/token-locker" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Token Locker</Link>
               </div>
             </div>
 
@@ -101,8 +107,8 @@ const SwapPageV2 = () => {
                 </svg>
               </button>
               <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                <Link to="/referrals" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Referral Program</Link>
-                <Link to="/referrals#leaderboard" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Leaderboard</Link>
+                <Link to="/earn/referrals" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Referral Dashboard</Link>
+                <Link to="/earn/referrals#leaderboard" className="block px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm">Leaderboard</Link>
               </div>
             </div>
 
