@@ -219,7 +219,7 @@ const NFTMintPage = () => {
                 </Button>
                 <Button
                   onClick={() => toast.info('Full generation coming soon!')}
-                  className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600"
+                  className="flex-1 bg-gradient-to-r from-brand-blue to-brand-purple hover:from-blue-700 hover:to-purple-700"
                 >
                   Generate {quantity} NFTs
                 </Button>
