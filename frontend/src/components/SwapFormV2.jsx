@@ -251,9 +251,14 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       // Hide confirmation modal after signing
       setShowWalletConfirm(false);
 
-      toast.success('Transaction submitted!', {
-        description: `TX: ${txHash.slice(0, 10)}...${txHash.slice(-8)}`
-      });
+      // Show success with Explorer link
+      toast.success(
+        <div className="flex flex-col gap-2">
+          <div>Transaction submitted!</div>
+          <ExplorerLink chainId={chainId} txHash={txHash} type="tx" />
+        </div>,
+        { duration: 10000 }
+      );
 
       // Get referrer if exists
       const referrer = getReferrerFromStorage();
