@@ -563,35 +563,6 @@ async def get_trending_categories(category: str = Query("top", regex="^(top|gain
     except Exception as e:
         logger.error(f"Error in trending categories: {str(e)}")
         return {"category": category, "tokens": [], "error": str(e)}
-            
-            # Process tokens
-            processed_tokens = []
-            for coin in data:
-                token_info = {
-                    "id": coin.get("id", ""),
-                    "symbol": coin.get("symbol", "").upper(),
-                    "name": coin.get("name", ""),
-                    "image": coin.get("image", ""),
-                    "current_price": coin.get("current_price", 0),
-                    "price_change_24h": coin.get("price_change_percentage_24h", 0),
-                    "market_cap": coin.get("market_cap", 0),
-                    "total_volume": coin.get("total_volume", 0),
-                    "market_cap_rank": coin.get("market_cap_rank", 0)
-                }
-                processed_tokens.append(token_info)
-            
-            result = {
-                "category": category,
-                "tokens": processed_tokens
-            }
-            
-            # Cache the result
-            discovery_cache[cache_key] = (result, current_time)
-            return result
-            
-    except Exception as e:
-        logger.error(f"Error fetching trending {category}: {str(e)}")
-        return {"category": category, "tokens": [], "error": str(e)}
 
 
 @api_router.get("/dex/new-listings")
