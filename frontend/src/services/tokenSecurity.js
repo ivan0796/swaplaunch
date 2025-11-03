@@ -10,6 +10,17 @@ const GOPLUS_API_BASE = 'https://api.gopluslabs.io/api/v1';
  */
 export const getTokenSecurity = async (chainId, contractAddress) => {
   try {
+    // Validate inputs
+    if (!contractAddress || typeof contractAddress !== 'string') {
+      console.warn('Invalid contract address:', contractAddress);
+      return null;
+    }
+    
+    if (!chainId) {
+      console.warn('Invalid chain ID:', chainId);
+      return null;
+    }
+    
     const response = await axios.get(
       `${GOPLUS_API_BASE}/token_security/${chainId}`,
       {
