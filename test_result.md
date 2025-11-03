@@ -204,6 +204,30 @@ backend:
         comment: "Created new /api/dex/pairs endpoint that returns complete trading pairs from Dexscreener with both baseToken and quoteToken data. Returns pair info including pairAddress, chainId, dexId, liquidity, volume24h, priceChange24h, and logoUrl. Tested with PEPE query - returns correct pairs from multiple chains."
 
 frontend:
+  - task: "Referral Page with Display-Only Earnings"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/ReferralsPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Enhanced ReferralsPage.jsx with comprehensive UI: Header with 'Earn by Sharing' message, Referral link box with copy button, Stats cards (Referrals, Total Earned, Available), 'How It Works' 3-step guide, Referral list table with address/joined/swaps/volume, Leaderboard with top 10 referrers showing ranks with gold/silver/bronze styling. Added support for both EVM and Solana wallets. Integrated with backend /api/referrals endpoints. Display-only mode (no withdrawal feature yet)."
+
+  - task: "Add Referrals Link to Navigation"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Navbar.jsx, /app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added 'My Referrals' link to Navbar under Portfolio menu with 🔥 badge. Added route /referrals in App.js. Imported Gift icon from lucide-react for visual consistency."
+
   - task: "Network Selector with XRP & Tron"
     implemented: true
     working: "NA"
