@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { useAccount } from 'wagmi';
@@ -17,6 +17,8 @@ const Navbar = ({ selectedChain, onChainChange }) => {
   const { address: evmAddress, isConnected: evmConnected } = useAccount();
   const { publicKey: solanaAddress, connected: solanaConnected } = useWallet();
   const [openMenu, setOpenMenu] = useState(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const navRef = useRef(null);
 
   const menuCategories = [
     {
