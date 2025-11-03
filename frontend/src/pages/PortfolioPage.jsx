@@ -106,9 +106,9 @@ const PortfolioPage = () => {
               </div>
             </div>
 
-            {/* Non-Custodial Badge */}
+            {/* Data Source Note */}
             <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-              ✓ Non-custodial - Read-only data from blockchain
+              ✓ {t('portfolio.dataNote')}
             </div>
           </div>
         )}
