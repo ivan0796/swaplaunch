@@ -6,6 +6,9 @@ import BridgePage from './pages/BridgePage';
 import RiskDisclosure from './pages/RiskDisclosure';
 import FAQPage from './pages/FAQPage';
 import LaunchpadPage from './pages/LaunchpadPage';
+import TokenLockerPage from './pages/TokenLockerPage';
+import LimitOrdersPage from './pages/LimitOrdersPage';
+import ProjectsPage from './pages/ProjectsPage';
 import { Toaster } from './components/ui/sonner';
 
 function App() {
@@ -16,6 +19,9 @@ function App() {
           <Route path="/" element={<SwapPageV2 />} />
           <Route path="/bridge" element={<BridgePage />} />
           <Route path="/launchpad" element={<LaunchpadPage />} />
+          <Route path="/token-locker" element={<TokenLockerPage />} />
+          <Route path="/limit-orders" element={<LimitOrdersPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/risk-disclosure" element={<RiskDisclosure />} />
         </Routes>
