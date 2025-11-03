@@ -290,6 +290,30 @@ frontend:
         agent: "main"
         comment: "✅ VERIFIED: Navigation working perfectly across ALL pages. Tested: Swap → Launchpad → NFT Maker → Referrals → Portfolio → Back to Swap. Screenshots confirm: (1) Hover dropdowns open smoothly on desktop (2) Single-click navigation works (3) Menus close on route change (4) Consistent Navbar on all pages (5) Logo and brand colors displayed correctly. Chevron icon rotates when dropdown opens. No double-click required. Phase 1 COMPLETE."
 
+  - task: "Route Breakdown Component with ETA"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/RouteBreakdown.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Enhanced RouteBreakdown component with ETA estimation (blocks * 13s or minutes format). Added tooltip on 'Why this route?' with non-custodial messaging: 'We show route, gas, protocol fees and our platform fee. You sign in your own wallet — we never hold funds.' Component displays: Route name, sources, ETA, chain, gas fees, DEX fees, platform fee (with tier badge), and security note. Integrated across SwapPageV2, SwapFormV2, SolanaSwapForm."
+
+  - task: "Referral Teaser on Homepage"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/SwapPageV2.jsx, /app/frontend/src/components/ReferralTeaser.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "✅ VERIFIED: Referral teaser visible on homepage sidebar with 'EARN REWARDS' badge. Displays localized text: 'Verdiene mit, wenn du Freunde einlädest' (German). Links to /referrals dashboard. Non-intrusive placement below New Listings. Screenshot confirms visibility and proper styling."
+
   - task: "Referral Page with Display-Only Earnings"
     implemented: true
     working: "NA"
