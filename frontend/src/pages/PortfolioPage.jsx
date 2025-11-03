@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import axios from 'axios';
-import { Wallet, TrendingUp, TrendingDown, DollarSign, PieChart } from 'lucide-react';
+import { Wallet, TrendingUp, TrendingDown, DollarSign, PieChart, Clock, Bell } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import SwapHistory from '../components/SwapHistory';
+import PriceAlerts from '../components/PriceAlerts';
 
 const PortfolioPage = () => {
   const { address, isConnected } = useAccount();
