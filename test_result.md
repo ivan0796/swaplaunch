@@ -302,18 +302,15 @@ frontend:
 
 metadata:
   created_by: "main_agent"
-  version: "4.0"
-  test_sequence: 5
+  version: "5.0"
+  test_sequence: 6
   run_ui: true
 
 test_plan:
   current_focus:
-    - "Add XRP and Tron Chain Support"
-    - "Chain-Prioritized Token Search"
-    - "Network Selector with XRP & Tron"
-    - "EVM Chain Filtering Logic"
-    - "Token Sniffer Button"
-    - "Chain-Prioritized Token Search UI"
+    - "Referral System Backend API"
+    - "Referral Page with Display-Only Earnings"
+    - "Add Referrals Link to Navigation"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -321,48 +318,56 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: |
-      ✅ SwapLaunch v3.0 - Multi-Chain Expansion Complete:
+      ✅ SwapLaunch v4.0 - Referral System Implementation (Phase 1: Display-Only):
+      
+      **User Strategy Confirmed:**
+      Priority: Referral first (drives growth) → Badges later (builds trust)
+      Approach: Display-only earnings (Phase 1) → Withdrawable later (Phase 2)
       
       **Backend Changes:**
-      1. **XRP & Tron Support**
-         - Added xrp -> xrpl and tron -> tron in CHAIN_ID_MAP
-         - Extended chain_map in token resolution to include all new chains
-         - Updated TrustWallet logo mapping for new EVM chains
-      
-      2. **Chain-Prioritized Search**
-         - /api/token/resolve now accepts optional chainId parameter
-         - Separates results into prioritized_results (from selected chain) + regular results
-         - Returns combined list with prioritized tokens first
-         - Includes "prioritized_chain" in response for verification
+      1. **Referral System API (/app/backend/referral_system.py)**
+         - POST /api/referrals/track: Track new referrals when referee connects with ?ref= param
+         - GET /api/referrals/stats/{wallet}: Fetch referral stats (count, earnings, referees)
+         - POST /api/referrals/reward: Record rewards after successful swaps (called by swap webhook)
+         - GET /api/referrals/leaderboard: Get top 10 referrers ranked by earnings
+         - POST /api/referrals/claim/{wallet}: Claim rewards (ready for Phase 2)
+         - Constants: 10% of platform fee (0.2% of swap) goes to referrer
+         - MongoDB collections: referrals, referral_rewards
       
       **Frontend Changes:**
-      1. **NetworkSelectorDropdown Enhancements**
-         - Added XRP Ledger (Sologenic DEX) with CMC logo
-         - Added Tron (SunSwap) with TrustWallet logo
-         - All chains categorized as 'EVM' or 'Non-EVM'
-         - Implemented chain filtering: EVM chains show only EVM options
-         - Added "EVM Chains Only" header when filter active
-         - Display chain type badge for each network
+      1. **Enhanced ReferralsPage.jsx**
+         - Support for both EVM (Wagmi) and Solana wallets
+         - Header: "Earn by Sharing" with motivational copy
+         - Referral Link Box: Copy button with visual feedback
+         - Stats Cards: Total Referrals, Total Earned, Available (display-only note)
+         - How It Works: 3-step visual guide (Share → Trade → Earn)
+         - Referral List: Table showing address, joined date, swaps, volume
+         - Leaderboard: Top 10 referrers with rank badges (🥇🥈🥉)
+         - Responsive design with glassmorphism styling
       
-      2. **Token Sniffer Button**
-         - Added prominent button in TokenSecurityPanel header
-         - Links to GoPlus Labs full report
-         - Blue gradient styling with Shield icon
-         - Opens in new tab with security attributes
+      2. **Navigation Updates**
+         - Added "My Referrals" link in Navbar → Portfolio menu
+         - Badge: 🔥 to highlight new feature
+         - Route added to App.js: /referrals
       
-      3. **Chain-Prioritized Search UI**
-         - TokenSearchAutocomplete now passes chainId to backend
-         - Added badge colors for all new chains (10 total)
-         - Fixed React hook dependencies
+      **Technical Details:**
+      - Wallet address handling: Supports both EVM (address) and Solana (publicKey.toBase58())
+      - Referral tracking: URL param ?ref={wallet_address}
+      - Fee calculation: Platform fee 0.2% × Referral share 10% = 0.02% per swap
+      - Display formatting: Currency formatter for USD amounts, address truncation
       
-      **Notes:**
-      - Trending from CMC: User has NO API key, keeping existing CoinGecko/Dexscreener implementation
-      - Token logos (WETH, DAI): Already using CMC URLs in DEFAULT_TOKENS
-      - Services restarted successfully
+      **Phase 1 Complete:**
+      ✅ Display referral stats
+      ✅ Show earnings (lifetime + unclaimed)
+      ✅ Leaderboard with competitive rankings
+      ✅ No withdrawal feature yet (coming in Phase 2)
       
       **Ready for Testing:**
-      - Backend: Chain support, prioritized token search
-      - Frontend: Network selector filtering, Token Sniffer button, search UI
+      - Backend: All referral API endpoints
+      - Frontend: Referral page UI, wallet integration, stats display
+      
+      **Next Step:**
+      After testing referral system, move to Launchpad badges (Audit Provided, Contract Verified).
   
   - agent: "testing"
     message: |
