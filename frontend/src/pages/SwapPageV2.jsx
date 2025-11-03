@@ -96,6 +96,9 @@ const SwapPageV2 = () => {
             onTokenSelect={handleNewListingSelect} 
           />
 
+          {/* Referral Teaser */}
+          <ReferralTeaser />
+
           {/* Features Card */}
           <div className="space-y-3">
             <div>
