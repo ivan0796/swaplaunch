@@ -19,6 +19,35 @@ const resources = {
       "nav.advertise": "Advertise",
       "nav.faq": "FAQ",
       
+      // CTA
+      "cta.startToken": "Start Token",
+      "cta.connectWallet": "Connect Wallet",
+      "cta.demo": "View Demo",
+      "cta.boostMyLaunch": "Boost My Launch",
+      "cta.requestInquiry": "Request Inquiry",
+      
+      // Hero
+      "hero.title": "Launch your token in minutes",
+      "hero.subtitle": "Create ERC-20, add liquidity & lock - without code",
+      "hero.trustBullet1": "No code required",
+      "hero.trustBullet2": "Source verified",
+      "hero.trustBullet3": "Transparent fees",
+      
+      // Launch Wizard Steps
+      "launch.step1": "Token Details",
+      "launch.step2": "Fees & Settings",
+      "launch.step3": "Liquidity",
+      "launch.step4": "Confirm & Launch",
+      "launch.priceBox.title": "Launch Costs",
+      "launch.priceBox.gas": "Gas (estimated)",
+      "launch.priceBox.launchFee": "Launch Fee",
+      "launch.priceBox.serviceFee": "Service Fee",
+      "launch.priceBox.total": "Total",
+      "launch.featureBoost": "Feature Boost (7 days Trending + Social)",
+      "launch.confirmDialog.title": "Confirm Launch",
+      "launch.confirmDialog.breakdown": "Cost Breakdown",
+      "launch.confirmDialog.security": "Security Details",
+      
       // Swap Page
       "swap.title": "Swap Tokens",
       "swap.subtitle": "Trade crypto across multiple blockchains with advanced security",
