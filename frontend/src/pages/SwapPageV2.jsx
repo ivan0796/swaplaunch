@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAccount, useChainId } from 'wagmi';
 import { useWallet } from '@solana/wallet-adapter-react';
-import Navbar from '../components/Navbar';
+import HeaderSlim from '../components/HeaderSlim';
 import Footer from '../components/Footer';
 import SwapFormV2 from '../components/SwapFormV2';
 import SolanaSwapForm from '../components/SolanaSwapForm';
