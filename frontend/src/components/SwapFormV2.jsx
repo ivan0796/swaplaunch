@@ -250,6 +250,9 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       return;
     }
 
+    // Track swap submission
+    analytics.swapSubmit(sellToken?.symbol, buyToken?.symbol, sellAmount);
+
     // Show wallet confirmation modal
     setShowWalletConfirm(true);
 
@@ -275,6 +278,9 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
 
       // Hide confirmation modal after signing
       setShowWalletConfirm(false);
+
+      // Track success
+      analytics.swapSuccess(sellToken?.symbol, buyToken?.symbol, txHash);
 
       // Show success with Explorer link
       toast.success(
