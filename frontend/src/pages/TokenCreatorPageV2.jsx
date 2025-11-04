@@ -36,6 +36,8 @@ const TokenCreatorPageV2 = () => {
   const [launchStage, setLaunchStage] = useState(null); // null, 'created', 'bonding', 'migrated', 'lp_added', 'first_trade'
   const [mintAddress, setMintAddress] = useState('');
   const [pairAddress, setPairAddress] = useState('');
+  const [showManualInput, setShowManualInput] = useState(false);
+  const [timeoutReached, setTimeoutReached] = useState(false);
   
   // Form State
   const [selectedChain, setSelectedChain] = useState(1);
