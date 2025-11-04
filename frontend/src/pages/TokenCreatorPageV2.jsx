@@ -354,6 +354,35 @@ const TokenCreatorPageV2 = () => {
                   <div className="space-y-6">
                     <h3 className="text-2xl font-bold mb-6 dark:text-white">{t('launch.step2')}</h3>
 
+                    {/* Token Image (Optional) */}
+                    <div>
+                      <label className="block text-sm font-medium mb-2 dark:text-gray-300">
+                        Token Logo (Optional)
+                      </label>
+                      <div className="flex items-center gap-4">
+                        {tokenImagePreview && (
+                          <img 
+                            src={tokenImagePreview} 
+                            alt="Token preview" 
+                            className="w-16 h-16 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600"
+                          />
+                        )}
+                        <Input
+                          type="url"
+                          placeholder="https://example.com/logo.png"
+                          value={tokenImage}
+                          onChange={(e) => {
+                            setTokenImage(e.target.value);
+                            setTokenImagePreview(e.target.value);
+                          }}
+                          className="flex-1 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Recommended: 512x512px, PNG or JPG
+                      </p>
+                    </div>
+
                     {/* Description */}
                     <div>
                       <label className="block text-sm font-medium mb-2 dark:text-gray-300">
@@ -366,6 +395,80 @@ const TokenCreatorPageV2 = () => {
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                       />
+                    </div>
+
+                    {/* Social Media Links (Optional) */}
+                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 space-y-4">
+                      <h4 className="font-semibold text-sm text-gray-900 dark:text-white mb-3">
+                        Social Media Links (Optional)
+                      </h4>
+                      
+                      <div>
+                        <label className="block text-xs font-medium mb-1 dark:text-gray-400">
+                          🌐 Website
+                        </label>
+                        <Input
+                          type="url"
+                          placeholder="https://yourproject.com"
+                          value={websiteUrl}
+                          onChange={(e) => setWebsiteUrl(e.target.value)}
+                          className="dark:bg-gray-700 dark:border-gray-600"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-medium mb-1 dark:text-gray-400">
+                            📱 TikTok
+                          </label>
+                          <Input
+                            type="url"
+                            placeholder="https://tiktok.com/@username"
+                            value={tiktokUrl}
+                            onChange={(e) => setTiktokUrl(e.target.value)}
+                            className="dark:bg-gray-700 dark:border-gray-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-medium mb-1 dark:text-gray-400">
+                            📷 Instagram
+                          </label>
+                          <Input
+                            type="url"
+                            placeholder="https://instagram.com/username"
+                            value={instagramUrl}
+                            onChange={(e) => setInstagramUrl(e.target.value)}
+                            className="dark:bg-gray-700 dark:border-gray-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-medium mb-1 dark:text-gray-400">
+                            💬 Discord
+                          </label>
+                          <Input
+                            type="url"
+                            placeholder="https://discord.gg/invite"
+                            value={discordUrl}
+                            onChange={(e) => setDiscordUrl(e.target.value)}
+                            className="dark:bg-gray-700 dark:border-gray-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-medium mb-1 dark:text-gray-400">
+                            ✈️ Telegram
+                          </label>
+                          <Input
+                            type="url"
+                            placeholder="https://t.me/username"
+                            value={telegramUrl}
+                            onChange={(e) => setTelegramUrl(e.target.value)}
+                            className="dark:bg-gray-700 dark:border-gray-600"
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     {/* Feature Boost */}
@@ -390,6 +493,21 @@ const TokenCreatorPageV2 = () => {
                           <p className="text-sm font-bold text-yellow-900 dark:text-yellow-200 mt-2">
                             +€{PRICING.featureBoostEUR}
                           </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* DEX Listing Info */}
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4">
+                      <div className="flex items-start gap-3">
+                        <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                        <div className="text-sm text-blue-900 dark:text-blue-200">
+                          <p className="font-semibold mb-1">📊 DEX Listings Info</p>
+                          <ul className="text-xs space-y-1 list-disc list-inside">
+                            <li><strong>DexScreener:</strong> Crawlt automatisch neue Tokens (meist innerhalb von 5-10 Minuten)</li>
+                            <li><strong>pump.fun & axiom.pro:</strong> Separate Plattformen - manuelle Registrierung erforderlich</li>
+                            <li>Optional: Submit-Formular auf dexscreener.com für schnellere Indexierung</li>
+                          </ul>
                         </div>
                       </div>
                     </div>
