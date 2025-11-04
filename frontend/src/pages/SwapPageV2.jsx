@@ -8,6 +8,7 @@ import Footer from '../components/Footer';
 import SwapFormV2 from '../components/SwapFormV2';
 import SolanaSwapForm from '../components/SolanaSwapForm';
 import TrendingTokensV2 from '../components/TrendingTokensV2';
+import PromotedHeroBanner from '../components/PromotedHeroBanner';
 import NewListings from '../components/NewListings';
 import ReferralWidget from '../components/ReferralWidget';
 import ReferralTeaser from '../components/ReferralTeaser';
