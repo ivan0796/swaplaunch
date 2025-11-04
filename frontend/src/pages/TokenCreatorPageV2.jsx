@@ -97,6 +97,49 @@ const TokenCreatorPageV2 = () => {
       setLaunchCost(cost);
     }
   }, [selectedChain, featureBoost, cryptoPrices]);
+  
+  // Poll pump.fun token status if launched
+  useEffect(() => {
+    if (!mintAddress || !launchFlow === 'pump') return;
+    
+    const pollStatus = async () => {
+      try {
+        const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+        const response = await fetch(`${backendUrl}/api/pump/status/${mintAddress}`);
+        const data = await response.json();
+        
+        if (data.found) {
+          setLaunchStage(data.stage);
+          if (data.pair_address) {
+            setPairAddress(data.pair_address);
+          }
+        }
+      } catch (error) {
+        console.error('Error polling pump status:', error);
+      }
+    };
+    
+    // Poll every 10 seconds
+    const interval = setInterval(pollStatus, 10000);
+    pollStatus(); // Initial call
+    
+    return () => clearInterval(interval);
+  }, [mintAddress, launchFlow]);
+  
+  // Handle user manual action completion
+  const handleUserActionComplete = async (stage) => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      await fetch(`${backendUrl}/api/pump/mark-stage?mint=${mintAddress}&stage=${stage}`, {
+        method: 'POST'
+      });
+      setLaunchStage(stage);
+      toast.success(`${stage === 'lp_added' ? 'Liquidity Added' : 'First Trade'} marked as complete!`);
+    } catch (error) {
+      console.error('Error marking stage:', error);
+      toast.error('Failed to update status');
+    }
+  };
 
   // Track page open
   useEffect(() => {
