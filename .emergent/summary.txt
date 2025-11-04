@@ -1,25 +1,29 @@
 <analysis>
-The AI engineer successfully progressed SwapLaunch through several critical phases. Initially, navigation consistency was achieved by unifying the  across all pages, resolving  import issues, and implementing robust hover/click, keyboard, and route-change behaviors. Following this, comprehensive localization was added for German and Chinese. The engineer then systematically cleaned up custody-like phrases, placeholder texts, and strategically re-introduced unfinished features, clearly marking them as Beta. Dynamic launchpad fees were implemented, adjusting to native blockchain currencies. Most recently, a sophisticated **Dynamic Tiered Fee System** was integrated into both EVM and Solana backend quote APIs, accompanied by thorough unit and integration testing. Frontend components were updated to display these fees, alongside a new Why this route? breakdown and a unified token logo resolver. A referral teaser was also added. The current work involves setting up a **secure weekly revenue reporting system**, with core Python modules already created.
+The AI engineer successfully guided SwapLaunch through multiple significant development phases. Initially, core UI/UX elements were standardized, including a unified navigation bar, comprehensive localization, and a clear distinction for Beta features. A dynamic tiered fee system was implemented in the backend, complete with A/B testing capabilities, and integrated into the frontend for transparent display. A referral teaser was also added. The engineer then tackled usability issues, improving menu hover functionality and removing Made with Emergent branding. Subsequently, several Beta features like Token Locker, Pro Swap, History, and Price Alerts were fully activated, ensuring non-custodial operation. Extensive legal and informational pages (Terms, Privacy, Risk, Getting Started) were created, along with a consistent global footer. The leaderboard and price alerts were made accessible without wallet connection.
+
+The latest major initiative, still in progress, focuses on optimizing the Token Launch funnel for revenue. This involved redesigning the navigation with a , setting the default route to the new  (which features a hero section, a progress stepper, and live pricing), enhancing swap fee transparency, implementing promoted slots for trending tokens, and preparing for a new advertise page and a dedicated security page. Analytics tracking for key user interactions has also been integrated. The work is structured into phases, with Phase 3 currently underway, covering swap fee display, trending promotions, and the creation of legal/informational pages.
 </analysis>
 
 <product_requirements>
-The SwapLaunch platform is a non-custodial multi-DEX swap supporting EVM and Solana chains. Initially focused on UI/UX enhancements and a non-custodial launchpad, the project evolved to include automated advertising, token locker, limit orders, NFT Maker, MEV protection, portfolio, and multi-language support. Recent explicit user requests led to:
-1.  **Unified Navigation**: Consistent menu (TRADE, LAUNCHPAD, EARN, PORTFOLIO) with hover-dropdowns across all pages, Swap as default.
-2.  **Localization**: Multi-language support (EN, DE, ZH) for all core pages.
-3.  **Content Cleanup & Beta Flagging**: Removal of custody-like/placeholder texts, clear Beta marking for unfinished features.
-4.  **Dynamic Launchpad Fees**: Auto-adjusting launch fees (approx. ~5 USD) to native blockchain currency.
-5.  **Dynamic Tiered Fee System**: Trade amount-based tiered fees (0.10%-0.35%) applied non-custodially to input amount for EVM and Solana quotes. Required new API fields, deterministic USD valuation, precise calculation, robust logging, and comprehensive testing.
-6.  **Why this route? & Fee Breakdown**: Detailed explanation of swap routes, gas, bridge/DEX fees, and tiered platform fees.
-7.  **Unified Token Logo Resolver**: Global resolver using tokenlists, TrustWallet CDN, and initial-avatar fallback.
-8.  **Referral Teaser**: Visible, non-intrusive teaser on the homepage linking to the dashboard.
-9.  **Automated Weekly Revenue Report**: Secure, non-custodial email report (weekly cron job) aggregating revenue, volume, executed swaps, chain/tier breakdowns, and top pairs, with robust error handling and persistence.
+The SwapLaunch platform is a non-custodial, multi-DEX swap supporting EVM and Solana chains, designed to offer a robust and transparent experience for token trading and launch. User requirements have driven the implementation of:
+1.  **Streamlined Navigation**: A focused header () with primary menu items (Swap, Token Launch, Lock Liquidity, Bridge) and a More dropdown. The default route is now .
+2.  **Localization**: Multi-language support (EN, DE, ZH) across all core pages and new UI elements.
+3.  **Content Management**: Removal of custody-like phrases, clear Beta marking for unfinished features, and later, activation of these features (Token Locker, Pro Swap, History, Alerts) with removal of Beta flags. Introduction of a detailed MEV protection explanation.
+4.  **Dynamic Tiered Fee System (0.10%-0.35%)**: Applied to EVM and Solana quotes, with backend A/B testing (20% tiered, 80% fixed 0.25%) and frontend display of fees and Why this route? breakdowns.
+5.  **Unified Token Logo Resolver**: A global utility for fetching token logos from various sources with fallbacks.
+6.  **Referral Program**: A non-intrusive teaser on the homepage, linking to a dashboard with a leaderboard visible without a wallet.
+7.  **Automated Weekly Revenue Report**: A secure, non-custodial email report for aggregated revenue, volume, and swap metrics, complemented by an  endpoint.
+8.  **Trust & Security**: Comprehensive Terms, Privacy, Risk Disclosure, and Getting Started pages linked in a global footer.
+9.  **Monetization Features**: Future plans include Ads Buy-Now (on-chain), Featured Token Slots, and Launchpad Pay-to-List with dynamic pricing and chain selection.
+10. **Token Launch Funnel**: A new Hero section, a multi-step progress wizard, and a live pricing box on the Token Launch page.
+11. **Analytics**: Vendor-agnostic tracking for user journey events (wallet connect, launch steps, swap events).
 </product_requirements>
 
 <key_technical_concepts>
 -   **Frontend**: React, React Router, Wagmi, Ethers, Solana Wallet Adapters, , Tailwind CSS, Shadcn UI.
--   **Backend**: FastAPI, Python, MongoDB, 0x Swap API, Jupiter API, CoinMarketCap API, .
+-   **Backend**: FastAPI, Python, MongoDB, 0x Swap API, Jupiter API, CoinMarketCap API, , .
 -   **Blockchain**: EVM (Ethereum, BSC, Polygon, Arbitrum, Optimism, Base, Avalanche), Solana, Non-custodial transactions.
--   **Architecture**: Modular design, environment variables (), Kubernetes, i18n, Abstraction for Image/Storage.
+-   **Architecture**: Modular design, environment variables (), Kubernetes, i18n, A/B testing via feature flags, local storage for non-custodial data.
 -   **Security**: Non-custodial operations, hashed/pseudonymized data, secret management via environment variables.
 </key_technical_concepts>
 
@@ -27,66 +31,65 @@ The SwapLaunch platform is a non-custodial multi-DEX swap supporting EVM and Sol
 The application uses a React frontend, FastAPI backend, and Solidity smart contracts.
 
 
--   ****: Core FastAPI app.
-    -   *Changes*: Integrated , extended  and  APIs with tiered fee logic, USD price fetching, and new response fields (feeTier, feePercent, etc.).
--   ** (new)**: Implements the  function based on user-defined tiers.
--   ** (new)**: Handles sending emails, designed for multi-provider support.
--   ** (new)**: Module to generate weekly revenue reports, aggregating data from successful swaps.
--   ****: Backend environment variables.
-    -   *Changes*: Added  feature flag. Will include email service credentials.
--   ** (new)**: Unit tests for , covering tier boundaries and edge cases.
--   ** (new)**: Integration tests for EVM and Solana quote APIs to verify tiered fee implementation.
--   ****: Manages application routing.
-    -   *Changes*: Registered  route.
--   ****: Primary navigation.
-    -   *Changes*: Extensively refactored for unified global navigation, robust hover/click (desktop/mobile), keyboard support, menu state management, active route highlighting, localization, and to display Beta badges for in-progress features. Fixed duplicate  declaration.
--   ****: Internationalization configuration.
-    -   *Changes*: Added translation keys for multiple pages (Launchpad, NFT Maker, Referrals) for English, German, and Chinese.
--   ****: Main swap interface.
-    -   *Changes*: Fixed missing  import. Integrated the global . Modified  to store tiered fee data from API. Added simple display for tiered fee and  component. Integrated .
--   ****: Project creation/listing.
-    -   *Changes*: Integrated  hook, translated hard-coded texts, removed Non-Custodial and Demo Mode phrases, added Beta badges. Implemented dynamic launch fees based on selected chain and native currency.
--   ****: NFT Maker.
-    -   *Changes*: Integrated  hook, translated hard-coded texts, removed placeholder content, added Beta badge and warnings.
--   ****: Referral program details.
-    -   *Changes*: Integrated  hook, translated hard-coded texts, removed Coming Soon and Non-Custodial phrases.
--   ****: Bridge interface.
-    -   *Changes*: Integrated  hook, removed Coming Soon, added Beta badge and warnings.
--   ****: Portfolio dashboard.
-    -   *Changes*: Integrated  hook, added Beta badges for History and Price Alerts.
--   ** (existing, updated)**: Token locker.
-    -   *Changes*: Added placeholder content with Beta badge and warning.
--   ** (existing, updated)**: Limit orders.
-    -   *Changes*: Added placeholder content with Beta badge and warning.
--   ** (existing, updated)**: User's NFT collections.
-    -   *Changes*: Added placeholder content with Beta badge and warning.
--   ** (new)**: Placeholder for Pro Swap interface.
--   ****: Advertising banner.
-    -   *Changes*: Removed Advertise Here placeholder text.
--   ****: The main swap form.
-    -   *Changes*: Modified  to handle new tiered fee fields from backend. Added UI elements to display , , . Integrated  component. Utilized  for token images.
--   ** (new)**: Displays details of a swap route, including aggregated fees and a non-custodial disclaimer.
--   ** (new)**: A small component for the homepage sidebar to promote the referral program.
--   ** (new)**: Centralized utility to fetch token logos from various sources (tokenlists, TrustWallet CDN) with a fallback to initial-based avatars.
+-   ****: Contains backend environment variables, now including A/B testing flags (, , etc.) and prepared placeholders for multi-chain fee recipient addresses.
+-   ****: The central FastAPI application. It now integrates A/B testing logic, modifies fee application for EVM and Solana quotes, logs cohort data, and exposes a  endpoint for A/B analytics.
+-   ** (new)**: A new module handling the determination of A/B test cohorts based on user wallets and managing the percentage rollout of new features.
+-   ****: The main HTML entry point. Modified to remove the Made with Emergent branding badge.
+-   ****: Manages the application's React routing. Updated to include new legal pages, ,  (mapped to ), and integrates the new  and  components.
+-   ****: The primary navigation component. Its hover logic was refactored to ensure dropdowns remain open reliably. Beta badges were removed from navigation items.
+-   ****: The main swap interface. Now features a detailed MEV protection information box, improved fee display leveraging  config, and analytics tracking for swap events (, , ).
+-   ****: Displays trending tokens. Enhanced with a Boost my Launch CTA and visual badges/outlines for promoted tokens.
+-   ****: Displays swap route details. Updated to show estimated transaction time (ETA) and a non-custodial disclaimer.
+-   ** (new)**: A new component for managing user price alerts, designed to function without requiring a wallet connection, likely using local storage.
+-   ** (new)**: A newly introduced global footer component, consistently applied across pages, containing essential legal links and a non-custodial trust badge.
+-   ** (new)**: A new, streamlined header component focusing navigation on core actions: Swap, Token Launch, Lock Liquidity, and Bridge.
+-   ****: The internationalization configuration. Significantly expanded with new English and German translation keys for new UI texts, hero sections, and feature descriptions.
+-   ****: The user's portfolio dashboard. Updated to integrate new tabs for Swap History and Price Alerts, with Beta labels removed. The global Footer component was also added.
+-   ****: The referral program page. Modified to ensure the leaderboard is always visible, independent of wallet connection status.
+-   ** (modified)**: An existing page whose content was updated from a placeholder/beta state to an active, non-custodial token locker interface.
+-   ** (new)**: A new page providing a Pro Swap interface with advanced features, now fully active.
+-   ** (new)**: A completely redesigned and functional page for launching new tokens, featuring a hero section, a multi-step progress wizard, and a live pricing breakdown.
+-   ** (new)**, ** (new)**, ** (new)**, ** (new)**: New pages providing legal terms, privacy policy, risk disclosure, and an onboarding guide, respectively.
+-   ** (new)**: A new JavaScript file centralizing pricing configurations for launch fees, service fees, and feature boosts.
+-   ** (new)**: A new utility for sending analytics events, supporting multiple providers (Umami, Plausible) with a console fallback.
 </code_architecture>
 
 <pending_tasks>
 -   **Revenue Report Cron Scheduler**: Set up the cron job for weekly email reports.
--   **Email Service Integration**: Integrate the  with actual email providers (SendGrid, SES, Mailgun, SMTP) using environment variables.
+-   **Email Service Integration**: Integrate  with actual email providers (SendGrid, SES, Mailgun, SMTP).
 -   **Dry-Run & Manual Test**: Implement a manual dry-run feature for the revenue report and perform a manual test send.
--   **README Documentation**: Create a README for the revenue report, detailing environment variables, cron, error handling, and key rotation.
+-   **README Documentation**: Create a README for the revenue report.
+-   **Monetization Wallet Addresses**: User needs to provide native wallet addresses for Polygon, BSC, Ethereum, Arbitrum, Optimism, Base, and Avalanche.
+-   **Complete SecurityPage**: Create .
+-   **Complete AdvertisePageV2**: Finish implementing .
+-   **Implement Default Route Change**: Set the default application route to  in .
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer was actively implementing a **secure weekly Revenue-Reporting-System** as per detailed user requirements. This system aims to generate and send an automated email report containing aggregated revenue, volume, executed swaps, chain/tier breakdowns, and top pairs for the preceding seven days. The implementation prioritizes highest security, data minimization, and non-custodial compliance, ensuring no plaintext secrets in the repository and pseudonymized data.
+Immediately before this summary request, the AI engineer was actively engaged in a significant frontend overhaul to focus the application's funnel on Token Launch and implement various revenue and UX improvements, as per the user's latest detailed requirements. This large task is broken down into systematic phases.
 
-The work has progressed through the initial stages:
-1.  **Revenue Report Generator**: The core logic for data aggregation and report generation has been created in .
-2.  **E-Mail Service**: A dedicated service for sending emails, supporting multiple providers, has been created in .
+The work is currently in **Phase 3** of this initiative, following the completion of initial configuration (pricing and analytics utilities, i18n keys) and the core Token Launch page redesign. Key accomplishments leading up to this point include:
 
-The next immediate step in this task is to set up the Cron scheduler to automate the weekly report generation and dispatch.
+1.  **Backend A/B Testing**: Fully integrated A/B testing logic into the backend's  and  endpoints, allowing for a 20% tiered fee vs. 80% fixed 0.25% control group. A  endpoint was created to monitor key metrics for each cohort.
+2.  **UI/UX Refinements**: The 's hover behavior was fixed for smoother navigation, and the Made with Emergent branding was removed.
+3.  **Feature Activation**: Previously Beta features like Token Locker, Pro Swap, Swap History, and Price Alerts were activated and integrated, with Beta badges removed.
+4.  **Legal & Informational Pages**: Comprehensive Terms, Privacy, Risk Disclosure, and Getting Started pages were created, along with a global  component that is now applied consistently across main pages.
+5.  **Accessibility**: The Referrals Leaderboard was made visible without requiring a wallet connection, and Price Alerts were configured for non-wallet users (via local storage).
+6.  **MEV Protection**: An explanatory MEV info-box was added to  to educate users on its importance.
+7.  **Token Launch Funnel (Phase 1 & 2 Complete)**:
+    *    and  were created.
+    *    was updated with new translations.
+    *    was implemented for a focused navigation.
+    *    (the new Token Launch page) was created, featuring a hero section, a multi-step progress stepper, and a live pricing box for launch costs. The  route now points to this page.
+
+The work currently in progress as part of **Phase 3** includes:
+*   **Improved Swap Fee Display**: Modifications to  to provide more transparent fee breakdowns, leveraging the  configuration.
+*   **Analytics Event Tracking**: Integration of  calls for , , and  within .
+*   **Trending Promoted Slots**: Enhancements to  to include a Boost my Launch CTA and visual indicators for promoted tokens.
+*   **Advertise Page Overhaul**: The creation of a new  to present revised advertisement packages.
+*   **Security Page Creation**: The AI engineer was immediately about to create the .
 </current_work>
 
 <optional_next_step>
-Set up the Cron job in the backend for the weekly revenue report generation and email dispatch.
+The AI engineer will proceed with creating the  and completing the  as part of Phase 3, and then change the default route to .
 </optional_next_step>
