@@ -477,6 +477,23 @@ test_plan:
   test_priority: "high_first"
 
 agent_communication:
+  - agent: "main"
+    message: |
+      🔧 **Fix: Staking Menu & Test Mode Wallet Issues**
+      
+      **User Issue Report:**
+      1. `/staking` page not visible in HeaderSlim navigation menu
+      2. Test Mode in TokenCreatorPageV2 still requires wallet connection at final step
+      
+      **Implementation Plan:**
+      1. Add `/staking` link to HeaderSlim primary navigation
+      2. Modify TokenCreatorPageV2 button logic to bypass wallet check when testMode is true
+      3. Ensure test mode flow works completely wallet-less
+      
+      **Files to Modify:**
+      - /app/frontend/src/components/HeaderSlim.jsx (add staking link)
+      - /app/frontend/src/pages/TokenCreatorPageV2.jsx (fix test mode wallet check)
+      
   - agent: "testing"
     message: |
       🎉 **A/B TESTING SYSTEM TESTING COMPLETE - ALL TESTS PASSED (6/6)**
