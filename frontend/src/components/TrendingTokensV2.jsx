@@ -149,16 +149,16 @@ const TrendingTokensV2 = ({ onTokenSelect }) => {
                   {/* Promoted Badge */}
                   {promoted && (
                     <div className="absolute -top-2 -right-2 z-10">
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold shadow-lg">
-                        <Sparkles className="w-3 h-3" />
-                        Promoted
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold shadow-lg">
+                        <Flame className="w-3 h-3 fill-current" />
+                        PROMOTED
                       </span>
                     </div>
                   )}
                   
                   <button
                     onClick={() => {
-                      if (token.promoted) {
+                      if (promoted) {
                         analytics.trendingBoostClick(token.name || token.symbol);
                       }
                       onTokenSelect && onTokenSelect(token);
