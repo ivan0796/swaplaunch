@@ -70,6 +70,21 @@ const TrendingTokensV2 = ({ onTokenSelect }) => {
         </button>
       </div>
 
+      {/* Boost CTA */}
+      <Link 
+        to="/advertise?product=trending"
+        onClick={() => analytics.ctaClick('boost_my_launch', 'trending_section')}
+      >
+        <Button 
+          variant="outline"
+          size="sm"
+          className="w-full bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-200 dark:border-yellow-700 hover:border-yellow-300 dark:hover:border-yellow-600"
+        >
+          <Sparkles className="w-4 h-4 mr-2 text-yellow-600" />
+          <span className="text-yellow-900 dark:text-yellow-200 font-semibold">Boost My Launch</span>
+        </Button>
+      </Link>
+
       {/* Tabs */}
       <div className="flex gap-2">
         {['top', 'gainers', 'losers'].map((cat) => (
