@@ -454,13 +454,15 @@ frontend:
 
 metadata:
   created_by: "main_agent"
-  version: "7.0"
-  test_sequence: 9
+  version: "7.1"
+  test_sequence: 10
   run_ui: true
 
 test_plan:
   current_focus:
-    - "Route Breakdown Component with ETA"
+    - "Phase 3: Security Page Implementation"
+    - "Phase 3: Advertise Page V2 Implementation"
+    - "Phase 3: Default Route to Token Launch"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
