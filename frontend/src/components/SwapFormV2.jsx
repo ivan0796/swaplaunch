@@ -6,6 +6,8 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ArrowDown, RefreshCw, Info, Zap, Settings, Search, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
+import { PRICING } from '../config/pricing';
+import analytics from '../lib/analytics';
 import TokenPriceWidget from './TokenPriceWidget';
 import { getCoinGeckoId } from '../services/coingecko';
 import { calculateAutoSlippage, formatSlippage, shouldShowSlippageWarning } from '../utils/slippage';
