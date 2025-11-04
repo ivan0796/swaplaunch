@@ -15,6 +15,7 @@ import TokenCreatorPageV2 from './pages/TokenCreatorPageV2';
 import LimitOrdersPage from './pages/LimitOrdersPage';
 import ProjectsPage from './pages/ProjectsPage';
 import AdvertisePage from './pages/AdvertisePage';
+import AdvertisePageV2 from './pages/AdvertisePageV2';
 import PortfolioPage from './pages/PortfolioPage';
 import NFTMintPage from './pages/NFTMintPage';
 import MyNFTCollectionsPage from './pages/MyNFTCollectionsPage';
@@ -23,6 +24,7 @@ import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import RiskDisclosurePage from './pages/RiskDisclosurePage';
 import GettingStartedPage from './pages/GettingStartedPage';
+import SecurityPage from './pages/SecurityPage';
 import { Toaster } from './components/ui/sonner';
 
 function App() {
