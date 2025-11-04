@@ -9,6 +9,7 @@ const resources = {
       "nav.swap": "Swap",
       "nav.trade": "Swap",
       "nav.launch": "Token Launch",
+      "nav.staking": "Staking",
       "nav.lock": "Lock Liquidity",
       "nav.bridge": "Bridge",
       "nav.more": "More",
