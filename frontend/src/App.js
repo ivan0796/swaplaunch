@@ -25,6 +25,7 @@ import PrivacyPage from './pages/PrivacyPage';
 import RiskDisclosurePage from './pages/RiskDisclosurePage';
 import GettingStartedPage from './pages/GettingStartedPage';
 import SecurityPage from './pages/SecurityPage';
+import StakingPage from './pages/StakingPage';
 import { Toaster } from './components/ui/sonner';
 
 function App() {
