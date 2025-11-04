@@ -189,20 +189,66 @@ const TokenCreatorPageV2 = () => {
             </div>
           </div>
 
-          {/* CTAs */}
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button
-              onClick={handleScrollToForm}
-              size="lg"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg"
-            >
-              <img 
-                src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/q1ccyq6i_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png"
-                alt="Rocket"
-                className="w-8 h-8 mr-2 object-contain"
-              />
-              {t('cta.startToken')}
-            </Button>
+          {/* CTAs - Rocket Size Comparison */}
+          <div className="flex flex-col items-center gap-6">
+            <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+              Wähle deine bevorzugte Raketengröße:
+            </p>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              {/* Option 1: w-10 h-10 (40px) */}
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-xs font-bold text-blue-600 dark:text-blue-400">Option 1</span>
+                <Button
+                  onClick={handleScrollToForm}
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg"
+                >
+                  <img 
+                    src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/q1ccyq6i_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png"
+                    alt="Rocket"
+                    className="w-10 h-10 mr-2 object-contain"
+                  />
+                  {t('cta.startToken')}
+                </Button>
+              </div>
+
+              {/* Option 2: w-12 h-12 (48px) */}
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-xs font-bold text-green-600 dark:text-green-400">Option 2</span>
+                <Button
+                  onClick={handleScrollToForm}
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg"
+                >
+                  <img 
+                    src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/q1ccyq6i_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png"
+                    alt="Rocket"
+                    className="w-12 h-12 mr-2 object-contain"
+                  />
+                  {t('cta.startToken')}
+                </Button>
+              </div>
+
+              {/* Option 3: w-14 h-14 (56px) */}
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-xs font-bold text-purple-600 dark:text-purple-400">Option 3</span>
+                <Button
+                  onClick={handleScrollToForm}
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg"
+                >
+                  <img 
+                    src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/q1ccyq6i_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png"
+                    alt="Rocket"
+                    className="w-14 h-14 mr-2 object-contain"
+                  />
+                  {t('cta.startToken')}
+                </Button>
+              </div>
+            </div>
+
+            {/* Demo Button */}
             <Button
               onClick={() => setShowDemoModal(true)}
               variant="outline"
