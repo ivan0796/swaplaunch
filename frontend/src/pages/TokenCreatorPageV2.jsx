@@ -196,7 +196,11 @@ const TokenCreatorPageV2 = () => {
               size="lg"
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg"
             >
-              <Rocket className="w-5 h-5 mr-2" />
+              <img 
+                src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/ke1a1bm2_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png"
+                alt="Rocket"
+                className="w-5 h-5 mr-2"
+              />
               {t('cta.startToken')}
             </Button>
             <Button
