@@ -23,6 +23,9 @@ class PumpWatcher:
         self.ws = None
         self.running = False
         self.tracked_tokens = {}  # mint -> status
+        self.reconnect_attempts = 0
+        self.last_heartbeat = datetime.now(timezone.utc)
+        self.is_healthy = False
         
     async def start(self):
         """Start watching pump.fun WebSocket"""
