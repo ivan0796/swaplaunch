@@ -479,20 +479,40 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: |
-      🔧 **Fix: Staking Menu & Test Mode Wallet Issues**
+      ✅ **FIXED: Staking Menu & Test Mode Wallet Issues - COMPLETE**
       
       **User Issue Report:**
       1. `/staking` page not visible in HeaderSlim navigation menu
       2. Test Mode in TokenCreatorPageV2 still requires wallet connection at final step
       
-      **Implementation Plan:**
-      1. Add `/staking` link to HeaderSlim primary navigation
-      2. Modify TokenCreatorPageV2 button logic to bypass wallet check when testMode is true
-      3. Ensure test mode flow works completely wallet-less
+      **Implementation Complete:**
       
-      **Files to Modify:**
-      - /app/frontend/src/components/HeaderSlim.jsx (add staking link)
-      - /app/frontend/src/pages/TokenCreatorPageV2.jsx (fix test mode wallet check)
+      **1. Staking Menu Visibility ✅**
+      - Added `/staking` link to HeaderSlim primary navigation (between Token Launch and Lock Liquidity)
+      - Added i18n translation keys for "nav.staking" in both EN and DE
+      - Menu item now shows "Staking" and is fully functional
+      - Verified with screenshots: Staking menu visible in header
+      
+      **2. Test Mode Wallet-less Flow ✅**
+      - Modified button logic: `disabled={!testMode && !isConnected}` (line 892)
+      - Changed button text: Shows "Launch Test Token 🧪" in test mode vs "Launch Token 🚀" or "Connect Wallet"
+      - Removed image upload requirement in test mode: `if (!testMode && !tokenImage)` (line 287)
+      - Test mode now completely wallet-less: no wallet, no image required
+      
+      **Files Modified:**
+      - /app/frontend/src/components/HeaderSlim.jsx (added staking nav link)
+      - /app/frontend/src/i18n.js (added nav.staking translations)
+      - /app/frontend/src/pages/TokenCreatorPageV2.jsx (fixed wallet & image checks for test mode)
+      
+      **Testing Results:**
+      ✅ Staking page accessible from navigation menu
+      ✅ Test mode enabled by default
+      ✅ Complete token launch flow works without wallet connection
+      ✅ Complete token launch flow works without image upload
+      ✅ Button correctly shows "Launch Test Token 🧪" in test mode
+      ✅ All 4 wizard steps completed successfully in test mode
+      
+      **Status: COMPLETE ✅**
       
   - agent: "testing"
     message: |
