@@ -11,6 +11,7 @@ import FAQPage from './pages/FAQPage';
 import LaunchpadPage from './pages/LaunchpadPage';
 import TokenLockerPage from './pages/TokenLockerPage';
 import TokenCreatorPage from './pages/TokenCreatorPage';
+import TokenCreatorPageV2 from './pages/TokenCreatorPageV2';
 import LimitOrdersPage from './pages/LimitOrdersPage';
 import ProjectsPage from './pages/ProjectsPage';
 import AdvertisePage from './pages/AdvertisePage';
