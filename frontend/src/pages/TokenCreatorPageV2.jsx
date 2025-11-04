@@ -48,14 +48,17 @@ const TokenCreatorPageV2 = () => {
   const [decimals, setDecimals] = useState('18');
   const [description, setDescription] = useState('');
   
-  // Token Metadata (Optional)
+  // Token Metadata
   const [tokenImage, setTokenImage] = useState('');
-  const [tokenImagePreview, setTokenImagePreview] = useState('');
+  const [tokenImageFile, setTokenImageFile] = useState(null);
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [tiktokUrl, setTiktokUrl] = useState('');
   const [instagramUrl, setInstagramUrl] = useState('');
   const [discordUrl, setDiscordUrl] = useState('');
   const [telegramUrl, setTelegramUrl] = useState('');
+  
+  // Test Mode
+  const [testMode, setTestMode] = useState(true); // Enable test mode by default
   
   // Advanced Settings
   const [featureBoost, setFeatureBoost] = useState(false);
