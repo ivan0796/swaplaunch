@@ -123,9 +123,20 @@ export const calculateLaunchCost = (chain = 'ethereum', gasPrice = 30, withBoost
   
   const serviceFee = fixedFee * (PRICING.serviceFeeBps / 10000);
   
-  // Convert Feature Boost from EUR to native currency
+  // Convert Feature Boost from EUR to native currency using live prices
   const boostCostEUR = withBoost ? PRICING.featureBoostEUR : 0;
-  const conversionRate = EUR_CONVERSION_RATES[nativeCurrency] || EUR_CONVERSION_RATES['ETH'];
+  
+  // Use live prices if available, otherwise fallback
+  const fallbackPrices = {
+    'ETH': 3100,
+    'BNB': 620,
+    'SOL': 170,
+    'MATIC': 0.60,
+    'AVAX': 33
+  };
+  
+  const cryptoPrice = livePrices ? livePrices[nativeCurrency] : fallbackPrices[nativeCurrency];
+  const conversionRate = eurToCryptoRate(cryptoPrice || fallbackPrices[nativeCurrency]);
   const boostCostNative = withBoost ? boostCostEUR * conversionRate : 0;
   
   const total = fixedFee + gasCostNative + serviceFee + boostCostNative;
