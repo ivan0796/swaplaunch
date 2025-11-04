@@ -199,7 +199,7 @@ const TokenCreatorPageV2 = () => {
               <img 
                 src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/q1ccyq6i_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png"
                 alt="Rocket"
-                className="w-7 h-7 mr-2 object-contain"
+                className="w-8 h-8 mr-2 object-contain"
               />
               {t('cta.startToken')}
             </Button>
