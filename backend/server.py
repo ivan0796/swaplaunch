@@ -1791,6 +1791,76 @@ async def mark_user_action_complete(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@api_router.post("/pump/manual-override")
+async def manual_pair_override(
+    mint: str = Query(...),
+    pair: str = Query(...)
+):
+    """
+    Manual override for pair detection
+    Allows user to manually enter pair address if auto-detection fails
+    """
+    try:
+        # Basic validation
+        if not mint or len(mint) < 32:
+            raise HTTPException(status_code=400, detail="Invalid mint address")
+        if not pair or len(pair) < 32:
+            raise HTTPException(status_code=400, detail="Invalid pair address")
+        
+        result = await db.pump_tokens.update_one(
+            {"mint": mint},
+            {
+                "$set": {
+                    "pair_address": pair,
+                    "stage": "migrated",
+                    "migrated": True,
+                    "manual_override": True,
+                    "manual_override_at": datetime.now(timezone.utc)
+                }
+            },
+            upsert=True
+        )
+        
+        logger.info(f"Manual override: {mint} -> {pair}")
+        
+        return {
+            "success": True,
+            "mint": mint,
+            "pair": pair,
+            "message": "Pair address set manually"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in manual override: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/pump/health")
+async def pump_watcher_health():
+    """
+    Health check for pump.fun watcher
+    """
+    try:
+        watcher = await get_watcher(db)
+        
+        return {
+            "healthy": watcher.is_healthy,
+            "running": watcher.running,
+            "reconnect_attempts": watcher.reconnect_attempts,
+            "last_heartbeat": watcher.last_heartbeat.isoformat() if watcher.last_heartbeat else None,
+            "tracked_tokens_count": len(watcher.tracked_tokens)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error checking health: {e}")
+        return {
+            "healthy": False,
+            "error": str(e)
+        }
+
+
 # Include the routers in the main app
 from ad_management import ad_router
 from referral_system import referral_router
