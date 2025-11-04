@@ -48,6 +48,21 @@ const resources = {
       "launch.confirmDialog.breakdown": "Cost Breakdown",
       "launch.confirmDialog.security": "Security Details",
       
+      // Launch Status & Actions
+      "status.created": "Token Created",
+      "status.bonding": "Bonding Curve",
+      "status.migrated": "Migrated to Raydium",
+      "status.lp_added": "Liquidity Added",
+      "status.first_trade": "First Trade Done",
+      "action.addLiquidity": "Add Liquidity on Raydium",
+      "action.firstTrade": "Trade on Raydium",
+      "action.lpComplete": "✓ I've Added Liquidity",
+      "action.tradeComplete": "✓ First Trade Complete",
+      "links.raydium": "Trade on Raydium",
+      "links.dexscreener": "View on Dexscreener",
+      "links.dexscreenerPair": "Dexscreener Pair",
+      "links.axiom": "Axiom Pulse",
+      
       // Swap Page
       "swap.title": "Swap Tokens",
       "swap.subtitle": "Trade crypto across multiple blockchains with advanced security",
