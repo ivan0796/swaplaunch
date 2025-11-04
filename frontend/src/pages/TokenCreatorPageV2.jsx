@@ -68,6 +68,7 @@ const TokenCreatorPageV2 = () => {
   // Deployment
   const [isDeploying, setIsDeploying] = useState(false);
   const [deployedToken, setDeployedToken] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const chains = [
     { 
