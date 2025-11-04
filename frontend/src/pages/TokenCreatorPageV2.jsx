@@ -283,6 +283,69 @@ const TokenCreatorPageV2 = () => {
     setShowConfirmDialog(true);
   };
 
+  // Social Media Share Functions
+  const getShareMessage = () => {
+    if (!deployedToken) return '';
+    return `🚀 Just launched ${deployedToken.name} ($${deployedToken.symbol}) on ${deployedToken.chain}!\n\nContract: ${deployedToken.address}\n\nCreated on LaunchSwap 💎`;
+  };
+
+  const getShareUrl = () => {
+    if (!deployedToken) return '';
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/token/${deployedToken.address}`;
+  };
+
+  const handleShareTwitter = () => {
+    const message = getShareMessage();
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
+  const handleShareTelegram = () => {
+    const message = getShareMessage();
+    const url = `https://t.me/share/url?url=${encodeURIComponent(getShareUrl())}&text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
+  const handleShareWhatsApp = () => {
+    const message = getShareMessage();
+    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
+  const handleShareFacebook = () => {
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getShareUrl())}`;
+    window.open(url, '_blank');
+  };
+
+  const handleShareDiscord = () => {
+    // Copy to clipboard for Discord (Discord doesn't have direct share API)
+    const message = getShareMessage();
+    navigator.clipboard.writeText(message);
+    toast.success('Message copied! Paste it in Discord');
+  };
+
+  const handleCopyContract = () => {
+    if (deployedToken) {
+      navigator.clipboard.writeText(deployedToken.address);
+      toast.success('Contract address copied!');
+    }
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+    // Reset form
+    setTimeout(() => {
+      setCurrentStep(1);
+      setTokenName('');
+      setTokenSymbol('');
+      setTotalSupply('');
+      setDeployedToken(null);
+      setTokenImage('');
+      setTokenImageFile(null);
+    }, 300);
+  };
+
   const handleDeploy = async () => {
     // Validate required fields (skip image check in test mode)
     if (!testMode && !tokenImage) {
