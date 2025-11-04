@@ -314,12 +314,64 @@ async def check_payment_solana(payment_address: str, expected_amount: float, sin
 
 async def check_payment_evm(payment_address: str, expected_amount: float, chain: str, since_timestamp: str) -> Optional[str]:
     """
-    Check for EVM payment (Ethereum, Polygon)
+    Check for EVM payment (Ethereum, Polygon) via RPC
     Returns: tx_hash if found, None otherwise
     """
-    # TODO: Implement EVM RPC scanning using web3.py
-    # This is a placeholder
-    return None
+    try:
+        from web3 import Web3
+        from datetime import datetime
+        
+        rpc_url = SUPPORTED_CHAINS[chain]["rpc_url"]
+        w3 = Web3(Web3.HTTPProvider(rpc_url))
+        
+        if not w3.is_connected():
+            print(f"❌ Cannot connect to {chain} RPC")
+            return None
+        
+        # Convert address to checksum
+        address = w3.to_checksum_address(payment_address)
+        
+        # Get current block
+        current_block = w3.eth.block_number
+        
+        # Parse since timestamp to estimate block range
+        since_dt = datetime.fromisoformat(since_timestamp.replace('Z', '+00:00'))
+        now = datetime.now(timezone.utc)
+        time_diff_seconds = (now - since_dt).total_seconds()
+        
+        # Estimate blocks (Ethereum ~12s, Polygon ~2s)
+        blocks_per_second = 0.083 if chain == "ethereum" else 0.5
+        estimated_blocks = int(time_diff_seconds * blocks_per_second)
+        from_block = max(current_block - estimated_blocks - 100, 0)  # Add buffer
+        
+        # Scan blocks for incoming transactions
+        expected_wei = w3.to_wei(expected_amount, 'ether')
+        tolerance = int(expected_wei * 0.01)  # 1% tolerance
+        
+        # Get recent blocks (limit to last 1000 blocks for performance)
+        scan_from = max(from_block, current_block - 1000)
+        
+        for block_num in range(current_block, scan_from, -1):
+            try:
+                block = w3.eth.get_block(block_num, full_transactions=True)
+                
+                for tx in block.transactions:
+                    # Check if transaction is to our address
+                    if tx['to'] and tx['to'].lower() == address.lower():
+                        # Check amount
+                        if abs(tx['value'] - expected_wei) <= tolerance:
+                            tx_hash = tx['hash'].hex()
+                            print(f"✅ Found EVM payment on {chain}: {tx_hash}")
+                            return tx_hash
+            except Exception as block_error:
+                # Skip problematic blocks
+                continue
+        
+        return None
+        
+    except Exception as e:
+        print(f"❌ Error checking EVM payment on {chain}: {e}")
+        return None
 
 
 async def check_payment_xrp(payment_address: str, expected_amount: float, since_timestamp: str) -> Optional[str]:
