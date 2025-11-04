@@ -56,7 +56,7 @@ const HeaderSlim = () => {
               <img 
                 src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/q1ccyq6i_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png" 
                 alt="LaunchSwap"
-                className="h-12 w-12 object-contain"
+                className="h-14 w-14 object-contain"
               />
               <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 LaunchSwap
