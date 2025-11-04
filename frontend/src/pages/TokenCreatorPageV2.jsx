@@ -155,7 +155,10 @@ const TokenCreatorPageV2 = () => {
   
   // Poll pump.fun token status if launched
   useEffect(() => {
-    if (!mintAddress || !launchFlow === 'pump') return;
+    if (!mintAddress || launchFlow !== 'pump') return;
+    
+    let pollCount = 0;
+    const MAX_POLLS_BEFORE_MANUAL = 9; // 90 seconds (9 x 10s)
     
     const pollStatus = async () => {
       try {
@@ -167,10 +170,17 @@ const TokenCreatorPageV2 = () => {
           setLaunchStage(data.stage);
           if (data.pair_address) {
             setPairAddress(data.pair_address);
+            setShowManualInput(false); // Hide manual input if auto-detected
           }
         }
+        
+        pollCount++;
+        if (pollCount >= MAX_POLLS_BEFORE_MANUAL && launchStage === 'bonding' && !pairAddress) {
+          setTimeoutReached(true);
+          console.warn('⏱️ Timeout reached - showing manual input option');
+        }
       } catch (error) {
-        console.error('Error polling pump status:', error);
+        console.error('❌ Error polling pump status:', error);
       }
     };
     
@@ -179,7 +189,7 @@ const TokenCreatorPageV2 = () => {
     pollStatus(); // Initial call
     
     return () => clearInterval(interval);
-  }, [mintAddress, launchFlow]);
+  }, [mintAddress, launchFlow, launchStage, pairAddress]);
   
   // Handle user manual action completion
   const handleUserActionComplete = async (stage) => {
