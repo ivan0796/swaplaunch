@@ -18,8 +18,40 @@ const StakeWizard = ({ mode, onClose, onStakeComplete, testMode = true }) => {
     { name: 'Validator C (Devnet)', vote: 'J1to3PQfXidUUhprQWgdKkQAMWPJAEqSJ7amkBDE9qhF', apy: '8.5%' },
   ];
 
-  const handleDelegate = () => {
-    setShowBetaPopup(true);
+  const handleDelegate = async () => {
+    if (!testMode) {
+      // Live Mode: Show Beta popup (später echte Wallet-Integration)
+      setShowBetaPopup(true);
+      return;
+    }
+
+    // Test Mode: Simulate delegation
+    setIsProcessing(true);
+    toast.info('🧪 Test Mode: Simulating delegation...');
+    
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const validator = devnetValidators.find(v => v.vote === selectedValidator);
+    const mockPosition = {
+      id: Math.random().toString(36).substring(7),
+      validator: validator.name,
+      validatorVote: validator.vote,
+      amount: parseFloat(amount),
+      apy: validator.apy,
+      rewards: 0,
+      status: 'active',
+      activatedAt: new Date().toISOString()
+    };
+    
+    toast.success(`✅ Successfully delegated ${amount} SOL to ${validator.name}!`);
+    
+    // Call parent callback with new position
+    if (onStakeComplete) {
+      onStakeComplete(mockPosition);
+    }
+    
+    setIsProcessing(false);
+    onClose();
   };
 
   const handleNext = () => {
