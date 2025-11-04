@@ -60,13 +60,62 @@ const TokenCreatorPageV2 = () => {
   const [deployedToken, setDeployedToken] = useState(null);
 
   const chains = [
-    { id: 1, name: 'Ethereum', symbol: 'ETH', logo: '⟠', standard: 'ERC-20', decimals: 18 },
-    { id: 56, name: 'BNB Chain', symbol: 'BNB', logo: '🟡', standard: 'BEP-20', decimals: 18 },
-    { id: 137, name: 'Polygon', symbol: 'MATIC', logo: '🟣', standard: 'ERC-20', decimals: 18 },
-    { id: 42161, name: 'Arbitrum', symbol: 'ETH', logo: '🔵', standard: 'ERC-20', decimals: 18 },
-    { id: 8453, name: 'Base', symbol: 'ETH', logo: '🔷', standard: 'ERC-20', decimals: 18 },
-    { id: 43114, name: 'Avalanche', symbol: 'AVAX', logo: '🔺', standard: 'ERC-20', decimals: 18 },
-    { id: 0, name: 'Solana', symbol: 'SOL', logo: '◎', standard: 'SPL', decimals: 9 }
+    { 
+      id: 1, 
+      name: 'Ethereum', 
+      symbol: 'ETH', 
+      logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
+      standard: 'ERC-20', 
+      decimals: 18 
+    },
+    { 
+      id: 56, 
+      name: 'BNB Chain', 
+      symbol: 'BNB', 
+      logo: 'https://cryptologos.cc/logos/bnb-bnb-logo.png',
+      standard: 'BEP-20', 
+      decimals: 18 
+    },
+    { 
+      id: 137, 
+      name: 'Polygon', 
+      symbol: 'MATIC', 
+      logo: 'https://cryptologos.cc/logos/polygon-matic-logo.png',
+      standard: 'ERC-20', 
+      decimals: 18 
+    },
+    { 
+      id: 42161, 
+      name: 'Arbitrum', 
+      symbol: 'ETH', 
+      logo: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png',
+      standard: 'ERC-20', 
+      decimals: 18 
+    },
+    { 
+      id: 8453, 
+      name: 'Base', 
+      symbol: 'ETH', 
+      logo: 'https://cryptologos.cc/logos/base-logo.png',
+      standard: 'ERC-20', 
+      decimals: 18 
+    },
+    { 
+      id: 43114, 
+      name: 'Avalanche', 
+      symbol: 'AVAX', 
+      logo: 'https://cryptologos.cc/logos/avalanche-avax-logo.png',
+      standard: 'ERC-20', 
+      decimals: 18 
+    },
+    { 
+      id: 0, 
+      name: 'Solana', 
+      symbol: 'SOL', 
+      logo: 'https://cryptologos.cc/logos/solana-sol-logo.png',
+      standard: 'SOL', 
+      decimals: 9 
+    }
   ];
 
   const selectedChainData = chains.find(c => c.id === selectedChain) || chains[0];
