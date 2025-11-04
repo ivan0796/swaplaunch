@@ -462,15 +462,9 @@ const TokenCreatorPageV2 = () => {
                             }`}
                           >
                             <div className="flex justify-center mb-2">
-                              <img 
-                                src={chain.logo} 
-                                alt={chain.name}
-                                className="w-10 h-10 object-contain"
-                                onError={(e) => {
-                                  e.target.onerror = null;
-                                  e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Ccircle cx="12" cy="12" r="10" fill="%236366f1"/%3E%3C/svg%3E';
-                                }}
-                              />
+                              <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${chain.color} flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
+                                {chain.symbol.slice(0, 3)}
+                              </div>
                             </div>
                             <div className="text-sm font-semibold dark:text-white">{chain.name}</div>
                             <div className="text-xs text-gray-500 dark:text-gray-400">{chain.standard}</div>
