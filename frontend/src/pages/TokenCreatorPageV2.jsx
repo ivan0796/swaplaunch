@@ -463,9 +463,7 @@ const TokenCreatorPageV2 = () => {
                             }`}
                           >
                             <div className="flex justify-center mb-2">
-                              <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${chain.color} flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
-                                {chain.symbol.slice(0, 3)}
-                              </div>
+                              <ChainLogo chain={chain.name} size={48} />
                             </div>
                             <div className="text-sm font-semibold dark:text-white">{chain.name}</div>
                             <div className="text-xs text-gray-500 dark:text-gray-400">{chain.standard}</div>
