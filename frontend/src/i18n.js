@@ -63,6 +63,15 @@ const resources = {
       "links.dexscreenerPair": "Dexscreener Pair",
       "links.axiom": "Axiom Pulse",
       
+      // Staking Page
+      "staking.hero.title": "Earn Rewards, Stay in Control",
+      "staking.hero.subtitle": "Non-custodial staking on Solana. You sign, you earn. We never hold your funds.",
+      "staking.cta.start": "Start Staking",
+      "staking.mode.sol": "SOL Staking",
+      "staking.mode.spl": "SPL Token Staking",
+      "staking.positions.title": "Your Stake Positions",
+      "staking.faq.title": "Frequently Asked Questions",
+      
       // Swap Page
       "swap.title": "Swap Tokens",
       "swap.subtitle": "Trade crypto across multiple blockchains with advanced security",
