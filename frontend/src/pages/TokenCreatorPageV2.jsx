@@ -355,14 +355,8 @@ const TokenCreatorPageV2 = () => {
         analytics.tokenLaunchSuccess(mockAddress, selectedChainData.name);
         toast.success(`🎉 ${tokenName} deployed successfully!`);
         
-        // Reset form after delay
-        setTimeout(() => {
-          setCurrentStep(1);
-          setTokenName('');
-          setTokenSymbol('');
-          setTotalSupply('');
-          setDeployedToken(null);
-        }, 5000);
+        // Show success modal
+        setShowSuccessModal(true);
       }
       
     } catch (error) {
