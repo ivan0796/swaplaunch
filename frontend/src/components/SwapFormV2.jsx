@@ -362,6 +362,10 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       console.error('Swap failed:', err);
       setShowWalletConfirm(false);
       const errorMsg = err.message || 'Swap transaction failed';
+      
+      // Track swap failure
+      analytics.swapFail(errorMsg);
+      
       toast.error(errorMsg);
     } finally {
       setSwapping(false);
