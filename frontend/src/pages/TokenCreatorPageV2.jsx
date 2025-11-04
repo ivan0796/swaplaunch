@@ -61,12 +61,32 @@ const TokenCreatorPageV2 = () => {
 
   const selectedChainData = chains.find(c => c.id === selectedChain) || chains[0];
 
-  // Calculate costs live
+  // Calculate costs live with crypto prices
   const [launchCost, setLaunchCost] = useState(null);
+  const [cryptoPrices, setCryptoPrices] = useState(null);
+  const [priceUpdateTime, setPriceUpdateTime] = useState(null);
+  
+  // Fetch crypto prices on mount and every 5 minutes
   useEffect(() => {
-    const cost = calculateLaunchCost(selectedChainData.name.toLowerCase(), 30, featureBoost);
-    setLaunchCost(cost);
-  }, [selectedChain, featureBoost]);
+    const fetchPrices = async () => {
+      const prices = await PRICING.fetchCryptoPrices();
+      setCryptoPrices(prices);
+      setPriceUpdateTime(new Date());
+    };
+    
+    fetchPrices();
+    const interval = setInterval(fetchPrices, 5 * 60 * 1000); // 5 minutes
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  // Recalculate costs when chain, boost, or prices change
+  useEffect(() => {
+    if (cryptoPrices) {
+      const cost = calculateLaunchCost(selectedChainData.name.toLowerCase(), 30, featureBoost, cryptoPrices);
+      setLaunchCost(cost);
+    }
+  }, [selectedChain, featureBoost, cryptoPrices]);
 
   // Track page open
   useEffect(() => {
