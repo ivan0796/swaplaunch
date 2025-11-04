@@ -97,11 +97,13 @@ const StakingPage = () => {
             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 text-lg"
           >
             <Shield className="w-5 h-5 mr-2" />
-            {t('staking.cta.start', 'Try Staking Demo (Beta)')}
+            {testMode ? 'Start Staking Demo' : 'Stake SOL (Beta)'}
           </Button>
 
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
-            🧪 Beta: UI Demo • No Real Transactions • Devnet Only
+            {testMode 
+              ? '🧪 Test Mode: Complete demo flow • No wallet needed' 
+              : '🔴 Beta: Real transactions • Wallet signature required'}
           </p>
         </div>
       </section>
