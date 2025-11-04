@@ -35,6 +35,17 @@ export const PRICING = {
 };
 
 /**
+ * Approximate EUR to Crypto conversion rates (static, for display purposes)
+ */
+const EUR_CONVERSION_RATES = {
+  'ETH': 0.016,      // ~€3000 per ETH
+  'BNB': 0.10,       // ~€500 per BNB
+  'MATIC': 80,       // ~€0.60 per MATIC
+  'SOL': 0.30,       // ~€170 per SOL
+  'AVAX': 1.5        // ~€33 per AVAX
+};
+
+/**
  * Berechne Total Launch Cost
  * @param {string} chain - blockchain name
  * @param {number} gasPrice - in Gwei
@@ -45,12 +56,16 @@ export const calculateLaunchCost = (chain = 'ethereum', gasPrice = 30, withBoost
   let fixedFee = 0;
   let nativeCurrency = 'ETH';
   
-  switch(chain.toLowerCase()) {
+  const chainNormalized = chain.toLowerCase().replace(/\s+/g, '');
+  
+  switch(chainNormalized) {
     case 'ethereum':
       fixedFee = PRICING.launchFixedFeeEth;
       nativeCurrency = 'ETH';
       break;
+    case 'bnbchain':
     case 'bsc':
+    case 'binance':
       fixedFee = PRICING.launchFixedFeeBsc;
       nativeCurrency = 'BNB';
       break;
@@ -62,31 +77,51 @@ export const calculateLaunchCost = (chain = 'ethereum', gasPrice = 30, withBoost
       fixedFee = PRICING.launchFixedFeeSolana;
       nativeCurrency = 'SOL';
       break;
+    case 'arbitrum':
+      fixedFee = PRICING.launchFixedFeeEth;
+      nativeCurrency = 'ETH';
+      break;
+    case 'base':
+      fixedFee = PRICING.launchFixedFeeEth;
+      nativeCurrency = 'ETH';
+      break;
+    case 'avalanche':
+      fixedFee = 0.5;
+      nativeCurrency = 'AVAX';
+      break;
     default:
       fixedFee = PRICING.launchFixedFeeEth;
+      nativeCurrency = 'ETH';
   }
   
   // Gas cost estimate (nur EVM chains)
   const totalGas = PRICING.gasEstimates.tokenDeploy + 
                    PRICING.gasEstimates.addLiquidity + 
                    PRICING.gasEstimates.lockLiquidity;
-  const gasCostEth = chain !== 'solana' ? (totalGas * gasPrice) / 1e9 : 0;
+  const gasCostNative = chainNormalized !== 'solana' ? (totalGas * gasPrice) / 1e9 : 0;
   
   const serviceFee = fixedFee * (PRICING.serviceFeeBps / 10000);
-  const boostCost = withBoost ? PRICING.featureBoostEUR : 0;
+  
+  // Convert Feature Boost from EUR to native currency
+  const boostCostEUR = withBoost ? PRICING.featureBoostEUR : 0;
+  const conversionRate = EUR_CONVERSION_RATES[nativeCurrency] || EUR_CONVERSION_RATES['ETH'];
+  const boostCostNative = withBoost ? boostCostEUR * conversionRate : 0;
+  
+  const total = fixedFee + gasCostNative + serviceFee + boostCostNative;
   
   return {
     fixedFee,
     nativeCurrency,
-    gasCost: gasCostEth,
+    gasCost: gasCostNative,
     serviceFee,
-    boostCost,
-    total: fixedFee + gasCostEth + serviceFee + (withBoost ? boostCost / 100 : 0), // rough EUR conversion
+    boostCost: boostCostEUR,
+    boostCostNative,
+    total,
     breakdown: {
       'Launch Fee': `${fixedFee} ${nativeCurrency}`,
-      'Gas (estimated)': chain !== 'solana' ? `${gasCostEth.toFixed(4)} ${nativeCurrency}` : 'Included',
+      'Gas (estimated)': chainNormalized !== 'solana' ? `${gasCostNative.toFixed(4)} ${nativeCurrency}` : 'Included',
       'Service Fee': `${serviceFee.toFixed(4)} ${nativeCurrency}`,
-      ...(withBoost && { 'Feature Boost': `€${boostCost}` })
+      ...(withBoost && { 'Feature Boost': `${boostCostNative.toFixed(4)} ${nativeCurrency} (€${boostCostEUR})` })
     }
   };
 };
