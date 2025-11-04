@@ -13,6 +13,15 @@ const TrendingTokensV2 = ({ onTokenSelect }) => {
   const [tokens, setTokens] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // Get promoted tokens
+  const { promotions: trendingPromotions } = usePromotions('trending_boost');
+  const { promotions: featuredPromotions } = usePromotions('featured_token');
+  
+  const isPromoted = (tokenAddress) => {
+    return trendingPromotions.some(p => p.token_address.toLowerCase() === tokenAddress?.toLowerCase()) ||
+           featuredPromotions.some(p => p.token_address.toLowerCase() === tokenAddress?.toLowerCase());
+  };
 
   useEffect(() => {
     fetchTrending();
