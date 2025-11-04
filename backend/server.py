@@ -1951,6 +1951,18 @@ async def list_promotion_packages():
         "crypto_prices": crypto_prices
     }
 
+@api_router.post("/promotion/mock-activate/{request_id}")
+async def mock_activate_promotion(request_id: str):
+    """
+    TEST ONLY: Manually activate a promotion for testing
+    """
+    from promotion_system import activate_promotion
+    
+    mock_tx_hash = "0xTEST" + request_id[:8]
+    await activate_promotion(db, request_id, mock_tx_hash)
+    
+    return {"success": True, "message": "Promotion activated (TEST MODE)"}
+
 # Include the routers in the main app
 from ad_management import ad_router
 from referral_system import referral_router
