@@ -735,7 +735,80 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
         </div>
       </div>
 
-      {/* Fee Breakdown Bar */}
+      {/* Transparent Fee Breakdown */}
+      {quote && (
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+          <h4 className="text-sm font-semibold mb-3 dark:text-white flex items-center gap-2">
+            <Info className="w-4 h-4 text-blue-600" />
+            Fee Breakdown
+          </h4>
+          <div className="space-y-2">
+            {/* Protocol Fee */}
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-600 dark:text-gray-400">Protocol Fee (DEX)</span>
+              <span className="font-medium dark:text-white">
+                {quote.protocolFee || '~0.30%'}
+              </span>
+            </div>
+            
+            {/* Platform Fee */}
+            {PRICING.serviceFeeBps > 0 && (
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600 dark:text-gray-400">
+                  Your Fee (SwapLaunch)
+                </span>
+                <span className="font-medium text-purple-600 dark:text-purple-400">
+                  {quote.feePercent || (PRICING.serviceFeeBps / 100)}%
+                  {quote.feeUsd && ` (~$${quote.feeUsd.toFixed(2)})`}
+                </span>
+              </div>
+            )}
+            
+            {/* Gas Fee */}
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-600 dark:text-gray-400">Network Fee (Gas)</span>
+              <span className="font-medium dark:text-white">
+                {quote.estimatedGas || 'Estimating...'}
+              </span>
+            </div>
+
+            {/* Total */}
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
+              <div className="flex justify-between items-center">
+                <span className="font-semibold dark:text-white">Total Fees</span>
+                <span className="font-bold text-green-600 dark:text-green-400">
+                  {quote.totalFees || 'Calculating...'}
+                </span>
+              </div>
+            </div>
+
+            {/* Tier Badge */}
+            {quote.feeTier && quote.cohort && (
+              <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-500 dark:text-gray-400">
+                    {quote.cohort === 'tiered' ? 'Dynamic Tier' : 'Standard Rate'}
+                  </span>
+                  <span className={`px-2 py-1 rounded-full font-medium ${
+                    quote.feeTier.includes('T1') || quote.feeTier.includes('T2') 
+                      ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
+                      : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                  }`}>
+                    {quote.feeTier}
+                  </span>
+                </div>
+                {quote.nextTier && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    💡 {quote.nextTier}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Old Fee Breakdown Bar */}
       {quote && <FeeBreakdownBar quote={quote} platformFeeBps={20} />}
 
       {/* Tiered Fee Info - Simple display for user (UI styling by user) */}
