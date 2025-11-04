@@ -163,13 +163,20 @@ const StakingPage = () => {
         </div>
       </section>
 
-      {/* Preview: Stake Positions (empty state) */}
+      {/* Stake Positions */}
       <section className="py-12 px-4 bg-white/50 dark:bg-gray-900/50">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6 dark:text-white">
-            {t('staking.positions.title', 'Your Stake Positions')}
-          </h2>
-          <StakePositions mode={selectedMode} positions={[]} />
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-3xl font-bold dark:text-white">
+              {t('staking.positions.title', 'Your Stake Positions')}
+            </h2>
+            {stakePositions.length > 0 && (
+              <Badge className="bg-green-600 text-white">
+                {stakePositions.length} Active
+              </Badge>
+            )}
+          </div>
+          <StakePositions mode={selectedMode} positions={stakePositions} />
         </div>
       </section>
 
