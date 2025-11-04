@@ -700,6 +700,41 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
         onSlippageModeChange={setSlippageMode}
       />
 
+      {/* MEV Protection Info Box */}
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4">
+        <div className="flex items-start gap-3">
+          <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-2 flex items-center gap-2">
+              <span>🛡️ Was ist MEV-Schutz?</span>
+            </h4>
+            <div className="text-sm text-blue-800 dark:text-blue-300 space-y-2">
+              <p>
+                <strong>MEV (Maximal Extractable Value)</strong> bedeutet, dass Bots Ihre Transaktion sehen und vor Ihnen ausführen können (Front-Running), um Profit zu machen.
+              </p>
+              <p>
+                <strong>Front-Running:</strong> Bot sieht Ihren Swap → Kauft Token vor Ihnen → Preis steigt → Sie zahlen mehr
+              </p>
+              <p>
+                <strong>Sandwich Attack:</strong> Bot kauft vor + verkauft nach Ihrem Swap → Sie verlieren durch Slippage
+              </p>
+              <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg p-3 mt-3">
+                <p className="font-semibold text-green-900 dark:text-green-200 mb-1">✅ So schützt SwapLaunch Sie:</p>
+                <ul className="list-disc list-inside space-y-1 text-green-800 dark:text-green-300 text-xs">
+                  <li>Private Mempool-Routing (Transaktion nicht öffentlich sichtbar)</li>
+                  <li>Flashbots Integration (MEV-geschützte Ausführung)</li>
+                  <li>Optimale Slippage-Einstellungen</li>
+                  <li>Auto-Erkennung von Front-Running-Risiko</li>
+                </ul>
+              </div>
+              <p className="text-xs text-blue-700 dark:text-blue-400 mt-3">
+                💡 <strong>Empfehlung:</strong> MEV-Schutz immer aktiviert lassen, besonders bei großen Trades (&gt;$1,000)
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Fee Breakdown Bar */}
       {quote && <FeeBreakdownBar quote={quote} platformFeeBps={20} />}
 
