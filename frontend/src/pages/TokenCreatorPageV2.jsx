@@ -499,7 +499,23 @@ const TokenCreatorPageV2 = () => {
                 {/* Step 1: Token Details */}
                 {currentStep === 1 && (
                   <div className="space-y-6">
-                    <h3 className="text-2xl font-bold mb-6 dark:text-white">{t('launch.step1')}</h3>
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-2xl font-bold dark:text-white">{t('launch.step1')}</h3>
+                      
+                      {/* Test Mode Toggle */}
+                      <div className="flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                        <input
+                          type="checkbox"
+                          id="test-mode"
+                          checked={testMode}
+                          onChange={(e) => setTestMode(e.target.checked)}
+                          className="w-4 h-4"
+                        />
+                        <label htmlFor="test-mode" className="text-sm font-medium text-yellow-900 dark:text-yellow-200 cursor-pointer">
+                          🧪 Test Mode (No Wallet Required)
+                        </label>
+                      </div>
+                    </div>
 
                     {/* Chain Selector */}
                     <div>
