@@ -15,6 +15,8 @@ const StakingPage = () => {
   const { t } = useTranslation();
   const [selectedMode, setSelectedMode] = useState('sol'); // 'sol' or 'spl'
   const [showWizard, setShowWizard] = useState(false);
+  const [testMode, setTestMode] = useState(true); // Test mode enabled by default
+  const [stakePositions, setStakePositions] = useState([]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-purple-950 dark:to-blue-950">
