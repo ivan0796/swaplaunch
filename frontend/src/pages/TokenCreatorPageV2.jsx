@@ -9,7 +9,7 @@ import { Checkbox } from '../components/ui/checkbox';
 import { toast } from 'sonner';
 import HeaderSlim from '../components/HeaderSlim';
 import Footer from '../components/Footer';
-import { PRICING, calculateLaunchCost } from '../config/pricing';
+import { PRICING, calculateLaunchCost, fetchCryptoPrices } from '../config/pricing';
 import analytics from '../lib/analytics';
 
 const TokenCreatorPageV2 = () => {
