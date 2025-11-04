@@ -405,6 +405,10 @@ const TokenCreatorPageV2 = () => {
       {launchStage && (
         <section className="py-6 px-4">
           <div className="max-w-4xl mx-auto space-y-4">
+            {/* Non-Custodial Disclaimer */}
+            <NonCustodialDisclaimer />
+            
+            {/* Status Bar */}
             <LaunchStatusBar 
               flow={launchFlow}
               stage={launchStage}
@@ -412,6 +416,15 @@ const TokenCreatorPageV2 = () => {
               pair={pairAddress}
             />
             
+            {/* Manual Input Option (after timeout) */}
+            {timeoutReached && launchStage === 'bonding' && !pairAddress && (
+              <ManualPairInput 
+                onSubmit={handleManualPairSubmit}
+                initialMint={mintAddress}
+              />
+            )}
+            
+            {/* User Action Prompts */}
             <UserActionPrompt 
               stage={launchStage}
               mint={mintAddress}
@@ -419,11 +432,15 @@ const TokenCreatorPageV2 = () => {
               onActionComplete={handleUserActionComplete}
             />
             
+            {/* Success Links & Indexing Notice */}
             {launchStage === 'first_trade' && (
-              <LaunchSuccessLinks 
-                mint={mintAddress}
-                pair={pairAddress}
-              />
+              <>
+                <IndexingLatencyNotice />
+                <LaunchSuccessLinks 
+                  mint={mintAddress}
+                  pair={pairAddress}
+                />
+              </>
             )}
           </div>
         </section>
