@@ -33,6 +33,7 @@ function App() {
           <Routes>
             {/* TRADE */}
             <Route path="/" element={<SwapPageV2 />} />
+            <Route path="/launch" element={<TokenCreatorPageV2 />} />
             <Route path="/trade/swap" element={<SwapPageV2 />} />
             <Route path="/trade/pro-swap" element={<ProSwapPage />} />
             <Route path="/trade/bridge" element={<BridgePage />} />
