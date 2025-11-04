@@ -225,14 +225,47 @@ const resources = {
   de: {
     translation: {
       // Navigation
+      "nav.swap": "Swap",
       "nav.trade": "Swap",
+      "nav.launch": "Token Launch",
+      "nav.lock": "Liquidität locken",
+      "nav.bridge": "Bridge",
+      "nav.more": "Mehr",
       "nav.projects": "Projekte",
       "nav.launchpad": "Launchpad",
       "nav.tokenLocker": "Token-Locker",
       "nav.limitDCA": "Limit/DCA",
-      "nav.bridge": "Bridge",
       "nav.advertise": "Werben",
       "nav.faq": "FAQ",
+      
+      // CTA
+      "cta.startToken": "Token starten",
+      "cta.connectWallet": "Wallet verbinden",
+      "cta.demo": "Demo ansehen",
+      "cta.boostMyLaunch": "Launch boosten",
+      "cta.requestInquiry": "Anfrage stellen",
+      
+      // Hero
+      "hero.title": "Starte deinen Token in Minuten",
+      "hero.subtitle": "ERC-20 erstellen, Liquidität hinzufügen & locken – ohne Code",
+      "hero.trustBullet1": "Kein Code nötig",
+      "hero.trustBullet2": "Source verified",
+      "hero.trustBullet3": "Gebühren transparent",
+      
+      // Launch Wizard Steps
+      "launch.step1": "Token Details",
+      "launch.step2": "Gebühren & Einstellungen",
+      "launch.step3": "Liquidität",
+      "launch.step4": "Bestätigen & Starten",
+      "launch.priceBox.title": "Launch-Kosten",
+      "launch.priceBox.gas": "Gas (geschätzt)",
+      "launch.priceBox.launchFee": "Launch-Gebühr",
+      "launch.priceBox.serviceFee": "Service-Gebühr",
+      "launch.priceBox.total": "Gesamt",
+      "launch.featureBoost": "Feature Boost (7 Tage Trending + Social)",
+      "launch.confirmDialog.title": "Launch bestätigen",
+      "launch.confirmDialog.breakdown": "Kostenaufschlüsselung",
+      "launch.confirmDialog.security": "Sicherheitsdetails",
       
       // Swap Page
       "swap.title": "Token tauschen",
