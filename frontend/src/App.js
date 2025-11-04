@@ -56,6 +56,7 @@ function App() {
             <Route path="/earn/referrals" element={<ReferralsPage />} />
             <Route path="/earn/staking" element={<StakingPage />} />
             <Route path="/staking" element={<StakingPage />} />
+            <Route path="/promote" element={<PromotePage />} />
             
             {/* PORTFOLIO */}
             <Route path="/portfolio" element={<PortfolioPage />} />
