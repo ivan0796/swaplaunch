@@ -19,7 +19,7 @@ const HeaderSlim = () => {
 
   // Primäre Navigation
   const primaryNav = [
-    { path: '/', label: t('nav.swap') },
+    { path: '/trade/swap', label: t('nav.swap') },
     { path: '/launch', label: t('nav.launch') },
     { path: '/launchpad/token-locker', label: t('nav.lock') },
     { path: '/bridge', label: t('nav.bridge') }
