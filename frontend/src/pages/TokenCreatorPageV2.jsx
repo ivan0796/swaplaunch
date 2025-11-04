@@ -64,7 +64,7 @@ const TokenCreatorPageV2 = () => {
       id: 1, 
       name: 'Ethereum', 
       symbol: 'ETH', 
-      logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
+      logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png',
       standard: 'ERC-20', 
       decimals: 18 
     },
@@ -72,7 +72,7 @@ const TokenCreatorPageV2 = () => {
       id: 56, 
       name: 'BNB Chain', 
       symbol: 'BNB', 
-      logo: 'https://cryptologos.cc/logos/bnb-bnb-logo.png',
+      logo: 'https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png',
       standard: 'BEP-20', 
       decimals: 18 
     },
@@ -80,7 +80,7 @@ const TokenCreatorPageV2 = () => {
       id: 137, 
       name: 'Polygon', 
       symbol: 'MATIC', 
-      logo: 'https://cryptologos.cc/logos/polygon-matic-logo.png',
+      logo: 'https://assets.coingecko.com/coins/images/4713/small/polygon.png',
       standard: 'ERC-20', 
       decimals: 18 
     },
@@ -88,7 +88,7 @@ const TokenCreatorPageV2 = () => {
       id: 42161, 
       name: 'Arbitrum', 
       symbol: 'ETH', 
-      logo: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png',
+      logo: 'https://assets.coingecko.com/coins/images/16547/small/photo_2023-03-29_21.47.00.jpeg',
       standard: 'ERC-20', 
       decimals: 18 
     },
@@ -96,7 +96,7 @@ const TokenCreatorPageV2 = () => {
       id: 8453, 
       name: 'Base', 
       symbol: 'ETH', 
-      logo: 'https://cryptologos.cc/logos/base-logo.png',
+      logo: 'https://assets.coingecko.com/coins/images/31164/small/coinbase-base-logo.png',
       standard: 'ERC-20', 
       decimals: 18 
     },
@@ -104,7 +104,7 @@ const TokenCreatorPageV2 = () => {
       id: 43114, 
       name: 'Avalanche', 
       symbol: 'AVAX', 
-      logo: 'https://cryptologos.cc/logos/avalanche-avax-logo.png',
+      logo: 'https://assets.coingecko.com/coins/images/12559/small/Avalanche_Circle_RedWhite_Trans.png',
       standard: 'ERC-20', 
       decimals: 18 
     },
@@ -112,7 +112,7 @@ const TokenCreatorPageV2 = () => {
       id: 0, 
       name: 'Solana', 
       symbol: 'SOL', 
-      logo: 'https://cryptologos.cc/logos/solana-sol-logo.png',
+      logo: 'https://assets.coingecko.com/coins/images/4128/small/solana.png',
       standard: 'SOL', 
       decimals: 9 
     }
