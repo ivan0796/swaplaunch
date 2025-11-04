@@ -201,28 +201,54 @@ const TokenCreatorPageV2 = () => {
     setShowConfirmDialog(false);
 
     try {
-      // Simulate deployment (Replace with real contract call)
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      const mockAddress = '0x' + Math.random().toString(16).slice(2, 42);
-      setDeployedToken({
-        address: mockAddress,
-        name: tokenName,
-        symbol: tokenSymbol,
-        chain: selectedChainData.name
-      });
+      // For Solana (pump.fun), guide user to create token on pump.fun
+      if (selectedChainData.id === 0) {
+        // Generate a mock Solana address for demo
+        const mockMint = 'PUMP' + Math.random().toString(36).substring(2, 15).toUpperCase();
+        
+        setMintAddress(mockMint);
+        setLaunchFlow('pump');
+        setLaunchStage('created');
+        
+        // Start tracking
+        const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+        await fetch(`${backendUrl}/api/pump/track?mint=${mockMint}`, {
+          method: 'POST'
+        });
+        
+        analytics.tokenLaunchSuccess(mockMint, 'Solana/pump.fun');
+        toast.success(`🎉 ${tokenName} launched on pump.fun!`);
+        
+        // Show info modal
+        toast.info('Your token is now on pump.fun bonding curve. Waiting for migration to Raydium...', {
+          duration: 10000
+        });
+        
+      } else {
+        // EVM chains - simulate deployment
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        const mockAddress = '0x' + Math.random().toString(16).slice(2, 42);
+        setDeployedToken({
+          address: mockAddress,
+          name: tokenName,
+          symbol: tokenSymbol,
+          chain: selectedChainData.name
+        });
 
-      analytics.tokenLaunchSuccess(mockAddress, selectedChainData.name);
-      toast.success(`🎉 ${tokenName} deployed successfully!`);
+        analytics.tokenLaunchSuccess(mockAddress, selectedChainData.name);
+        toast.success(`🎉 ${tokenName} deployed successfully!`);
+        
+        // Reset form after delay
+        setTimeout(() => {
+          setCurrentStep(1);
+          setTokenName('');
+          setTokenSymbol('');
+          setTotalSupply('');
+          setDeployedToken(null);
+        }, 5000);
+      }
       
-      // Reset form
-      setTimeout(() => {
-        setCurrentStep(1);
-        setTokenName('');
-        setTokenSymbol('');
-        setTotalSupply('');
-        setDeployedToken(null);
-      }, 5000);
     } catch (error) {
       console.error('Deployment error:', error);
       analytics.tokenLaunchFail(error.message);
