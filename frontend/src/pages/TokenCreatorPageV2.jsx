@@ -595,34 +595,15 @@ const TokenCreatorPageV2 = () => {
                   <div className="space-y-6">
                     <h3 className="text-2xl font-bold mb-6 dark:text-white">{t('launch.step2')}</h3>
 
-                    {/* Token Image (Optional) */}
-                    <div>
-                      <label className="block text-sm font-medium mb-2 dark:text-gray-300">
-                        Token Logo (Optional)
-                      </label>
-                      <div className="flex items-center gap-4">
-                        {tokenImagePreview && (
-                          <img 
-                            src={tokenImagePreview} 
-                            alt="Token preview" 
-                            className="w-16 h-16 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600"
-                          />
-                        )}
-                        <Input
-                          type="url"
-                          placeholder="https://example.com/logo.png"
-                          value={tokenImage}
-                          onChange={(e) => {
-                            setTokenImage(e.target.value);
-                            setTokenImagePreview(e.target.value);
-                          }}
-                          className="flex-1 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                      </div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Recommended: 512x512px, PNG or JPG
-                      </p>
-                    </div>
+                    {/* Token Logo Upload (Mandatory) */}
+                    <ImageDropzone
+                      onImageSelect={(preview, file) => {
+                        setTokenImage(preview);
+                        setTokenImageFile(file);
+                      }}
+                      maxSize={2}
+                      required={true}
+                    />
 
                     {/* Description */}
                     <div>
