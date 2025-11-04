@@ -6,12 +6,16 @@ const resources = {
   en: {
     translation: {
       // Navigation
+      "nav.swap": "Swap",
       "nav.trade": "Swap",
+      "nav.launch": "Token Launch",
+      "nav.lock": "Lock Liquidity",
+      "nav.bridge": "Bridge",
+      "nav.more": "More",
       "nav.projects": "Projects",
       "nav.launchpad": "Launchpad",
       "nav.tokenLocker": "Token Locker",
       "nav.limitDCA": "Limit/DCA",
-      "nav.bridge": "Bridge",
       "nav.advertise": "Advertise",
       "nav.faq": "FAQ",
       
