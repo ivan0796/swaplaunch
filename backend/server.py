@@ -1682,6 +1682,115 @@ async def get_crypto_prices():
         raise HTTPException(status_code=500, detail="Failed to fetch crypto prices")
 
 
+# ====== Pump.fun Launch Tracking (Non-Custodial) ======
+from pump_watcher import get_watcher
+
+@api_router.post("/pump/track")
+async def track_pump_token(mint: str = Query(..., description="Token mint address")):
+    """
+    Start tracking a pump.fun token (non-custodial)
+    Just monitors status - no transactions
+    """
+    try:
+        watcher = await get_watcher(db)
+        
+        # Check if already exists
+        existing = await db.pump_tokens.find_one({"mint": mint})
+        if existing:
+            return {
+                "success": True,
+                "message": "Token already being tracked",
+                "status": existing.get("stage", "unknown")
+            }
+        
+        # Create tracking entry
+        await db.pump_tokens.insert_one({
+            "mint": mint,
+            "stage": "created",
+            "created_at": datetime.now(timezone.utc),
+            "migrated": False,
+            "user_initiated": True
+        })
+        
+        logger.info(f"Started tracking pump.fun token: {mint}")
+        
+        return {
+            "success": True,
+            "message": "Token tracking started",
+            "mint": mint
+        }
+        
+    except Exception as e:
+        logger.error(f"Error tracking pump token: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/pump/status/{mint}")
+async def get_pump_status(mint: str):
+    """
+    Get current status of a pump.fun token
+    Returns: stage, bonding_progress, pair_address (if migrated)
+    """
+    try:
+        watcher = await get_watcher(db)
+        status = await watcher.get_token_status(mint)
+        
+        if not status:
+            return {
+                "found": False,
+                "message": "Token not found. Start tracking first."
+            }
+        
+        return {
+            "found": True,
+            **status
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting pump status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.post("/pump/mark-stage")
+async def mark_user_action_complete(
+    mint: str = Query(...),
+    stage: str = Query(..., description="Stage: lp_added or first_trade")
+):
+    """
+    User marks completion of manual actions (LP add, first trade)
+    """
+    try:
+        if stage not in ["lp_added", "first_trade"]:
+            raise HTTPException(status_code=400, detail="Invalid stage")
+        
+        result = await db.pump_tokens.update_one(
+            {"mint": mint},
+            {
+                "$set": {
+                    "stage": stage,
+                    f"{stage}_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Token not found")
+        
+        logger.info(f"User marked {mint} as {stage}")
+        
+        return {
+            "success": True,
+            "mint": mint,
+            "stage": stage
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error marking stage: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # Include the routers in the main app
 from ad_management import ad_router
 from referral_system import referral_router
