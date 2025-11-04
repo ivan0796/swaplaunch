@@ -69,7 +69,7 @@ const TokenCreatorPageV2 = () => {
   // Fetch crypto prices on mount and every 5 minutes
   useEffect(() => {
     const fetchPrices = async () => {
-      const prices = await PRICING.fetchCryptoPrices();
+      const prices = await fetchCryptoPrices();
       setCryptoPrices(prices);
       setPriceUpdateTime(new Date());
     };
