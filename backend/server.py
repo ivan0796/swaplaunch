@@ -1736,10 +1736,12 @@ async def track_pump_token(request: Request, mint: str = Query(..., description=
 
 
 @api_router.get("/pump/status/{mint}")
-async def get_pump_status(mint: str):
+@limiter.limit("30/minute")
+async def get_pump_status(request: Request, mint: str):
     """
     Get current status of a pump.fun token
     Returns: stage, bonding_progress, pair_address (if migrated)
+    Rate limit: 30 requests per minute
     """
     try:
         watcher = await get_watcher(db)
