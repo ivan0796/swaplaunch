@@ -1387,6 +1387,10 @@ async def startup_event():
     from ad_management import init_ad_slots
     await init_ad_slots()
     logger.info("Ad management initialized")
+    
+    # Start promotion payment scanner worker
+    asyncio.create_task(payment_scanner_worker(db))
+    logger.info("Promotion payment scanner started")
 
 # ========== COMMUNITY RATING SYSTEM ==========
 
