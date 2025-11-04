@@ -1,6 +1,7 @@
 """
 Pump.fun Token Watcher (Non-Custodial)
 Only tracks token status - no private keys, no transactions
+With resilient reconnect & health checks
 """
 import asyncio
 import json
@@ -13,6 +14,8 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 logger = logging.getLogger(__name__)
 
 PUMPPORTAL_WS = "wss://pumpportal.fun/api/data"
+MAX_RECONNECT_ATTEMPTS = 5
+RECONNECT_BASE_DELAY = 2  # seconds
 
 class PumpWatcher:
     def __init__(self, db: AsyncIOMotorDatabase):
