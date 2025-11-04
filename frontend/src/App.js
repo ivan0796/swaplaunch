@@ -33,8 +33,10 @@ function App() {
       <div className="App">
         <BrowserRouter>
           <Routes>
+            {/* Default Route - Token Launch Funnel */}
+            <Route path="/" element={<TokenCreatorPageV2 />} />
+            
             {/* TRADE */}
-            <Route path="/" element={<SwapPageV2 />} />
             <Route path="/launch" element={<TokenCreatorPageV2 />} />
             <Route path="/trade/swap" element={<SwapPageV2 />} />
             <Route path="/trade/pro-swap" element={<ProSwapPage />} />
@@ -55,12 +57,13 @@ function App() {
             <Route path="/portfolio" element={<PortfolioPage />} />
             
             {/* Advertise */}
-            <Route path="/advertise" element={<AdvertisePage />} />
+            <Route path="/advertise" element={<AdvertisePageV2 />} />
             
             {/* Legal & Info Pages */}
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/risk" element={<RiskDisclosurePage />} />
+            <Route path="/security" element={<SecurityPage />} />
             <Route path="/getting-started" element={<GettingStartedPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/risk-disclosure" element={<RiskDisclosure />} />
