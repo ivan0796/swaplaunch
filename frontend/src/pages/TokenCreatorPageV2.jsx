@@ -890,10 +890,10 @@ const TokenCreatorPageV2 = () => {
                   ) : (
                     <Button
                       onClick={handleConfirmClick}
-                      disabled={!isConnected}
+                      disabled={!testMode && !isConnected}
                       className="bg-gradient-to-r from-green-600 to-green-700"
                     >
-                      {isConnected ? 'Launch Token 🚀' : 'Connect Wallet'}
+                      {testMode ? 'Launch Test Token 🧪' : (isConnected ? 'Launch Token 🚀' : 'Connect Wallet')}
                     </Button>
                   )}
                 </div>
