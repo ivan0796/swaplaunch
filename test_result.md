@@ -141,6 +141,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETE: All 5 priority referral endpoints working perfectly. Fixed routing conflict between old /api/referrals/{wallet} and new referral system by renaming old endpoint to /api/legacy-referrals/{wallet}. Tested complete referral flow: Track referral (Alice→Bob) → Record rewards ($500 swap = $0.10 reward) → Check stats → Leaderboard ranking → Claim rewards. Reward calculation verified: 10% of 0.2% platform fee = 0.02% of swap amount. MongoDB collections (referrals, referral_rewards) working correctly. All test cases passed (11/11)."
+      - working: true
+        agent: "testing"
+        comment: "✅ PHASE 3 VERIFICATION COMPLETE: Referral leaderboard endpoint remains accessible and functional after frontend route changes. Returns proper JSON structure with leaderboard array. No regressions detected from Phase 3 frontend modifications."
 
   - task: "Add XRP and Tron Chain Support"
     implemented: true
