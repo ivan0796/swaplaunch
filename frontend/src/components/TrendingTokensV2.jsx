@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { TrendingUp, TrendingDown, BarChart3, RefreshCw, Sparkles } from 'lucide-react';
+import { TrendingUp, TrendingDown, BarChart3, RefreshCw, Sparkles, Flame } from 'lucide-react';
 import { Button } from './ui/button';
 import analytics from '../lib/analytics';
+import { usePromotions } from '../hooks/usePromotions';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
