@@ -18,6 +18,7 @@ import ChainLogo from '../components/ChainLogo';
 import ManualPairInput from '../components/ManualPairInput';
 import IndexingLatencyNotice from '../components/IndexingLatencyNotice';
 import NonCustodialDisclaimer from '../components/NonCustodialDisclaimer';
+import ImageDropzone from '../components/ImageDropzone';
 import { VISIBILITY } from '../config/visibility';
 
 const TokenCreatorPageV2 = () => {
