@@ -283,8 +283,14 @@ const TokenCreatorPageV2 = () => {
   };
 
   const handleDeploy = async () => {
-    if (!isConnected) {
-      toast.error('Please connect your wallet');
+    // Validate required fields
+    if (!tokenImage) {
+      toast.error('Token logo is required');
+      return;
+    }
+    
+    if (!testMode && !isConnected) {
+      toast.error('Please connect your wallet or enable Test Mode');
       return;
     }
 
@@ -292,6 +298,24 @@ const TokenCreatorPageV2 = () => {
     setShowConfirmDialog(false);
 
     try {
+      // Test Mode: Simulate deployment
+      if (testMode) {
+        toast.info('🧪 Test Mode: Simulating token deployment...');
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        const mockMint = 'TEST' + Math.random().toString(36).substring(2, 15).toUpperCase();
+        
+        setMintAddress(mockMint);
+        setLaunchFlow('pump');
+        setLaunchStage('created');
+        
+        toast.success(`✅ Test token created: ${tokenName}`);
+        toast.info('This is a test deployment. No real transactions were made.', {
+          duration: 5000
+        });
+        
+        return;
+      }
       // For Solana (pump.fun), guide user to create token on pump.fun
       if (selectedChainData.id === 0) {
         // Generate a mock Solana address for demo
