@@ -11,6 +11,10 @@ import HeaderSlim from '../components/HeaderSlim';
 import Footer from '../components/Footer';
 import { PRICING, calculateLaunchCost, fetchCryptoPrices } from '../config/pricing';
 import analytics from '../lib/analytics';
+import LaunchStatusBar from '../components/LaunchStatusBar';
+import LaunchSuccessLinks from '../components/LaunchSuccessLinks';
+import UserActionPrompt from '../components/UserActionPrompt';
+import { VISIBILITY } from '../config/visibility';
 
 const TokenCreatorPageV2 = () => {
   const { t } = useTranslation();
@@ -22,6 +26,12 @@ const TokenCreatorPageV2 = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showDemoModal, setShowDemoModal] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  
+  // Pump.fun Launch Tracking
+  const [launchFlow, setLaunchFlow] = useState('pump'); // 'pump' or 'direct'
+  const [launchStage, setLaunchStage] = useState(null); // null, 'created', 'bonding', 'migrated', 'lp_added', 'first_trade'
+  const [mintAddress, setMintAddress] = useState('');
+  const [pairAddress, setPairAddress] = useState('');
   
   // Form State
   const [selectedChain, setSelectedChain] = useState(1);
