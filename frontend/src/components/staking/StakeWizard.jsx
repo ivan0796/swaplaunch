@@ -219,28 +219,11 @@ const StakeWizard = ({ mode, onClose, onStakeComplete, testMode = true }) => {
               <div className="space-y-3">
                 <Button
                   onClick={handleDelegate}
+                  disabled={isProcessing}
                   className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
                   size="lg"
                 >
-                  Delegate (Wallet)
-                </Button>
-
-                <Button
-                  onClick={() => setShowBetaPopup(true)}
-                  variant="outline"
-                  className="w-full"
-                  size="lg"
-                >
-                  Deactivate (Wallet)
-                </Button>
-
-                <Button
-                  onClick={() => setShowBetaPopup(true)}
-                  variant="outline"
-                  className="w-full"
-                  size="lg"
-                >
-                  Withdraw (Wallet)
+                  {isProcessing ? 'Processing...' : (testMode ? 'Delegate (Test)' : 'Delegate (Wallet)')}
                 </Button>
               </div>
             </div>
