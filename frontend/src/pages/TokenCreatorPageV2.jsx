@@ -759,15 +759,15 @@ const TokenCreatorPageV2 = () => {
             >
               {isDeploying ? (
                 <>
-                  <Clock className="w-4 h-4 mr-2 animate-spin" />
+                  <Clock className="w-5 h-5 mr-2 animate-spin" />
                   Deploying...
                 </>
               ) : (
                 <>
                   <img 
-                    src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/ke1a1bm2_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png"
+                    src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/q1ccyq6i_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png"
                     alt="Rocket"
-                    className="w-4 h-4 mr-2"
+                    className="w-6 h-6 mr-2 object-contain"
                   />
                   Confirm & Deploy
                 </>
