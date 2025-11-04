@@ -1872,10 +1872,11 @@ app.include_router(nft_router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=["*"],  # TODO: Replace with specific frontend domain in production
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    max_age=600,  # Cache preflight for 10 minutes
 )
 
 # Configure logging
