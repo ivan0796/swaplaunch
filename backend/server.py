@@ -1694,10 +1694,12 @@ async def get_crypto_prices():
 from pump_watcher import get_watcher
 
 @api_router.post("/pump/track")
-async def track_pump_token(mint: str = Query(..., description="Token mint address")):
+@limiter.limit("10/minute")
+async def track_pump_token(request: Request, mint: str = Query(..., description="Token mint address")):
     """
     Start tracking a pump.fun token (non-custodial)
     Just monitors status - no transactions
+    Rate limit: 10 requests per minute
     """
     try:
         watcher = await get_watcher(db)
