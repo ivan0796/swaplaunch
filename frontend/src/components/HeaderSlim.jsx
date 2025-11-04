@@ -179,7 +179,7 @@ const HeaderSlim = () => {
             <img 
               src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/q1ccyq6i_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png"
               alt="Rocket"
-              className="w-6 h-6 object-contain"
+              className="w-7 h-7 object-contain"
             />
           </Link>
         </div>
