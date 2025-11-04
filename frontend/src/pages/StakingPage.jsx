@@ -100,35 +100,38 @@ const StakingPage = () => {
         </div>
       </section>
 
-      {/* Coming Soon Info */}
+      {/* Beta Info */}
       <section className="py-12 px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="rounded-2xl border-2 border-dashed border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/20 p-8">
+          <div className="rounded-2xl border-2 border-dashed border-orange-300 dark:border-orange-700 bg-orange-50 dark:bg-orange-900/20 p-8">
             <div className="flex items-start gap-4">
-              <Info className="w-8 h-8 text-purple-600 flex-shrink-0 mt-1" />
+              <Info className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-2xl font-bold text-purple-900 dark:text-purple-200 mb-3">
-                  🚀 Feature in Entwicklung
+                <h3 className="text-2xl font-bold text-orange-900 dark:text-orange-200 mb-3">
+                  🧪 Beta-Version: UI Demo
                 </h3>
-                <div className="text-purple-800 dark:text-purple-300 space-y-3">
+                <div className="text-orange-800 dark:text-orange-300 space-y-3">
                   <p>
-                    <strong>Phase 1 - SOL Staking:</strong> Validator-Delegation für native SOL-Staking wird 
-                    derzeit auf Devnet getestet. Launch erfolgt nach erfolgreichen Security-Audits.
+                    <strong>Dies ist eine Vorschau:</strong> Diese Seite demonstriert den Staking-Flow, 
+                    führt aber noch keine echten Transaktionen aus. Du kannst die UI testen und den 
+                    Ablauf kennenlernen.
                   </p>
                   <p>
-                    <strong>Phase 2 - SPL Token Staking:</strong> Folgt nach SOL-Launch mit eigenem 
-                    Staking-Contract und Reward-Distribution.
+                    <strong>Was funktioniert:</strong> Validator-Auswahl, Betragseingabe, UI-Flow
+                  </p>
+                  <p>
+                    <strong>Was noch kommt:</strong> Wallet-Signierung, echte Delegation auf Devnet/Mainnet, 
+                    Live-Rewards-Tracking
                   </p>
                   <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mt-4">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                      📋 Geplante Features:
+                      ✅ Non-Custodial Garantie:
                     </p>
                     <ul className="text-sm space-y-1 list-disc list-inside">
-                      <li>Validator-Auswahl & Auto-Delegation</li>
-                      <li>Live APY & Rewards Tracking</li>
-                      <li>Instant Unstake (wenn verfügbar)</li>
-                      <li>Multi-Validator Portfolio</li>
-                      <li>Claim & Compound Rewards</li>
+                      <li>Keine Private Keys auf unseren Servern</li>
+                      <li>Du signierst alle Transaktionen selbst (später)</li>
+                      <li>Keine Verwahrung von SOL oder Tokens</li>
+                      <li>Alle Gelder bleiben in deiner Wallet</li>
                     </ul>
                   </div>
                 </div>
