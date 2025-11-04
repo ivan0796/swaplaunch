@@ -71,3 +71,6 @@ uvicorn==0.25.0
 watchfiles==1.1.1
 websockets==15.0.1
 slowapi
+solana==0.36.9
+solders==0.26.0
+web3==7.14.0
