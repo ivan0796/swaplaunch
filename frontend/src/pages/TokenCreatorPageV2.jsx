@@ -205,6 +205,28 @@ const TokenCreatorPageV2 = () => {
       toast.error('Failed to update status');
     }
   };
+  
+  // Handle manual pair input
+  const handleManualPairSubmit = async ({ mint, pair }) => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      const response = await fetch(`${backendUrl}/api/pump/manual-override?mint=${mint}&pair=${pair}`, {
+        method: 'POST'
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        setMintAddress(mint);
+        setPairAddress(pair);
+        setLaunchStage('migrated');
+        setShowManualInput(false);
+        toast.success('✅ Pair address set manually - you can now add liquidity!');
+      }
+    } catch (error) {
+      console.error('Error in manual override:', error);
+      toast.error('Failed to set pair address');
+    }
+  };
 
   // Track page open
   useEffect(() => {
