@@ -291,6 +291,15 @@ const resources = {
       "launch.confirmDialog.breakdown": "Kostenaufschlüsselung",
       "launch.confirmDialog.security": "Sicherheitsdetails",
       
+      // Staking Page
+      "staking.hero.title": "Verdiene Rewards, behalte die Kontrolle",
+      "staking.hero.subtitle": "Non-Custodial Staking auf Solana. Du signierst, du verdienst. Wir verwahren niemals deine Gelder.",
+      "staking.cta.start": "Staking starten",
+      "staking.mode.sol": "SOL Staking",
+      "staking.mode.spl": "SPL Token Staking",
+      "staking.positions.title": "Deine Stake-Positionen",
+      "staking.faq.title": "Häufig gestellte Fragen",
+      
       // Swap Page
       "swap.title": "Token tauschen",
       "swap.subtitle": "Handel Krypto über mehrere Blockchains mit erweiterten Sicherheitsfunktionen",
