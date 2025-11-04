@@ -15,6 +15,9 @@ import LaunchStatusBar from '../components/LaunchStatusBar';
 import LaunchSuccessLinks from '../components/LaunchSuccessLinks';
 import UserActionPrompt from '../components/UserActionPrompt';
 import ChainLogo from '../components/ChainLogo';
+import ManualPairInput from '../components/ManualPairInput';
+import IndexingLatencyNotice from '../components/IndexingLatencyNotice';
+import NonCustodialDisclaimer from '../components/NonCustodialDisclaimer';
 import { VISIBILITY } from '../config/visibility';
 
 const TokenCreatorPageV2 = () => {
