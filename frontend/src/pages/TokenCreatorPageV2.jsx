@@ -283,8 +283,8 @@ const TokenCreatorPageV2 = () => {
   };
 
   const handleDeploy = async () => {
-    // Validate required fields
-    if (!tokenImage) {
+    // Validate required fields (skip image check in test mode)
+    if (!testMode && !tokenImage) {
       toast.error('Token logo is required');
       return;
     }
