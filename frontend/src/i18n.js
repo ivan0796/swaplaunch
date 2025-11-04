@@ -253,6 +253,7 @@ const resources = {
       "nav.swap": "Swap",
       "nav.trade": "Swap",
       "nav.launch": "Token Launch",
+      "nav.staking": "Staking",
       "nav.lock": "Liquidität locken",
       "nav.bridge": "Bridge",
       "nav.more": "Mehr",
