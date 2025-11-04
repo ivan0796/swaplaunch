@@ -1613,6 +1613,75 @@ async def get_ab_stats(
         logger.error(f"Error fetching A/B stats: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch A/B test statistics")
 
+
+# Crypto price cache
+crypto_price_cache = {}
+CRYPTO_PRICE_CACHE_TTL = 300  # 5 minutes
+
+@api_router.get("/crypto/prices")
+async def get_crypto_prices():
+    """
+    Get live crypto prices in EUR from CoinGecko API
+    Returns: ETH, BNB, SOL, MATIC, AVAX prices in EUR
+    Cache: 5 minutes
+    """
+    try:
+        current_time = datetime.now(timezone.utc).timestamp()
+        
+        # Check cache
+        if "prices" in crypto_price_cache:
+            cached_data, cached_time = crypto_price_cache["prices"]
+            if current_time - cached_time < CRYPTO_PRICE_CACHE_TTL:
+                logger.info("Returning cached crypto prices")
+                return cached_data
+        
+        # Fetch from CoinGecko API (free, no API key needed)
+        url = "https://api.coingecko.com/api/v3/simple/price"
+        params = {
+            "ids": "ethereum,binancecoin,solana,matic-network,avalanche-2",
+            "vs_currencies": "eur"
+        }
+        
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
+        
+        # Map to our currency symbols
+        result = {
+            "ETH": data.get("ethereum", {}).get("eur", 3000),  # fallback to 3000
+            "BNB": data.get("binancecoin", {}).get("eur", 600),  # fallback to 600
+            "SOL": data.get("solana", {}).get("eur", 170),  # fallback to 170
+            "MATIC": data.get("matic-network", {}).get("eur", 0.60),  # fallback to 0.60
+            "AVAX": data.get("avalanche-2", {}).get("eur", 33),  # fallback to 33
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "cache_ttl_seconds": CRYPTO_PRICE_CACHE_TTL
+        }
+        
+        # Update cache
+        crypto_price_cache["prices"] = (result, current_time)
+        
+        logger.info(f"Fetched live crypto prices: ETH={result['ETH']}€, BNB={result['BNB']}€, SOL={result['SOL']}€")
+        return result
+        
+    except httpx.HTTPError as e:
+        logger.error(f"Error fetching crypto prices from CoinGecko: {e}")
+        # Return fallback prices
+        return {
+            "ETH": 3100,
+            "BNB": 620,
+            "SOL": 170,
+            "MATIC": 0.60,
+            "AVAX": 33,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "cache_ttl_seconds": CRYPTO_PRICE_CACHE_TTL,
+            "note": "Using fallback prices - API unavailable"
+        }
+    except Exception as e:
+        logger.error(f"Unexpected error fetching crypto prices: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch crypto prices")
+
+
 # Include the routers in the main app
 from ad_management import ad_router
 from referral_system import referral_router
