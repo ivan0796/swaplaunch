@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { X, ArrowRight, Check, AlertCircle, TrendingUp } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { toast } from 'sonner';
 
-const StakeWizard = ({ mode, onClose }) => {
+const StakeWizard = ({ mode, onClose, onStakeComplete, testMode = true }) => {
   const [step, setStep] = useState(1);
   const [selectedValidator, setSelectedValidator] = useState('');
   const [amount, setAmount] = useState('');
   const [showBetaPopup, setShowBetaPopup] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Devnet Validators (Demo Data)
   const devnetValidators = [
