@@ -135,18 +135,19 @@ const TrendingTokensV2 = ({ onTokenSelect }) => {
             {tokens.slice(0, 6).map((token, index) => {
               const priceChange = token.price_change_24h || 0;
               const isPositive = priceChange >= 0;
+              const promoted = token.promoted || isPromoted(token.contract_address || token.address);
               
               return (
                 <div 
                   key={token.id} 
                   className={`relative ${
-                    token.promoted 
+                    promoted 
                       ? 'ring-2 ring-yellow-400 dark:ring-yellow-500 rounded-xl' 
                       : ''
                   }`}
                 >
                   {/* Promoted Badge */}
-                  {token.promoted && (
+                  {promoted && (
                     <div className="absolute -top-2 -right-2 z-10">
                       <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold shadow-lg">
                         <Sparkles className="w-3 h-3" />
