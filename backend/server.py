@@ -1877,6 +1877,80 @@ async def pump_watcher_health():
         }
 
 
+# ========== PROMOTION SYSTEM ==========
+
+from promotion_system import (
+    create_promotion_request,
+    get_promotion_status,
+    get_active_promotions,
+    get_crypto_prices,
+    PROMO_PACKAGES,
+    SUPPORTED_CHAINS,
+    payment_scanner_worker
+)
+
+class PromotionRequest(BaseModel):
+    token_address: str
+    chain: str
+    package_type: str
+    duration: str
+    user_wallet: Optional[str] = None
+
+@api_router.post("/promotion/request")
+@limiter.limit("10/minute")
+async def request_promotion(request: Request, promo_request: PromotionRequest):
+    """
+    Create a new promotion request
+    Returns payment details
+    """
+    try:
+        result = await create_promotion_request(
+            db,
+            token_address=promo_request.token_address,
+            chain=promo_request.chain,
+            package_type=promo_request.package_type,
+            duration=promo_request.duration,
+            user_wallet=promo_request.user_wallet
+        )
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error creating promotion request: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create promotion request")
+
+@api_router.get("/promotion/status/{request_id}")
+async def check_promotion_status(request_id: str):
+    """
+    Check promotion request status
+    """
+    status = await get_promotion_status(db, request_id)
+    if not status:
+        raise HTTPException(status_code=404, detail="Promotion request not found")
+    return status
+
+@api_router.get("/promotion/active")
+async def list_active_promotions(package_type: Optional[str] = None):
+    """
+    Get all active promotions
+    Optionally filter by package_type
+    """
+    promotions = await get_active_promotions(db, package_type)
+    return {"promotions": promotions, "count": len(promotions)}
+
+@api_router.get("/promotion/packages")
+async def list_promotion_packages():
+    """
+    Get all promotion packages with current prices
+    """
+    crypto_prices = get_crypto_prices()
+    
+    return {
+        "packages": PROMO_PACKAGES,
+        "chains": SUPPORTED_CHAINS,
+        "crypto_prices": crypto_prices
+    }
+
 # Include the routers in the main app
 from ad_management import ad_router
 from referral_system import referral_router
