@@ -367,16 +367,19 @@ const TokenCreatorPageV2 = () => {
         toast.info('🧪 Test Mode: Simulating token deployment...');
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        const mockMint = 'TEST' + Math.random().toString(36).substring(2, 15).toUpperCase();
+        const mockAddress = selectedChainData.id === 0 
+          ? 'TEST' + Math.random().toString(36).substring(2, 15).toUpperCase()
+          : '0x' + Math.random().toString(16).slice(2, 42);
         
-        setMintAddress(mockMint);
-        setLaunchFlow('pump');
-        setLaunchStage('created');
-        
-        toast.success(`✅ Test token created: ${tokenName}`);
-        toast.info('This is a test deployment. No real transactions were made.', {
-          duration: 5000
+        setDeployedToken({
+          address: mockAddress,
+          name: tokenName,
+          symbol: tokenSymbol,
+          chain: selectedChainData.name
         });
+        
+        analytics.tokenLaunchSuccess(mockAddress, `${selectedChainData.name} (Test Mode)`);
+        setShowSuccessModal(true);
         
         return;
       }
