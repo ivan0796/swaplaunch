@@ -28,35 +28,71 @@ class PumpWatcher:
         self.is_healthy = False
         
     async def start(self):
-        """Start watching pump.fun WebSocket"""
+        """Start watching pump.fun WebSocket with resilient reconnect"""
         self.running = True
         while self.running:
             try:
+                # Exponential backoff for reconnects
+                if self.reconnect_attempts > 0:
+                    delay = min(RECONNECT_BASE_DELAY * (2 ** self.reconnect_attempts), 60)
+                    logger.warning(f"Reconnect attempt {self.reconnect_attempts}/{MAX_RECONNECT_ATTEMPTS} in {delay}s...")
+                    await asyncio.sleep(delay)
+                
                 logger.info("Connecting to PumpPortal WebSocket...")
-                async with websockets.connect(PUMPPORTAL_WS) as ws:
+                async with websockets.connect(
+                    PUMPPORTAL_WS,
+                    ping_interval=30,
+                    ping_timeout=10
+                ) as ws:
                     self.ws = ws
+                    self.is_healthy = True
+                    self.reconnect_attempts = 0
                     
                     # Subscribe to events
                     await ws.send(json.dumps({"method": "subscribeNewToken"}))
                     await ws.send(json.dumps({"method": "subscribeTokenTrade"}))
                     logger.info("✅ Connected to PumpPortal")
                     
-                    # Listen for messages
-                    async for message in ws:
-                        try:
-                            data = json.loads(message)
-                            await self._handle_event(data)
-                        except json.JSONDecodeError as e:
-                            logger.error(f"Failed to parse message: {e}")
-                        except Exception as e:
-                            logger.error(f"Error handling event: {e}")
+                    # Start heartbeat task
+                    heartbeat_task = asyncio.create_task(self._heartbeat())
+                    
+                    try:
+                        # Listen for messages
+                        async for message in ws:
+                            self.last_heartbeat = datetime.now(timezone.utc)
+                            try:
+                                data = json.loads(message)
+                                await self._handle_event(data)
+                            except json.JSONDecodeError as e:
+                                logger.error(f"Failed to parse message: {e}")
+                            except Exception as e:
+                                logger.error(f"Error handling event: {e}")
+                    finally:
+                        heartbeat_task.cancel()
                             
             except websockets.exceptions.WebSocketException as e:
-                logger.error(f"WebSocket error: {e}")
-                await asyncio.sleep(5)  # Retry after 5 seconds
+                self.is_healthy = False
+                self.reconnect_attempts += 1
+                logger.error(f"WebSocket error (attempt {self.reconnect_attempts}): {e}")
+                
+                if self.reconnect_attempts >= MAX_RECONNECT_ATTEMPTS:
+                    logger.critical("Max reconnect attempts reached. Waiting 60s before reset...")
+                    await asyncio.sleep(60)
+                    self.reconnect_attempts = 0
+                    
             except Exception as e:
+                self.is_healthy = False
                 logger.error(f"Unexpected error: {e}")
                 await asyncio.sleep(5)
+    
+    async def _heartbeat(self):
+        """Monitor connection health"""
+        while True:
+            await asyncio.sleep(60)
+            elapsed = (datetime.now(timezone.utc) - self.last_heartbeat).total_seconds()
+            if elapsed > 120:
+                logger.warning(f"No heartbeat for {elapsed}s - connection may be dead")
+                self.is_healthy = False
     
     async def _handle_event(self, data: Dict[str, Any]):
         """Handle incoming pump.fun events"""
