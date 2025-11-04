@@ -53,12 +53,11 @@ const HeaderSlim = () => {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">S</span>
-              </div>
-              <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                SwapLaunch
-              </span>
+              <img 
+                src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/uu14fo81_ChatGPT%20Image%203.%20Nov.%202025%2C%2009_11_36.png" 
+                alt="LaunchSwap Logo"
+                className="h-10 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation */}
