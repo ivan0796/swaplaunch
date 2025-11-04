@@ -14,6 +14,7 @@ import analytics from '../lib/analytics';
 import LaunchStatusBar from '../components/LaunchStatusBar';
 import LaunchSuccessLinks from '../components/LaunchSuccessLinks';
 import UserActionPrompt from '../components/UserActionPrompt';
+import ChainLogo from '../components/ChainLogo';
 import { VISIBILITY } from '../config/visibility';
 
 const TokenCreatorPageV2 = () => {
