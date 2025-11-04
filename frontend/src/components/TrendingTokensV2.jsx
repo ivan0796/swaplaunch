@@ -127,9 +127,31 @@ const TrendingTokensV2 = ({ onTokenSelect }) => {
               const isPositive = priceChange >= 0;
               
               return (
-                <div key={token.id} className="relative">
+                <div 
+                  key={token.id} 
+                  className={`relative ${
+                    token.promoted 
+                      ? 'ring-2 ring-yellow-400 dark:ring-yellow-500 rounded-xl' 
+                      : ''
+                  }`}
+                >
+                  {/* Promoted Badge */}
+                  {token.promoted && (
+                    <div className="absolute -top-2 -right-2 z-10">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold shadow-lg">
+                        <Sparkles className="w-3 h-3" />
+                        Promoted
+                      </span>
+                    </div>
+                  )}
+                  
                   <button
-                    onClick={() => onTokenSelect && onTokenSelect(token)}
+                    onClick={() => {
+                      if (token.promoted) {
+                        analytics.trendingBoostClick(token.name || token.symbol);
+                      }
+                      onTokenSelect && onTokenSelect(token);
+                    }}
                     className="w-full p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-left group"
                   >
                     <div className="flex items-center gap-3">
