@@ -64,7 +64,7 @@ const TokenCreatorPageV2 = () => {
       id: 1, 
       name: 'Ethereum', 
       symbol: 'ETH', 
-      logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png',
+      color: 'from-gray-600 to-gray-800',
       standard: 'ERC-20', 
       decimals: 18 
     },
@@ -72,7 +72,7 @@ const TokenCreatorPageV2 = () => {
       id: 56, 
       name: 'BNB Chain', 
       symbol: 'BNB', 
-      logo: 'https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png',
+      color: 'from-yellow-400 to-yellow-600',
       standard: 'BEP-20', 
       decimals: 18 
     },
@@ -80,23 +80,23 @@ const TokenCreatorPageV2 = () => {
       id: 137, 
       name: 'Polygon', 
       symbol: 'MATIC', 
-      logo: 'https://assets.coingecko.com/coins/images/4713/small/polygon.png',
+      color: 'from-purple-500 to-purple-700',
       standard: 'ERC-20', 
       decimals: 18 
     },
     { 
       id: 42161, 
       name: 'Arbitrum', 
-      symbol: 'ETH', 
-      logo: 'https://assets.coingecko.com/coins/images/16547/small/photo_2023-03-29_21.47.00.jpeg',
+      symbol: 'ARB', 
+      color: 'from-blue-400 to-blue-600',
       standard: 'ERC-20', 
       decimals: 18 
     },
     { 
       id: 8453, 
       name: 'Base', 
-      symbol: 'ETH', 
-      logo: 'https://assets.coingecko.com/coins/images/31164/small/coinbase-base-logo.png',
+      symbol: 'BASE', 
+      color: 'from-blue-500 to-blue-700',
       standard: 'ERC-20', 
       decimals: 18 
     },
@@ -104,7 +104,7 @@ const TokenCreatorPageV2 = () => {
       id: 43114, 
       name: 'Avalanche', 
       symbol: 'AVAX', 
-      logo: 'https://assets.coingecko.com/coins/images/12559/small/Avalanche_Circle_RedWhite_Trans.png',
+      color: 'from-red-500 to-red-700',
       standard: 'ERC-20', 
       decimals: 18 
     },
@@ -112,7 +112,7 @@ const TokenCreatorPageV2 = () => {
       id: 0, 
       name: 'Solana', 
       symbol: 'SOL', 
-      logo: 'https://assets.coingecko.com/coins/images/4128/small/solana.png',
+      color: 'from-purple-400 to-pink-500',
       standard: 'SOL', 
       decimals: 9 
     }
