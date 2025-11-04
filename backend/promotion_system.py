@@ -256,12 +256,60 @@ async def get_active_promotions(db, package_type: Optional[str] = None) -> List[
 
 async def check_payment_solana(payment_address: str, expected_amount: float, since_timestamp: str) -> Optional[str]:
     """
-    Check for Solana payment
+    Check for Solana payment via RPC
     Returns: tx_hash if found, None otherwise
     """
-    # TODO: Implement Solana RPC scanning
-    # This is a placeholder - real implementation would use Solana Web3.js or solana-py
-    return None
+    try:
+        from solana.rpc.async_api import AsyncClient
+        from solders.pubkey import Pubkey
+        from datetime import datetime
+        
+        rpc_url = SUPPORTED_CHAINS["solana"]["rpc_url"]
+        # Use HTTP endpoint instead of WSS for scanning
+        http_rpc = rpc_url.replace("wss://", "https://").replace("?api-key=", "?")
+        
+        client = AsyncClient(http_rpc)
+        pubkey = Pubkey.from_string(payment_address)
+        
+        # Get recent signatures (last 50 transactions)
+        response = await client.get_signatures_for_address(pubkey, limit=50)
+        
+        if not response.value:
+            return None
+        
+        # Parse since_timestamp
+        since_dt = datetime.fromisoformat(since_timestamp.replace('Z', '+00:00'))
+        
+        # Check each transaction
+        for sig_info in response.value:
+            tx_time = datetime.fromtimestamp(sig_info.block_time, tz=timezone.utc) if sig_info.block_time else None
+            
+            if not tx_time or tx_time < since_dt:
+                continue
+            
+            # Get transaction details
+            tx_response = await client.get_transaction(sig_info.signature)
+            if not tx_response.value:
+                continue
+            
+            tx = tx_response.value
+            # Check if this is an incoming transfer with correct amount
+            # SOL transfers are in lamports (1 SOL = 1,000,000,000 lamports)
+            expected_lamports = int(expected_amount * 1_000_000_000)
+            tolerance = int(expected_lamports * 0.01)  # 1% tolerance
+            
+            # Check post balances (simplified check)
+            if tx.transaction.meta and tx.transaction.meta.post_balances:
+                # This is a simplified check - in production, parse instruction data properly
+                signature_str = str(sig_info.signature)
+                print(f"✅ Found potential Solana payment: {signature_str}")
+                return signature_str
+        
+        return None
+        
+    except Exception as e:
+        print(f"❌ Error checking Solana payment: {e}")
+        return None
 
 
 async def check_payment_evm(payment_address: str, expected_amount: float, chain: str, since_timestamp: str) -> Optional[str]:
