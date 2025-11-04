@@ -75,14 +75,13 @@ const StakingPage = () => {
             onClick={() => setShowWizard(true)}
             size="lg"
             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 text-lg"
-            disabled={true}
           >
             <Shield className="w-5 h-5 mr-2" />
-            {t('staking.cta.start', 'Start Staking (Coming Soon)')}
+            {t('staking.cta.start', 'Try Staking Demo (Beta)')}
           </Button>
 
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
-            ✅ Non-Custodial • ✅ You Sign All Transactions • ✅ Your Keys, Your Funds
+            🧪 Beta: UI Demo • No Real Transactions • Devnet Only
           </p>
         </div>
       </section>
