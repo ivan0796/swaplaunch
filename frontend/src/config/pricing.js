@@ -35,14 +35,34 @@ export const PRICING = {
 };
 
 /**
- * Approximate EUR to Crypto conversion rates (static, for display purposes)
+ * Fetch live crypto prices from backend
  */
-const EUR_CONVERSION_RATES = {
-  'ETH': 0.016,      // ~€3000 per ETH
-  'BNB': 0.10,       // ~€500 per BNB
-  'MATIC': 80,       // ~€0.60 per MATIC
-  'SOL': 0.30,       // ~€170 per SOL
-  'AVAX': 1.5        // ~€33 per AVAX
+export const fetchCryptoPrices = async () => {
+  try {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+    const response = await fetch(`${backendUrl}/api/crypto/prices`);
+    if (!response.ok) throw new Error('Failed to fetch prices');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching crypto prices:', error);
+    // Fallback prices if API fails
+    return {
+      ETH: 3100,
+      BNB: 620,
+      SOL: 170,
+      MATIC: 0.60,
+      AVAX: 33
+    };
+  }
+};
+
+/**
+ * Calculate EUR to Crypto conversion rate
+ * @param {number} eurPrice - Price of 1 crypto in EUR (e.g., 3100 for ETH)
+ * @returns {number} - How much crypto you get for 1 EUR
+ */
+const eurToCryptoRate = (eurPrice) => {
+  return 1 / eurPrice;
 };
 
 /**
@@ -50,9 +70,10 @@ const EUR_CONVERSION_RATES = {
  * @param {string} chain - blockchain name
  * @param {number} gasPrice - in Gwei
  * @param {boolean} withBoost - Feature Boost inkludieren?
+ * @param {object} livePrices - Live crypto prices in EUR (optional)
  * @returns {object} - breakdown of costs
  */
-export const calculateLaunchCost = (chain = 'ethereum', gasPrice = 30, withBoost = false) => {
+export const calculateLaunchCost = (chain = 'ethereum', gasPrice = 30, withBoost = false, livePrices = null) => {
   let fixedFee = 0;
   let nativeCurrency = 'ETH';
   
