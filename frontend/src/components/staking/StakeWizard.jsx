@@ -72,7 +72,7 @@ const StakeWizard = ({ mode, onClose, onStakeComplete, testMode = true }) => {
               Stake {mode === 'sol' ? 'SOL' : 'SPL Tokens'}
             </h2>
             <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
-              🧪 Beta Demo - No Real Transactions
+              {testMode ? '🧪 Test Mode - Demo Only' : '🔴 Beta - Live Transactions'}
             </p>
           </div>
           <button
