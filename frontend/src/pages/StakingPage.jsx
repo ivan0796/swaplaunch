@@ -194,7 +194,11 @@ const StakingPage = () => {
       {showWizard && (
         <StakeWizard
           mode={selectedMode}
+          testMode={testMode}
           onClose={() => setShowWizard(false)}
+          onStakeComplete={(position) => {
+            setStakePositions([...stakePositions, position]);
+          }}
         />
       )}
 
