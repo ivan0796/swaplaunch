@@ -416,6 +416,42 @@ frontend:
         agent: "main"
         comment: "Added 'Select Trading Pair' button in SwapFormV2 that opens PairSearchModal. When user selects a pair, both tokens are automatically set (baseToken as sell, quoteToken as buy). Button placed prominently with TrendingUp icon."
 
+  - task: "Phase 3: Security Page Implementation"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/SecurityPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created comprehensive SecurityPage.jsx with sections: Smart Contracts & Verification, Non-Custodial Architecture (What We Do/Don't Do), Risks (smart contract, market, phishing, user error), Audits & Transparency (contract addresses), and Responsible Disclosure (security@swaplaunch.app). Uses HeaderSlim and Footer components. Route added at /security. Visual design includes Shield, Lock, Eye, AlertTriangle icons with color-coded info boxes (green for What We Verify, blue/red for Do/Don't, orange for Risks)."
+
+  - task: "Phase 3: Advertise Page V2 Implementation"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdvertisePageV2.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "AdvertisePageV2.jsx already exists with complete implementation. Features three advertising packages: 1) Trending Boost (€50/7 days) - Featured in trending, promoted badge, social media mention, 2) Social Mention (On Request) - Twitter/Telegram posts, 50k+ reach, 3) Featured Banner (On Request) - Homepage placement, CPC/CPM pricing, analytics. Includes inquiry modal with form (name, email, token name, URL, message) that opens mailto link. Uses HeaderSlim, Footer, and pricing config from PRICING object. Analytics tracking integrated."
+
+  - task: "Phase 3: Default Route to Token Launch"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated App.js to change default route from SwapPageV2 to TokenCreatorPageV2. Changes: 1) Imported SecurityPage and AdvertisePageV2, 2) Changed path='/' from <SwapPageV2 /> to <TokenCreatorPageV2 />, 3) Added route /security -> SecurityPage, 4) Updated route /advertise from AdvertisePage to AdvertisePageV2, 5) Added legacy route /swap -> SwapPageV2 for backward compatibility. Default homepage now shows Token Launch funnel with hero section and multi-step wizard."
+
 metadata:
   created_by: "main_agent"
   version: "7.0"
