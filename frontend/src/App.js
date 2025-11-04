@@ -69,6 +69,7 @@ function App() {
             <Route path="/risk-disclosure" element={<RiskDisclosure />} />
             
             {/* Legacy routes for backward compatibility */}
+            <Route path="/swap" element={<SwapPageV2 />} />
             <Route path="/bridge" element={<BridgePage />} />
             <Route path="/trade/limit-orders" element={<LimitOrdersPage />} />
             <Route path="/limit-orders" element={<LimitOrdersPage />} />
