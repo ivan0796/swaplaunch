@@ -23,10 +23,10 @@ const StakingPage = () => {
       {/* Hero Section */}
       <section className="py-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          {/* Coming Soon Badge */}
+          {/* Beta Badge */}
           <div className="flex justify-center mb-4">
-            <Badge className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 text-sm font-bold">
-              🚀 COMING SOON
+            <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 text-sm font-bold">
+              🧪 BETA - UI Demo Only
             </Badge>
           </div>
 
