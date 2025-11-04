@@ -288,6 +288,34 @@ const TokenCreatorPageV2 = () => {
         </div>
       </section>
 
+      {/* Launch Status & Success Links */}
+      {launchStage && (
+        <section className="py-6 px-4">
+          <div className="max-w-4xl mx-auto space-y-4">
+            <LaunchStatusBar 
+              flow={launchFlow}
+              stage={launchStage}
+              mint={mintAddress}
+              pair={pairAddress}
+            />
+            
+            <UserActionPrompt 
+              stage={launchStage}
+              mint={mintAddress}
+              pair={pairAddress}
+              onActionComplete={handleUserActionComplete}
+            />
+            
+            {launchStage === 'first_trade' && (
+              <LaunchSuccessLinks 
+                mint={mintAddress}
+                pair={pairAddress}
+              />
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Main Launch Section */}
       <section id="launch-form" className="py-12 px-4">
         <div className="max-w-7xl mx-auto">
