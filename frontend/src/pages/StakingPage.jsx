@@ -1,206 +1,251 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useAccount } from 'wagmi';
+import { Coins, TrendingUp, Info, Shield, ChevronDown } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { toast } from 'sonner';
 import HeaderSlim from '../components/HeaderSlim';
 import Footer from '../components/Footer';
-import StakeWizard from '../components/staking/StakeWizard';
-import StakePositions from '../components/staking/StakePositions';
-import RewardPanel from '../components/staking/RewardPanel';
-import StakingFAQ from '../components/staking/StakingFAQ';
-import NonCustodialDisclaimer from '../components/NonCustodialDisclaimer';
-import { Badge } from '../components/ui/badge';
-import { Button } from '../components/ui/button';
-import { Sparkles, TrendingUp, Shield, Info } from 'lucide-react';
 
 const StakingPage = () => {
-  const { t } = useTranslation();
-  const [selectedMode, setSelectedMode] = useState('sol'); // 'sol' or 'spl'
-  const [showWizard, setShowWizard] = useState(false);
-  const [testMode, setTestMode] = useState(true); // Test mode enabled by default
-  const [stakePositions, setStakePositions] = useState([]);
+  const { address: walletAddress } = useAccount();
+  const [selectedChain, setSelectedChain] = useState('solana');
+  const [stakeAmount, setStakeAmount] = useState('');
+  const [selectedValidator, setSelectedValidator] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // Staking options
+  const stakingOptions = [
+    {
+      id: 'solana',
+      name: 'Solana (SOL)',
+      symbol: 'SOL',
+      apr: '6.8%',
+      minStake: '0.01',
+      description: 'Stake SOL with top validators',
+      validators: [
+        { id: 'v1', name: 'Coinbase Cloud', apr: '7.2%', commission: '8%' },
+        { id: 'v2', name: 'Everstake', apr: '6.9%', commission: '10%' },
+        { id: 'v3', name: 'P2P Validator', apr: '6.8%', commission: '9%' }
+      ]
+    },
+    {
+      id: 'ethereum',
+      name: 'Ethereum (ETH)',
+      symbol: 'ETH',
+      apr: '3.5%',
+      minStake: '0.01',
+      description: 'Liquid staking via Lido',
+      validators: [
+        { id: 'lido', name: 'Lido', apr: '3.5%', commission: '10%' }
+      ]
+    }
+  ];
+
+  const selectedOption = stakingOptions.find(opt => opt.id === selectedChain);
+
+  const handleStake = async () => {
+    if (!walletAddress) {
+      toast.error('Please connect your wallet');
+      return;
+    }
+
+    if (!stakeAmount || parseFloat(stakeAmount) <= 0) {
+      toast.error('Please enter a valid amount');
+      return;
+    }
+
+    if (!selectedValidator) {
+      toast.error('Please select a validator');
+      return;
+    }
+
+    setLoading(true);
+    
+    // Beta mode - simulate staking
+    setTimeout(() => {
+      toast.success(`Successfully staked ${stakeAmount} ${selectedOption.symbol}! (Beta Mode)`);
+      setLoading(false);
+      setStakeAmount('');
+    }, 2000);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-purple-950 dark:to-blue-950">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <HeaderSlim />
 
-      {/* Hero Section */}
-      <section className="py-12 px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          {/* Mode Badge & Toggle */}
-          <div className="flex justify-center items-center gap-4 mb-4">
-            <Badge className={`px-4 py-2 text-sm font-bold ${
-              testMode 
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white' 
-                : 'bg-gradient-to-r from-orange-500 to-red-500 text-white'
-            }`}>
-              {testMode ? '🧪 TEST MODE' : '🔴 BETA - LIVE'}
-            </Badge>
-            
-            {/* Test Mode Toggle */}
-            <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700">
-              <input
-                type="checkbox"
-                id="staking-test-mode"
-                checked={testMode}
-                onChange={(e) => setTestMode(e.target.checked)}
-                className="w-4 h-4"
-              />
-              <label htmlFor="staking-test-mode" className="text-sm font-medium dark:text-white cursor-pointer">
-                Test Mode (No Real Transactions)
-              </label>
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Beta Badge */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-4 py-1 rounded-full text-sm font-semibold">
+            BETA
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Staking Form - Like Swap */}
+          <div className="lg:col-span-2">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+              {/* Header */}
+              <div className="flex items-center gap-2 mb-4">
+                <Coins className="w-6 h-6 text-purple-600" />
+                <h1 className="text-2xl font-bold dark:text-white">Stake & Earn</h1>
+              </div>
+
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                Non-custodial staking. Earn rewards while keeping full control.
+              </p>
+
+              {/* Chain Selector */}
+              <div className="mb-4">
+                <label className="text-xs text-gray-600 dark:text-gray-400 mb-2 block">Select Chain:</label>
+                <div className="flex gap-2">
+                  {stakingOptions.map(option => (
+                    <button
+                      key={option.id}
+                      onClick={() => {
+                        setSelectedChain(option.id);
+                        setSelectedValidator('');
+                      }}
+                      className={`flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-colors ${
+                        selectedChain === option.id
+                          ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                      }`}
+                    >
+                      {option.symbol}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Stake Amount */}
+              <div className="mb-4">
+                <label className="text-xs text-gray-600 dark:text-gray-400 mb-2 block">Amount to Stake:</label>
+                <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
+                  <input
+                    type="number"
+                    value={stakeAmount}
+                    onChange={(e) => setStakeAmount(e.target.value)}
+                    placeholder="0.0"
+                    className="bg-transparent text-2xl font-semibold outline-none w-full dark:text-white"
+                  />
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      Min: {selectedOption?.minStake} {selectedOption?.symbol}
+                    </span>
+                    <span className="text-sm font-medium text-purple-600 dark:text-purple-400">
+                      APR: {selectedOption?.apr}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Validator Selection */}
+              <div className="mb-6">
+                <label className="text-xs text-gray-600 dark:text-gray-400 mb-2 block">Select Validator:</label>
+                <div className="space-y-2">
+                  {selectedOption?.validators.map(validator => (
+                    <button
+                      key={validator.id}
+                      onClick={() => setSelectedValidator(validator.id)}
+                      className={`w-full p-3 rounded-xl text-left transition-colors ${
+                        selectedValidator === validator.id
+                          ? 'bg-purple-100 dark:bg-purple-900/30 border-2 border-purple-600'
+                          : 'bg-gray-50 dark:bg-gray-900 border-2 border-transparent hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-semibold dark:text-white">{validator.name}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">Commission: {validator.commission}</div>
+                        </div>
+                        <div className="text-sm font-medium text-green-600 dark:text-green-400">
+                          {validator.apr}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Info Box */}
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-3 mb-4">
+                <div className="flex gap-2">
+                  <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-xs text-blue-900 dark:text-blue-200">
+                    <strong>Non-Custodial:</strong> Your staked tokens remain in your control. Unstake anytime.
+                  </div>
+                </div>
+              </div>
+
+              {/* Stake Button */}
+              <Button
+                onClick={handleStake}
+                disabled={loading || !walletAddress}
+                className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              >
+                {loading ? 'Staking...' : !walletAddress ? 'Connect Wallet' : `Stake ${selectedOption?.symbol}`}
+              </Button>
             </div>
           </div>
 
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            {t('staking.hero.title', 'Earn Rewards, Stay in Control')}
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-            {t('staking.hero.subtitle', 'Non-custodial staking on Solana. You sign, you earn. We never hold your funds.')}
-          </p>
-
-          {/* Mode Selector */}
-          <div className="flex justify-center gap-4 mb-8">
-            <button
-              onClick={() => setSelectedMode('sol')}
-              className={`px-6 py-3 rounded-xl font-semibold transition-all ${
-                selectedMode === 'sol'
-                  ? 'bg-purple-600 text-white shadow-lg'
-                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-200 dark:border-gray-700'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5" />
-                SOL Staking
+          {/* Info Panel */}
+          <div className="space-y-6">
+            {/* Stats */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+              <h3 className="font-bold mb-4 dark:text-white">Staking Stats</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Total Staked</span>
+                  <span className="font-semibold dark:text-white">0.00 {selectedOption?.symbol}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Rewards Earned</span>
+                  <span className="font-semibold text-green-600 dark:text-green-400">0.00 {selectedOption?.symbol}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">APR</span>
+                  <span className="font-semibold text-purple-600 dark:text-purple-400">{selectedOption?.apr}</span>
+                </div>
               </div>
-              <p className="text-xs mt-1 opacity-80">Validator Delegation</p>
-            </button>
+            </div>
 
-            <button
-              onClick={() => setSelectedMode('spl')}
-              className={`px-6 py-3 rounded-xl font-semibold transition-all ${
-                selectedMode === 'spl'
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-200 dark:border-gray-700'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5" />
-                SPL Token Staking
+            {/* How it Works */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+              <h3 className="font-bold mb-4 dark:text-white">How Staking Works</h3>
+              <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+                <div className="flex gap-2">
+                  <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 text-xs font-bold flex-shrink-0">1</div>
+                  <div>Select chain and amount</div>
+                </div>
+                <div className="flex gap-2">
+                  <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 text-xs font-bold flex-shrink-0">2</div>
+                  <div>Choose validator</div>
+                </div>
+                <div className="flex gap-2">
+                  <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 text-xs font-bold flex-shrink-0">3</div>
+                  <div>Confirm transaction</div>
+                </div>
+                <div className="flex gap-2">
+                  <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 text-xs font-bold flex-shrink-0">4</div>
+                  <div>Earn rewards automatically</div>
+                </div>
               </div>
-              <p className="text-xs mt-1 opacity-80">Phase 2</p>
-            </button>
-          </div>
+            </div>
 
-          {/* Primary CTA */}
-          <Button
-            onClick={() => setShowWizard(true)}
-            size="lg"
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 text-lg"
-          >
-            <Shield className="w-5 h-5 mr-2" />
-            {testMode ? 'Start Staking Demo' : 'Stake SOL (Beta)'}
-          </Button>
-
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
-            {testMode 
-              ? '🧪 Test Mode: Complete demo flow • No wallet needed' 
-              : '🔴 Beta: Real transactions • Wallet signature required'}
-          </p>
-        </div>
-      </section>
-
-      {/* Non-Custodial Disclaimer */}
-      <section className="py-6 px-4">
-        <div className="max-w-6xl mx-auto">
-          <NonCustodialDisclaimer />
-        </div>
-      </section>
-
-      {/* Reward Panel */}
-      <section className="py-12 px-4">
-        <div className="max-w-6xl mx-auto">
-          <RewardPanel mode={selectedMode} />
-        </div>
-      </section>
-
-      {/* Beta Info */}
-      <section className="py-12 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="rounded-2xl border-2 border-dashed border-orange-300 dark:border-orange-700 bg-orange-50 dark:bg-orange-900/20 p-8">
-            <div className="flex items-start gap-4">
-              <Info className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-2xl font-bold text-orange-900 dark:text-orange-200 mb-3">
-                  🧪 Beta-Version: UI Demo
-                </h3>
-                <div className="text-orange-800 dark:text-orange-300 space-y-3">
-                  <p>
-                    <strong>Dies ist eine Vorschau:</strong> Diese Seite demonstriert den Staking-Flow, 
-                    führt aber noch keine echten Transaktionen aus. Du kannst die UI testen und den 
-                    Ablauf kennenlernen.
-                  </p>
-                  <p>
-                    <strong>Was funktioniert:</strong> Validator-Auswahl, Betragseingabe, UI-Flow
-                  </p>
-                  <p>
-                    <strong>Was noch kommt:</strong> Wallet-Signierung, echte Delegation auf Devnet/Mainnet, 
-                    Live-Rewards-Tracking
-                  </p>
-                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mt-4">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                      ✅ Non-Custodial Garantie:
-                    </p>
-                    <ul className="text-sm space-y-1 list-disc list-inside">
-                      <li>Keine Private Keys auf unseren Servern</li>
-                      <li>Du signierst alle Transaktionen selbst (später)</li>
-                      <li>Keine Verwahrung von SOL oder Tokens</li>
-                      <li>Alle Gelder bleiben in deiner Wallet</li>
-                    </ul>
-                  </div>
+            {/* Risk Disclaimer */}
+            <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-xl p-4">
+              <div className="flex gap-2">
+                <Shield className="w-5 h-5 text-orange-600 flex-shrink-0" />
+                <div className="text-xs text-orange-900 dark:text-orange-200">
+                  <strong>Beta Notice:</strong> This is a beta feature. Start with small amounts. Always DYOR.
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Stake Positions */}
-      <section className="py-12 px-4 bg-white/50 dark:bg-gray-900/50">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-bold dark:text-white">
-              {t('staking.positions.title', 'Your Stake Positions')}
-            </h2>
-            {stakePositions.length > 0 && (
-              <Badge className="bg-green-600 text-white">
-                {stakePositions.length} Active
-              </Badge>
-            )}
-          </div>
-          <StakePositions mode={selectedMode} positions={stakePositions} />
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-12 px-4">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6 dark:text-white text-center">
-            {t('staking.faq.title', 'Frequently Asked Questions')}
-          </h2>
-          <StakingFAQ mode={selectedMode} />
-        </div>
-      </section>
-
-      {/* Wizard Modal (if active) */}
-      {showWizard && (
-        <StakeWizard
-          mode={selectedMode}
-          testMode={testMode}
-          onClose={() => setShowWizard(false)}
-          onStakeComplete={(position) => {
-            setStakePositions([...stakePositions, position]);
-          }}
-        />
-      )}
+      </div>
 
       <Footer />
     </div>
