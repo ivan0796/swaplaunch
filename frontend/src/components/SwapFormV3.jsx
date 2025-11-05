@@ -441,8 +441,19 @@ const SwapFormV3 = ({ chainId = 1 }) => {
                 onClick={() => setShowSellTokenModal(true)}
                 className="flex items-center gap-1.5 px-2 py-1.5 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm"
               >
-                {sellToken?.logoURI && (
-                  <img src={sellToken.logoURI} alt={sellToken.symbol} className="w-5 h-5 rounded-full" />
+                {sellToken?.logoURI ? (
+                  <img 
+                    src={sellToken.logoURI} 
+                    alt={sellToken.symbol} 
+                    className="w-5 h-5 rounded-full"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                ) : sellToken?.symbol && (
+                  <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
+                    {sellToken.symbol.charAt(0)}
+                  </div>
                 )}
                 <span className="font-semibold dark:text-white">{sellToken?.symbol || 'Select'}</span>
                 <ChevronDown className="w-3 h-3 text-gray-400" />
