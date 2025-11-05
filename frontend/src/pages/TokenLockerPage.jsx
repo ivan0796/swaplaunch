@@ -316,27 +316,29 @@ const TokenLockerPage = () => {
           </div>
         </div>
 
-        {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-            <Lock className="w-8 h-8 text-blue-600 mb-3" />
-            <h3 className="font-bold mb-2 dark:text-white">Time-Based Vesting</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Lock tokens until specific date. Perfect for team vesting.</p>
+        {/* Info Cards - Kompakter */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow">
+            <Lock className="w-6 h-6 text-blue-600 mb-2" />
+            <h3 className="font-bold text-sm mb-1 dark:text-white">Time-Based Vesting</h3>
+            <p className="text-xs text-gray-600 dark:text-gray-400">Lock tokens until specific date. Perfect for team vesting.</p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-            <Shield className="w-8 h-8 text-green-600 mb-3" />
-            <h3 className="font-bold mb-2 dark:text-white">100% Non-Custodial</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Smart contract holds tokens. You control unlock.</p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow">
+            <Shield className="w-6 h-6 text-green-600 mb-2" />
+            <h3 className="font-bold text-sm mb-1 dark:text-white">100% Non-Custodial</h3>
+            <p className="text-xs text-gray-600 dark:text-gray-400">Smart contract holds tokens. You control unlock.</p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-            <CheckCircle className="w-8 h-8 text-purple-600 mb-3" />
-            <h3 className="font-bold mb-2 dark:text-white">Auto Unlock</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Tokens automatically unlockable after date. Claim anytime.</p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow">
+            <CheckCircle className="w-6 h-6 text-purple-600 mb-2" />
+            <h3 className="font-bold text-sm mb-1 dark:text-white">Auto Unlock</h3>
+            <p className="text-xs text-gray-600 dark:text-gray-400">Tokens automatically unlockable after date. Claim anytime.</p>
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 };
