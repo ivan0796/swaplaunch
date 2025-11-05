@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import { useCurrency } from '../contexts/CurrencyContext';
+import SwapSettingsModal from './SwapSettingsModal';
 
 const API = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
