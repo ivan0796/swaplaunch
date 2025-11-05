@@ -28,6 +28,65 @@ const TokenLockerPage = () => {
     }
   }, [isConnected, address]);
 
+  // Fetch fiat preview when amount or token changes
+  useEffect(() => {
+    const fetchFiatPreview = async () => {
+      try {
+        setIsFiatLoading(true);
+        
+        if (!tokenAddress || !amount || Number(amount) <= 0) {
+          setFiatPreview({ usd: null, eur: null });
+          return;
+        }
+
+        // Map common tokens to CoinGecko IDs
+        const coinIdMap = {
+          // Stablecoins
+          '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': 'usd-coin', // USDC
+          '0xdac17f958d2ee523a2206206994597c13d831ec7': 'tether', // USDT
+          '0x6b175474e89094c44da98b954eedeac495271d0f': 'dai', // DAI
+          // Major tokens
+          '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2': 'weth', // WETH
+          '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': 'wrapped-bitcoin', // WBTC
+        };
+
+        const coinId = coinIdMap[tokenAddress.toLowerCase()];
+        
+        if (!coinId) {
+          setFiatPreview({ usd: null, eur: null });
+          return;
+        }
+
+        const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+        const response = await fetch(`${backendUrl}/api/crypto/price/${coinId}`);
+        
+        if (!response.ok) {
+          setFiatPreview({ usd: null, eur: null });
+          return;
+        }
+
+        const data = await response.json();
+        const amt = Number(amount);
+        
+        setFiatPreview({
+          usd: data.price_usd ? (amt * data.price_usd).toFixed(2) : null,
+          eur: data.price_eur ? (amt * data.price_eur).toFixed(2) : null,
+        });
+        
+      } catch (error) {
+        console.error('Error fetching fiat preview:', error);
+        setFiatPreview({ usd: null, eur: null });
+      } finally {
+        setIsFiatLoading(false);
+      }
+    };
+
+    // Debounce: only fetch after user stops typing
+    const timeoutId = setTimeout(fetchFiatPreview, 500);
+    return () => clearTimeout(timeoutId);
+    
+  }, [tokenAddress, amount]);
+
   const loadMyLocks = async () => {
     // Mock data - replace with actual contract reads
     setMyLocks([
