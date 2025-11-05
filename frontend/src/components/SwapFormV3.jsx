@@ -151,18 +151,18 @@ const SwapFormV3 = ({ chainId = 1 }) => {
     if (activeTab === 'twap') {
       return (
         <>
-          {/* TWAP Additional Settings */}
-          <div className="mb-4 space-y-3">
-            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
-              <label className="text-sm font-medium mb-2 block dark:text-gray-300">
+          {/* TWAP Additional Settings - Kompakter */}
+          <div className="mb-2 space-y-2">
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-2.5">
+              <label className="text-xs font-medium mb-1.5 block dark:text-gray-300">
                 Time Interval
               </label>
-              <div className="flex gap-2">
+              <div className="flex gap-1.5">
                 {[5, 10, 30, 60].map(min => (
                   <button
                     key={min}
                     onClick={() => setTwapInterval(min)}
-                    className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                       twapInterval === min
                         ? 'bg-blue-600 text-white'
                         : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
@@ -174,8 +174,8 @@ const SwapFormV3 = ({ chainId = 1 }) => {
               </div>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
-              <label className="text-sm font-medium mb-2 block dark:text-gray-300">
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-2.5">
+              <label className="text-xs font-medium mb-1.5 block dark:text-gray-300">
                 Number of Splits
               </label>
               <input
@@ -184,9 +184,9 @@ const SwapFormV3 = ({ chainId = 1 }) => {
                 onChange={(e) => setTwapSplits(parseInt(e.target.value) || 10)}
                 min="2"
                 max="100"
-                className="w-full px-4 py-2 bg-white dark:bg-gray-800 rounded-lg outline-none"
+                className="w-full px-3 py-1.5 bg-white dark:bg-gray-800 rounded-lg outline-none text-sm"
               />
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Order will be split into {twapSplits} parts over {(twapInterval * twapSplits) / 60} hours
               </p>
             </div>
@@ -198,10 +198,10 @@ const SwapFormV3 = ({ chainId = 1 }) => {
     if (activeTab === 'limit') {
       return (
         <>
-          {/* Limit Order Settings */}
-          <div className="mb-4 space-y-3">
-            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
-              <label className="text-sm font-medium mb-2 block dark:text-gray-300">
+          {/* Limit Order Settings - Kompakter */}
+          <div className="mb-2 space-y-2">
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-2.5">
+              <label className="text-xs font-medium mb-1.5 block dark:text-gray-300">
                 Limit Price
               </label>
               <div className="flex items-center gap-2">
@@ -210,24 +210,24 @@ const SwapFormV3 = ({ chainId = 1 }) => {
                   value={limitPrice}
                   onChange={(e) => setLimitPrice(e.target.value)}
                   placeholder="0.0"
-                  className="flex-1 px-4 py-2 bg-white dark:bg-gray-800 rounded-lg outline-none text-lg"
+                  className="flex-1 px-3 py-1.5 bg-white dark:bg-gray-800 rounded-lg outline-none text-base"
                 />
-                <span className="text-sm text-gray-600 dark:text-gray-400">
+                <span className="text-xs text-gray-600 dark:text-gray-400">
                   {buyToken?.symbol}/{sellToken?.symbol}
                 </span>
               </div>
               {exchangeRate && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  Market: {(1 / exchangeRate).toFixed(8)} {buyToken?.symbol}/{sellToken?.symbol}
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Market: {(1 / exchangeRate).toFixed(6)} {buyToken?.symbol}/{sellToken?.symbol}
                 </p>
               )}
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
-              <label className="text-sm font-medium mb-2 block dark:text-gray-300">
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-2.5">
+              <label className="text-xs font-medium mb-1.5 block dark:text-gray-300">
                 Expiry
               </label>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-4 gap-1.5">
                 {[
                   { value: '1', label: '1 day' },
                   { value: '7', label: '7 days' },
@@ -237,7 +237,7 @@ const SwapFormV3 = ({ chainId = 1 }) => {
                   <button
                     key={opt.value}
                     onClick={() => setLimitExpiry(opt.value)}
-                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                    className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                       limitExpiry === opt.value
                         ? 'bg-blue-600 text-white'
                         : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
