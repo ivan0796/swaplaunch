@@ -292,34 +292,6 @@ const PromotePage = () => {
                   </div>
                 </div>
 
-                {/* Currency Selection */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium mb-2 dark:text-gray-300">
-                    Währung
-                  </label>
-                  <div className="grid grid-cols-3 gap-3">
-                    {['usd', 'eur', 'gbp'].map((currency) => (
-                      <button
-                        key={currency}
-                        onClick={() => setSelectedCurrency(currency)}
-                        className={`p-3 rounded-xl border-2 transition-all ${
-                          selectedCurrency === currency
-                            ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20'
-                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
-                        }`}
-                      >
-                        <div className="text-center">
-                          <div className="text-lg font-bold dark:text-white">
-                            {currency === 'usd' ? '$' : currency === 'eur' ? '€' : '£'}
-                          </div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400">
-                            {currency.toUpperCase()}
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
               </div>
             </div>
 
