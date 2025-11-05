@@ -1630,6 +1630,38 @@ async def get_ab_stats(
 crypto_price_cache = {}
 CRYPTO_PRICE_CACHE_TTL = 300  # 5 minutes
 
+@api_router.get("/crypto/price/{coin_id}")
+async def get_token_price(coin_id: str):
+    """
+    Get token price in USD and EUR
+    coin_id: CoinGecko ID (e.g., 'ethereum', 'tether', 'usd-coin')
+    """
+    try:
+        url = "https://api.coingecko.com/api/v3/simple/price"
+        params = {
+            "ids": coin_id,
+            "vs_currencies": "usd,eur"
+        }
+        
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
+        
+        if coin_id not in data:
+            raise HTTPException(status_code=404, detail=f"Price not found for {coin_id}")
+        
+        return {
+            "symbol": coin_id,
+            "price_usd": data[coin_id].get("usd"),
+            "price_eur": data[coin_id].get("eur"),
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+    except httpx.HTTPError as e:
+        logger.error(f"Error fetching price for {coin_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch price")
+
 @api_router.get("/crypto/prices")
 async def get_crypto_prices():
     """
