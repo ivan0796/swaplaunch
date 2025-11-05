@@ -111,14 +111,18 @@ def get_crypto_prices() -> Dict[str, float]:
             if cg_id in data:
                 prices[cg_id] = data[cg_id]["usd"]
         
+        # Log prices for debugging
+        print(f"✅ Live Crypto Prices: {prices}")
+        
         return prices
     except Exception as e:
         print(f"❌ Error fetching crypto prices: {e}")
-        # Fallback prices (update regularly)
+        # Conservative fallback prices - will be overwritten by live prices
+        print("⚠️ Using fallback prices")
         return {
-            "solana": 150.0,
-            "ethereum": 3000.0,
-            "matic-network": 0.80,
+            "solana": 200.0,
+            "ethereum": 3500.0,
+            "matic-network": 0.70,
             "ripple": 0.55
         }
 
