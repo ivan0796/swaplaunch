@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import HeaderSlim from '../components/HeaderSlim';
 import Footer from '../components/Footer';
 import ChainLogo from '../components/ChainLogo';
+import { useCurrency } from '../contexts/CurrencyContext';
 
 const PromotePage = () => {
   const { t } = useTranslation();
