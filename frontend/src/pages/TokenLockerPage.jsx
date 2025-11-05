@@ -177,25 +177,25 @@ const TokenLockerPage = () => {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium mb-2 dark:text-gray-300">Token Address *</label>
+                <label className="block text-xs font-medium mb-1.5 dark:text-gray-300">Token Address *</label>
                 <Input
                   placeholder="0x..."
                   value={tokenAddress}
                   onChange={(e) => setTokenAddress(e.target.value)}
-                  className="dark:bg-gray-700 dark:border-gray-600"
+                  className="dark:bg-gray-700 dark:border-gray-600 h-9 text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2 dark:text-gray-300">Amount *</label>
+                <label className="block text-xs font-medium mb-1.5 dark:text-gray-300">Amount *</label>
                 <Input
                   type="number"
                   placeholder="0.0"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="dark:bg-gray-700 dark:border-gray-600"
+                  className="dark:bg-gray-700 dark:border-gray-600 h-9 text-sm"
                 />
                 {/* Fiat Preview */}
                 <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -219,23 +219,23 @@ const TokenLockerPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2 dark:text-gray-300">Unlock Date *</label>
+                <label className="block text-xs font-medium mb-1.5 dark:text-gray-300">Unlock Date *</label>
                 <Input
                   type="datetime-local"
                   value={unlockDate}
                   onChange={(e) => setUnlockDate(e.target.value)}
                   min={new Date().toISOString().slice(0, 16)}
-                  className="dark:bg-gray-700 dark:border-gray-600"
+                  className="dark:bg-gray-700 dark:border-gray-600 h-9 text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2 dark:text-gray-300">Beneficiary (Optional)</label>
+                <label className="block text-xs font-medium mb-1.5 dark:text-gray-300">Beneficiary (Optional)</label>
                 <Input
                   placeholder={address || '0x... (defaults to your address)'}
                   value={beneficiary}
                   onChange={(e) => setBeneficiary(e.target.value)}
-                  className="dark:bg-gray-700 dark:border-gray-600"
+                  className="dark:bg-gray-700 dark:border-gray-600 h-9 text-sm"
                 />
                 <p className="text-xs text-gray-500 mt-1">Who can unlock tokens. Defaults to your wallet.</p>
               </div>
@@ -243,7 +243,7 @@ const TokenLockerPage = () => {
               <Button
                 onClick={handleLock}
                 disabled={loading || !isConnected}
-                className="w-full py-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                className="w-full py-3 text-sm bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
               >
                 {loading ? 'Locking...' : isConnected ? '🔒 Lock Tokens' : 'Connect Wallet'}
               </Button>
