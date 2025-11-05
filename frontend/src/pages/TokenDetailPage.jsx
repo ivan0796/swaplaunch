@@ -118,7 +118,21 @@ const TokenDetailPage = () => {
 
   const handleTrade = () => {
     const chainId = getChainId(chain);
-    navigate(`/trade/swap?chain=${chainId}&to=${contract}`);
+    
+    // Native tokens
+    const nativeTokens = {
+      'ethereum': 'ETH',
+      'eth': 'ETH',
+      'solana': 'SOL',
+      'bsc': 'BNB',
+      'binance': 'BNB',
+      'polygon': 'MATIC',
+      'matic': 'MATIC',
+      'xrp': 'XRP'
+    };
+    const fromToken = nativeTokens[chain.toLowerCase()] || 'ETH';
+    
+    navigate(`/trade/swap?chain=${chainId}&buyToken=${contract}&sellToken=${fromToken}`);
   };
 
   if (loading) {
