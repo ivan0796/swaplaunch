@@ -62,44 +62,31 @@ const SwapFormV3 = ({ chainId = 1 }) => {
     WBTC: 95000
   });
 
-  // Fetch token prices from CoinGecko via backend
+  // Fetch token prices from CoinGecko via backend - FAST & IMMEDIATE
   useEffect(() => {
     const fetchTokenPrices = async () => {
       try {
-        const response = await axios.get(`${API}/api/crypto/prices`);
+        const response = await axios.get(`${API}/api/crypto/prices`, { timeout: 5000 });
         if (response.data) {
           // Add alias mappings for common tokens
           const prices = {
             ...response.data,
-            'WETH': response.data.ETH || 3100,
-            'WBTC': response.data.BTC || 95000,
+            'WETH': response.data.ETH || response.data.ethereum || 3100,
+            'WBTC': response.data.BTC || response.data.bitcoin || 95000,
           };
-          setTokenPrices(prices);
-          console.log('Token prices loaded:', prices);
+          setTokenPrices(prev => ({ ...prev, ...prices }));
+          console.log('✅ Live token prices updated:', prices);
         }
       } catch (error) {
-        console.error('Error fetching token prices:', error);
-        // Fallback prices
-        const fallback = {
-          ETH: 3100,
-          WETH: 3100,
-          BNB: 620,
-          SOL: 170,
-          MATIC: 0.60,
-          USDT: 1,
-          USDC: 1,
-          DAI: 1,
-          BTC: 95000,
-          WBTC: 95000
-        };
-        setTokenPrices(fallback);
-        console.log('Using fallback prices:', fallback);
+        console.warn('⚠️ Could not fetch live prices, using fallback');
       }
     };
     
+    // Fetch immediately on mount
     fetchTokenPrices();
-    // Refresh prices every 30 seconds
-    const interval = setInterval(fetchTokenPrices, 30000);
+    
+    // Then refresh every 10 seconds for real-time updates
+    const interval = setInterval(fetchTokenPrices, 10000);
     return () => clearInterval(interval);
   }, []);
 
