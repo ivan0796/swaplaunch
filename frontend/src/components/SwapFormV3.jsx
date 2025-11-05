@@ -11,6 +11,7 @@ import { useCurrency } from '../contexts/CurrencyContext';
 import { useSettings } from '../contexts/SettingsContext';
 import SwapSettingsModal from './SwapSettingsModal';
 import TokenSearchModal from './TokenSearchModal';
+import ReferralCodeInput from './ReferralCodeInput';
 
 const API = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
