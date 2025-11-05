@@ -17,6 +17,10 @@ const TokenLockerPage = () => {
   const [beneficiary, setBeneficiary] = useState('');
   const [loading, setLoading] = useState(false);
   const [myLocks, setMyLocks] = useState([]);
+  
+  // Fiat preview state
+  const [fiatPreview, setFiatPreview] = useState({ usd: null, eur: null });
+  const [isFiatLoading, setIsFiatLoading] = useState(false);
 
   useEffect(() => {
     if (isConnected && address) {
