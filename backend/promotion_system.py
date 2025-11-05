@@ -108,8 +108,18 @@ def get_crypto_prices() -> Dict[str, float]:
         prices = {}
         for chain_data in SUPPORTED_CHAINS.values():
             cg_id = chain_data["coingecko_id"]
-            if cg_id in data:
+            if cg_id in data and "usd" in data[cg_id]:
                 prices[cg_id] = data[cg_id]["usd"]
+            else:
+                # Use fallback for missing coins
+                fallbacks = {
+                    "solana": 200.0,
+                    "ethereum": 3500.0,
+                    "matic-network": 0.70,
+                    "ripple": 2.20
+                }
+                prices[cg_id] = fallbacks.get(cg_id, 1.0)
+                print(f"⚠️ Using fallback for {cg_id}: {prices[cg_id]}")
         
         # Log prices for debugging
         print(f"✅ Live Crypto Prices: {prices}")
