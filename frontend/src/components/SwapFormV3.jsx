@@ -422,6 +422,9 @@ const SwapFormV3 = ({ chainId = 1 }) => {
           </button>
         </div>
 
+        {/* Referral Code Input */}
+        <ReferralCodeInput />
+
         {/* From Token - Kompakter */}
         <div className="mb-2">
           <label className="text-xs text-gray-600 dark:text-gray-400 mb-1 block">From:</label>
