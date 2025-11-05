@@ -57,12 +57,19 @@ const SwapFormV3 = ({ chainId = 1 }) => {
       try {
         const response = await axios.get(`${API}/api/crypto/prices`);
         if (response.data) {
-          setTokenPrices(response.data);
+          // Add alias mappings for common tokens
+          const prices = {
+            ...response.data,
+            'WETH': response.data.ETH || 3100,
+            'WBTC': response.data.BTC || 95000,
+          };
+          setTokenPrices(prices);
+          console.log('Token prices loaded:', prices);
         }
       } catch (error) {
         console.error('Error fetching token prices:', error);
         // Fallback prices
-        setTokenPrices({
+        const fallback = {
           ETH: 3100,
           WETH: 3100,
           BNB: 620,
@@ -71,8 +78,11 @@ const SwapFormV3 = ({ chainId = 1 }) => {
           USDT: 1,
           USDC: 1,
           DAI: 1,
+          BTC: 95000,
           WBTC: 95000
-        });
+        };
+        setTokenPrices(fallback);
+        console.log('Using fallback prices:', fallback);
       }
     };
     
