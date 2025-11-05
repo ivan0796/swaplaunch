@@ -421,6 +421,14 @@ const SwapFormV3 = ({ chainId = 1 }) => {
           🔒 Non-custodial · Your keys, your crypto
         </div>
       </div>
+
+      {/* Settings Modal */}
+      <SwapSettingsModal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
+        slippage={slippage}
+        setSlippage={setSlippage}
+      />
     </div>
   );
 };
