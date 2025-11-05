@@ -242,7 +242,7 @@ const SwapFormV3 = ({ chainId = 1 }) => {
         sellAmount: sellAmountInBaseUnits,
         takerAddress: takerAddr,
         chain: chainName
-      });
+      }, { timeout: 10000 });
 
       const quoteData = response.data;
       const buyAmountFormatted = ethers.formatUnits(quoteData.buyAmount, buyToken.decimals);
@@ -256,8 +256,18 @@ const SwapFormV3 = ({ chainId = 1 }) => {
 
     } catch (error) {
       console.error('Quote error:', error);
-      toast.error('Failed to fetch quote');
-      setBuyAmount('0');
+      
+      // Fallback: Use simple price estimation if quote API fails
+      if (tokenPrices[sellToken.symbol] && tokenPrices[buyToken.symbol]) {
+        const sellValue = parseFloat(sellAmount) * tokenPrices[sellToken.symbol];
+        const estimatedBuyAmount = sellValue / tokenPrices[buyToken.symbol];
+        setBuyAmount(estimatedBuyAmount.toFixed(6));
+        setExchangeRate(tokenPrices[sellToken.symbol] / tokenPrices[buyToken.symbol]);
+        console.log('✅ Using price estimation fallback');
+      } else {
+        toast.error('Could not fetch quote - try again');
+        setBuyAmount('0');
+      }
     } finally {
       setLoading(false);
     }
