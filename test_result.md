@@ -152,6 +152,42 @@ backend:
         agent: "testing"
         comment: "✅ PHASE 3 VERIFICATION COMPLETE: Referral leaderboard endpoint remains accessible and functional after frontend route changes. Returns proper JSON structure with leaderboard array. No regressions detected from Phase 3 frontend modifications."
 
+  - task: "Smart Contract: FeeTakingRouterV2 (EVM Chains)"
+    implemented: true
+    working: "NA"
+    file: "/app/contracts/FeeTakingRouterV2.sol"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created FeeTakingRouterV2.sol with complete non-custodial referral system. Features: referral mapping (user→referrer) on-chain, automatic 90/10 fee split (90% platform, 10% referrer), registerReferral() function, enhanced swapViaRouter() with automatic split, native token support (ETH/BNB/MATIC), events (ReferralRegistered, ReferralRewardPaid), emergency recovery, router whitelisting. Compatible with all EVM chains (Ethereum, BSC, Polygon, Base, Arbitrum, Optimism). Rewards sent directly to referrer wallet - NO platform wallet needed!"
+
+  - task: "Contract Integration: Web3 & API Endpoints"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/contract_integration.py, /app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created contract_integration.py with Web3 integration for all EVM chains. Functions: check_referral_on_chain() - check if wallet has registered referrer, get_referrer_stats_on_chain() - get referral count and rewards from contract, get_all_chain_referrer_stats() - aggregate stats across chains, prepare_register_referral_tx() - prepare transaction for frontend signing. Added new endpoints to server.py: GET /api/referral/stats/{wallet}?chain_id - combined off-chain + on-chain stats, GET /api/referral/on-chain/{wallet} - check on-chain registration, POST /api/referral/prepare-tx - prepare registration transaction. Multi-chain support: ETH, BSC, Polygon, Base, Arbitrum, Optimism."
+
+  - task: "Referral System Documentation"
+    implemented: true
+    working: true
+    file: "/app/REFERRAL_SYSTEM_README.md, /app/contracts/DEPLOYMENT_GUIDE.md"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Created comprehensive documentation: REFERRAL_SYSTEM_README.md with complete system overview, user flow diagrams, technical architecture, setup instructions, testing guide, monitoring, security best practices, multi-chain roadmap, frontend components guide, economics breakdown. Created DEPLOYMENT_GUIDE.md with step-by-step contract deployment instructions for Hardhat and Remix, network configuration, post-deployment setup, DEX router whitelisting, testing procedures, security considerations, gas estimates, troubleshooting. Includes example scripts and code snippets."
+
   - task: "Add XRP and Tron Chain Support"
     implemented: true
     working: true
