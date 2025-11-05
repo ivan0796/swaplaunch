@@ -427,8 +427,6 @@ const SwapFormV3 = ({ chainId = 1 }) => {
       <SwapSettingsModal
         isOpen={showSettingsModal}
         onClose={() => setShowSettingsModal(false)}
-        slippage={slippage}
-        setSlippage={setSlippage}
       />
     </div>
   );
