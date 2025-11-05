@@ -13,13 +13,16 @@ import { useCurrency } from '../contexts/CurrencyContext';
 
 const PromotePage = () => {
   const { t } = useTranslation();
+  const { currency: globalCurrency, getCurrencySymbol, getCurrencyName } = useCurrency();
   
   // Form State
   const [tokenAddress, setTokenAddress] = useState('');
   const [selectedChain, setSelectedChain] = useState('solana');
   const [selectedPackage, setSelectedPackage] = useState('trending_boost');
   const [selectedDuration, setSelectedDuration] = useState('7d');
-  const [selectedCurrency, setSelectedCurrency] = useState('usd'); // usd, eur, gbp
+  
+  // Use global currency from context
+  const selectedCurrency = globalCurrency;
   
   // Data State
   const [packages, setPackages] = useState(null);
