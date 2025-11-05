@@ -72,12 +72,14 @@ const HeaderSlim = () => {
                   key={item.path}
                   to={item.path}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    isActive(item.path)
+                    item.highlight
+                      ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white hover:from-yellow-500 hover:to-orange-600 shadow-md'
+                      : isActive(item.path)
                       ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                   }`}
                 >
-                  {item.label}
+                  {item.highlight && '⭐ '}{item.label}
                 </Link>
               ))}
 
