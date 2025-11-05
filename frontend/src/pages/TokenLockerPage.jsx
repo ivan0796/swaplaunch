@@ -5,7 +5,8 @@ import { Lock, Calendar, Info, CheckCircle, Clock, Shield } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { toast } from 'sonner';
-import Navbar from '../components/Navbar';
+import HeaderSlim from '../components/HeaderSlim';
+import Footer from '../components/Footer';
 
 const TokenLockerPage = () => {
   const { t } = useTranslation();
