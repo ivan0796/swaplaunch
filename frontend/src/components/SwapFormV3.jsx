@@ -135,36 +135,37 @@ const SwapFormV3 = ({ chainId = 1 }) => {
       // Set default tokens based on chain
       if (chainId === 1) { // Ethereum
         setSellToken({
-        address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-        symbol: 'ETH',
-        name: 'Ethereum',
-        decimals: 18,
-        logoURI: 'https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png'
-      });
-      setBuyToken({
-        address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-        symbol: 'USDT',
-        name: 'Tether USD',
-        decimals: 6,
-        logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png'
-      });
-    } else if (chainId === 56) { // BSC
-      setSellToken({
-        address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-        symbol: 'BNB',
-        name: 'BNB',
-        decimals: 18,
-        logoURI: 'https://tokens.1inch.io/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c.png'
-      });
-      setBuyToken({
-        address: '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82',
-        symbol: 'CAKE',
-        name: 'PancakeSwap Token',
-        decimals: 18,
-        logoURI: 'https://tokens.1inch.io/0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82.png'
-      });
+          address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+          symbol: 'ETH',
+          name: 'Ethereum',
+          decimals: 18,
+          logoURI: 'https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png'
+        });
+        setBuyToken({
+          address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+          symbol: 'USDT',
+          name: 'Tether USD',
+          decimals: 6,
+          logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png'
+        });
+      } else if (chainId === 56) { // BSC
+        setSellToken({
+          address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+          symbol: 'BNB',
+          name: 'BNB',
+          decimals: 18,
+          logoURI: 'https://tokens.1inch.io/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c.png'
+        });
+        setBuyToken({
+          address: '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82',
+          symbol: 'CAKE',
+          name: 'PancakeSwap Token',
+          decimals: 18,
+          logoURI: 'https://tokens.1inch.io/0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82.png'
+        });
+      }
     }
-  }, [chainId]);
+  }, [chainId, searchParams]);
 
   // Fetch quote when amount changes
   useEffect(() => {
