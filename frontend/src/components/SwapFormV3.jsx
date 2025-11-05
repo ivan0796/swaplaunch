@@ -436,13 +436,16 @@ const SwapFormV3 = ({ chainId = 1 }) => {
           </div>
         )}
 
-        {/* Swap Button */}
+        {/* Action Button */}
         <Button
           onClick={handleSwap}
           disabled={!walletAddress || loading || !sellAmount || parseFloat(sellAmount) <= 0}
           className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
         >
-          {!walletAddress ? 'Connect Wallet' : loading ? 'Loading...' : 'Swap'}
+          {!walletAddress ? 'Connect Wallet' : loading ? 'Loading...' : 
+            activeTab === 'swap' ? 'Swap' : 
+            activeTab === 'twap' ? 'Place TWAP Order' : 
+            'Place Limit Order'}
         </Button>
 
         {/* Non-Custodial Notice */}
