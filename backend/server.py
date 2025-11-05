@@ -1633,14 +1633,14 @@ CRYPTO_PRICE_CACHE_TTL = 300  # 5 minutes
 @api_router.get("/crypto/price/{coin_id}")
 async def get_token_price(coin_id: str):
     """
-    Get token price in USD and EUR
+    Get token price in USD, EUR, and GBP
     coin_id: CoinGecko ID (e.g., 'ethereum', 'tether', 'usd-coin')
     """
     try:
         url = "https://api.coingecko.com/api/v3/simple/price"
         params = {
             "ids": coin_id,
-            "vs_currencies": "usd,eur"
+            "vs_currencies": "usd,eur,gbp"
         }
         
         async with httpx.AsyncClient(timeout=10.0) as client:
@@ -1655,6 +1655,7 @@ async def get_token_price(coin_id: str):
             "symbol": coin_id,
             "price_usd": data[coin_id].get("usd"),
             "price_eur": data[coin_id].get("eur"),
+            "price_gbp": data[coin_id].get("gbp"),
             "updated_at": datetime.now(timezone.utc).isoformat()
         }
         
