@@ -27,6 +27,7 @@ import GettingStartedPage from './pages/GettingStartedPage';
 import SecurityPage from './pages/SecurityPage';
 import StakingPage from './pages/StakingPage';
 import PromotePage from './pages/PromotePage';
+import TokenDetailPage from './pages/TokenDetailPage';
 import { Toaster } from './components/ui/sonner';
 import { CurrencyProvider } from './contexts/CurrencyContext';
 import { SettingsProvider } from './contexts/SettingsContext';
@@ -47,6 +48,9 @@ function App() {
             <Route path="/trade/swap" element={<SwapPageV2 />} />
             <Route path="/trade/pro-swap" element={<ProSwapPage />} />
             <Route path="/trade/bridge" element={<BridgePage />} />
+            
+            {/* TOKEN DETAILS */}
+            <Route path="/token/:chain/:contract" element={<TokenDetailPage />} />
             
             {/* LAUNCHPAD */}
             <Route path="/launchpad/explore" element={<ProjectsPage />} />
