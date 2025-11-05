@@ -2086,10 +2086,57 @@ async def use_free_swap(request: Dict[str, str]):
     return {"success": success}
 
 @api_router.get("/referral/stats/{wallet_address}")
-async def get_stats(wallet_address: str):
-    """Get referral statistics"""
-    stats = await get_referral_stats(wallet_address)
-    return stats
+async def get_stats(wallet_address: str, chain_id: Optional[int] = Query(None)):
+    """
+    Get referral statistics (combines off-chain codes with on-chain rewards)
+    
+    Args:
+        wallet_address: User wallet address
+        chain_id: Optional specific chain ID, or all chains if not provided
+    """
+    # Get off-chain stats (referral codes, etc.)
+    off_chain_stats = await get_referral_stats(wallet_address)
+    
+    # Get on-chain stats
+    if chain_id:
+        on_chain_stats = await get_referrer_stats_on_chain(wallet_address, chain_id)
+        return {
+            **off_chain_stats,
+            'on_chain': on_chain_stats
+        }
+    else:
+        # Get stats from all chains
+        all_chain_stats = await get_all_chain_referrer_stats(wallet_address)
+        return {
+            **off_chain_stats,
+            'on_chain': all_chain_stats
+        }
+
+@api_router.get("/referral/on-chain/{wallet_address}")
+async def check_on_chain_referral(wallet_address: str, chain_id: int = Query(...)):
+    """Check if wallet has registered referrer on-chain for a specific chain"""
+    result = await check_referral_on_chain(wallet_address, chain_id)
+    return result
+
+@api_router.post("/referral/prepare-tx")
+async def prepare_referral_tx(request: Dict[str, Any]):
+    """
+    Prepare transaction data for registering referral on-chain
+    Frontend will sign and broadcast this transaction
+    """
+    user_wallet = request.get('user_wallet')
+    referrer_wallet = request.get('referrer_wallet')
+    chain_id = request.get('chain_id')
+    
+    if not user_wallet or not referrer_wallet or not chain_id:
+        raise HTTPException(status_code=400, detail="user_wallet, referrer_wallet, and chain_id required")
+    
+    tx_data = prepare_register_referral_tx(user_wallet, referrer_wallet, chain_id)
+    
+    if not tx_data:
+        raise HTTPException(status_code=500, detail="Failed to prepare transaction")
+    
+    return tx_data
 
 # Include the routers in the main app
 from ad_management import ad_router
