@@ -18,6 +18,7 @@ const PromotePage = () => {
   const [selectedChain, setSelectedChain] = useState('solana');
   const [selectedPackage, setSelectedPackage] = useState('trending_boost');
   const [selectedDuration, setSelectedDuration] = useState('7d');
+  const [selectedCurrency, setSelectedCurrency] = useState('usd'); // usd, eur, gbp
   
   // Data State
   const [packages, setPackages] = useState(null);
