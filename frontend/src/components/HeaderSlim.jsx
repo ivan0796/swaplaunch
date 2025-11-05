@@ -170,16 +170,16 @@ const HeaderSlim = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Kompakt */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-            <div className="px-4 py-4 space-y-2">
+            <div className="px-3 py-2 space-y-1">
               {primaryNav.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block px-4 py-3 rounded-lg font-medium ${
+                  className={`block px-3 py-2 rounded-lg text-sm font-medium ${
                     isActive(item.path)
                       ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                       : 'text-gray-700 dark:text-gray-300'
@@ -189,8 +189,8 @@ const HeaderSlim = () => {
                 </Link>
               ))}
 
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
-                <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 px-4 py-2">
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-1 mt-1">
+                <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 px-3 py-1">
                   {t('nav.more').toUpperCase()}
                 </div>
                 {moreItems.map((item) => (
@@ -198,14 +198,14 @@ const HeaderSlim = () => {
                     key={item.path}
                     to={item.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300"
+                    className="block px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300"
                   >
                     {item.label}
                   </Link>
                 ))}
               </div>
 
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
                 <WalletButtonWithHistory />
               </div>
             </div>
