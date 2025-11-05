@@ -69,14 +69,28 @@ const SwapFormV3 = ({ chainId = 1 }) => {
       try {
         const response = await axios.get(`${API}/api/crypto/prices`, { timeout: 5000 });
         if (response.data) {
-          // Add alias mappings for common tokens
-          const prices = {
-            ...response.data,
-            'WETH': response.data.ETH || response.data.ethereum || 3100,
-            'WBTC': response.data.BTC || response.data.bitcoin || 95000,
-          };
-          setTokenPrices(prev => ({ ...prev, ...prices }));
-          console.log('✅ Live token prices updated:', prices);
+          // Parse the nested format: {"ETH": {"usd": 3320, "eur": 2890}}
+          // Extract only USD prices for calculation
+          const parsedPrices = {};
+          
+          Object.keys(response.data).forEach(key => {
+            if (key === 'updated_at' || key === 'cache_ttl_seconds') return;
+            
+            const priceData = response.data[key];
+            if (priceData && typeof priceData === 'object' && priceData.usd) {
+              parsedPrices[key] = priceData.usd;
+            }
+          });
+          
+          // Add aliases
+          parsedPrices['WETH'] = parsedPrices['ETH'] || 3100;
+          parsedPrices['WBTC'] = parsedPrices['BTC'] || 95000;
+          parsedPrices['USDT'] = 1;
+          parsedPrices['USDC'] = 1;
+          parsedPrices['DAI'] = 1;
+          
+          setTokenPrices(parsedPrices);
+          console.log('✅ Token prices loaded (USD):', parsedPrices);
         }
       } catch (error) {
         console.warn('⚠️ Could not fetch live prices, using fallback');
