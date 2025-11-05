@@ -351,9 +351,9 @@ const PromotePage = () => {
                   
                   <div className="border-t border-gray-200 dark:border-gray-700 pt-3 mt-3">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="font-bold dark:text-white">Preis (USD):</span>
+                      <span className="font-bold dark:text-white">Preis ({getCurrencyName()}):</span>
                       <span className="text-xl font-bold text-gray-900 dark:text-white">
-                        ${usdPrice}
+                        {getCurrencySymbol()}{usdPrice}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
