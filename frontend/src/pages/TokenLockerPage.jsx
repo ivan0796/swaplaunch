@@ -152,32 +152,32 @@ const TokenLockerPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <Navbar selectedChain={selectedChain} onChainChange={setSelectedChain} />
+      <HeaderSlim />
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Lock Form */}
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Lock className="w-8 h-8 text-blue-600" />
-              <h1 className="text-3xl font-bold dark:text-white">Token Locker</h1>
+          {/* Lock Form - Kompakter */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Lock className="w-6 h-6 text-blue-600" />
+              <h1 className="text-2xl font-bold dark:text-white">Token Locker</h1>
             </div>
 
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Lock tokens with time-based vesting. 100% non-custodial.
             </p>
 
-            {/* Non-Custodial Notice */}
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-4 mb-6">
-              <div className="flex items-start gap-3">
-                <Shield className="w-5 h-5 text-green-600 flex-shrink-0" />
-                <div className="text-sm text-green-900 dark:text-green-200">
+            {/* Non-Custodial Notice - Kompakter */}
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-3 mb-4">
+              <div className="flex items-start gap-2">
+                <Shield className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                <div className="text-xs text-green-900 dark:text-green-200">
                   <strong>Non-Custodial:</strong> Tokens locked in smart contract. You control unlock. We never hold your funds.
                 </div>
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2 dark:text-gray-300">Token Address *</label>
                 <Input
