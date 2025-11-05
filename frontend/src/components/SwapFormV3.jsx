@@ -136,7 +136,122 @@ const SwapFormV3 = ({ chainId = 1 }) => {
       return;
     }
 
-    toast.info('Swap functionality coming soon');
+    if (activeTab === 'swap') {
+      toast.info('Swap functionality coming soon');
+    } else if (activeTab === 'twap') {
+      toast.info('TWAP order will be executed');
+    } else if (activeTab === 'limit') {
+      toast.info('Limit order will be placed');
+    }
+  };
+
+  const renderTabContent = () => {
+    if (activeTab === 'twap') {
+      return (
+        <>
+          {/* TWAP Additional Settings */}
+          <div className="mb-4 space-y-3">
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
+              <label className="text-sm font-medium mb-2 block dark:text-gray-300">
+                Time Interval
+              </label>
+              <div className="flex gap-2">
+                {[5, 10, 30, 60].map(min => (
+                  <button
+                    key={min}
+                    onClick={() => setTwapInterval(min)}
+                    className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      twapInterval === min
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                    }`}
+                  >
+                    {min}m
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
+              <label className="text-sm font-medium mb-2 block dark:text-gray-300">
+                Number of Splits
+              </label>
+              <input
+                type="number"
+                value={twapSplits}
+                onChange={(e) => setTwapSplits(parseInt(e.target.value) || 10)}
+                min="2"
+                max="100"
+                className="w-full px-4 py-2 bg-white dark:bg-gray-800 rounded-lg outline-none"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                Order will be split into {twapSplits} parts over {(twapInterval * twapSplits) / 60} hours
+              </p>
+            </div>
+          </div>
+        </>
+      );
+    }
+
+    if (activeTab === 'limit') {
+      return (
+        <>
+          {/* Limit Order Settings */}
+          <div className="mb-4 space-y-3">
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
+              <label className="text-sm font-medium mb-2 block dark:text-gray-300">
+                Limit Price
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  value={limitPrice}
+                  onChange={(e) => setLimitPrice(e.target.value)}
+                  placeholder="0.0"
+                  className="flex-1 px-4 py-2 bg-white dark:bg-gray-800 rounded-lg outline-none text-lg"
+                />
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {buyToken?.symbol}/{sellToken?.symbol}
+                </span>
+              </div>
+              {exchangeRate && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  Market: {(1 / exchangeRate).toFixed(8)} {buyToken?.symbol}/{sellToken?.symbol}
+                </p>
+              )}
+            </div>
+
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
+              <label className="text-sm font-medium mb-2 block dark:text-gray-300">
+                Expiry
+              </label>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { value: '1', label: '1 day' },
+                  { value: '7', label: '7 days' },
+                  { value: '30', label: '30 days' },
+                  { value: 'never', label: 'Never' }
+                ].map(opt => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setLimitExpiry(opt.value)}
+                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                      limitExpiry === opt.value
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    }
+
+    return null;
   };
 
   return (
