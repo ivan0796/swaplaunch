@@ -1684,7 +1684,7 @@ async def get_crypto_prices():
         url = "https://api.coingecko.com/api/v3/simple/price"
         params = {
             "ids": "ethereum,binancecoin,solana,matic-network,avalanche-2",
-            "vs_currencies": "usd,eur"
+            "vs_currencies": "usd,eur,gbp"
         }
         
         async with httpx.AsyncClient(timeout=10.0) as client:
@@ -1692,27 +1692,32 @@ async def get_crypto_prices():
             response.raise_for_status()
             data = response.json()
         
-        # Map to our currency symbols (both USD and EUR)
+        # Map to our currency symbols (USD, EUR, GBP)
         result = {
             "ETH": {
                 "usd": data.get("ethereum", {}).get("usd", 3500),
-                "eur": data.get("ethereum", {}).get("eur", 3000)
+                "eur": data.get("ethereum", {}).get("eur", 3000),
+                "gbp": data.get("ethereum", {}).get("gbp", 2600)
             },
             "BNB": {
                 "usd": data.get("binancecoin", {}).get("usd", 700),
-                "eur": data.get("binancecoin", {}).get("eur", 600)
+                "eur": data.get("binancecoin", {}).get("eur", 600),
+                "gbp": data.get("binancecoin", {}).get("gbp", 520)
             },
             "SOL": {
                 "usd": data.get("solana", {}).get("usd", 200),
-                "eur": data.get("solana", {}).get("eur", 170)
+                "eur": data.get("solana", {}).get("eur", 170),
+                "gbp": data.get("solana", {}).get("gbp", 150)
             },
             "MATIC": {
                 "usd": data.get("matic-network", {}).get("usd", 0.70),
-                "eur": data.get("matic-network", {}).get("eur", 0.60)
+                "eur": data.get("matic-network", {}).get("eur", 0.60),
+                "gbp": data.get("matic-network", {}).get("gbp", 0.52)
             },
             "AVAX": {
                 "usd": data.get("avalanche-2", {}).get("usd", 38),
-                "eur": data.get("avalanche-2", {}).get("eur", 33)
+                "eur": data.get("avalanche-2", {}).get("eur", 33),
+                "gbp": data.get("avalanche-2", {}).get("gbp", 29)
             },
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "cache_ttl_seconds": CRYPTO_PRICE_CACHE_TTL
