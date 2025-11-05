@@ -17,10 +17,15 @@ const TrendingTokensV2 = ({ onTokenSelect }) => {
   // Get promoted tokens
   const { promotions: trendingPromotions } = usePromotions('trending_boost');
   const { promotions: featuredPromotions } = usePromotions('featured_token');
+  const { promotions: pinnedPromotions } = usePromotions('pinned_card');
   
   const isPromoted = (tokenAddress) => {
     return trendingPromotions.some(p => p.token_address.toLowerCase() === tokenAddress?.toLowerCase()) ||
            featuredPromotions.some(p => p.token_address.toLowerCase() === tokenAddress?.toLowerCase());
+  };
+  
+  const isPinned = (tokenAddress) => {
+    return pinnedPromotions.some(p => p.token_address.toLowerCase() === tokenAddress?.toLowerCase());
   };
 
   useEffect(() => {
