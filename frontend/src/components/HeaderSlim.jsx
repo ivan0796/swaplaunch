@@ -12,9 +12,12 @@ const HeaderSlim = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const { isConnected } = useAccount();
+  const { currency, setCurrency, getCurrencySymbol } = useCurrency();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
+  const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
   const moreRef = useRef(null);
+  const currencyRef = useRef(null);
 
   const isActive = (path) => location.pathname === path;
 
