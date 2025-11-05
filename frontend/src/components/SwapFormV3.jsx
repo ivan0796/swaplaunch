@@ -29,6 +29,14 @@ const SwapFormV3 = ({ chainId = 1 }) => {
   const [slippage, setSlippage] = useState(0.5);
   const [showSettings, setShowSettings] = useState(false);
 
+  // TWAP specific
+  const [twapInterval, setTwapInterval] = useState(5); // minutes
+  const [twapSplits, setTwapSplits] = useState(10);
+
+  // Limit specific
+  const [limitPrice, setLimitPrice] = useState('');
+  const [limitExpiry, setLimitExpiry] = useState('7'); // days
+
   // Quote data
   const [quote, setQuote] = useState(null);
   const [exchangeRate, setExchangeRate] = useState(null);
