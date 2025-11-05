@@ -7,7 +7,7 @@ from datetime import datetime
 import uuid
 
 class SwapLaunchAPITester:
-    def __init__(self, base_url="https://swapverse-1.preview.emergentagent.com"):
+    def __init__(self, base_url="https://tradexchange-2.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.tests_run = 0
