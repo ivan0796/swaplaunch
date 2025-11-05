@@ -279,7 +279,7 @@ const PromotePage = () => {
                       >
                         <div className="text-center">
                           <div className="font-semibold dark:text-white">{duration}</div>
-                          <div className="text-lg font-bold text-purple-600">${price}</div>
+                          <div className="text-lg font-bold text-purple-600">{getCurrencySymbol()}{price}</div>
                           {duration === '7d' && (
                             <div className="text-xs text-green-600 mt-1">-10%</div>
                           )}
