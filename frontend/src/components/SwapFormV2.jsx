@@ -917,6 +917,14 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
             </div>
           </div>
 
+          {/* Best Route Badge */}
+          {quote && (
+            <BestRouteBadge 
+              provider={quote.sources?.[0]?.name || '0x'} 
+              nonCustodial={true}
+            />
+          )}
+
           {/* Route Breakdown - "Why this route?" */}
           <RouteBreakdown 
             quote={quote} 
