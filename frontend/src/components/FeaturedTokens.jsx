@@ -93,7 +93,20 @@ const FeaturedTokens = () => {
 
   const handleTrade = (promo, info) => {
     const chainId = getChainId(promo.chain);
-    navigate(`/trade/swap?chain=${chainId}&to=${promo.token_address}&from=${info.symbol}`);
+    // Set native token as "from" based on chain
+    const nativeTokens = {
+      'ethereum': 'ETH',
+      'eth': 'ETH',
+      'solana': 'SOL',
+      'bsc': 'BNB',
+      'binance': 'BNB',
+      'polygon': 'MATIC',
+      'matic': 'MATIC',
+      'xrp': 'XRP'
+    };
+    const fromToken = nativeTokens[promo.chain.toLowerCase()] || 'ETH';
+    
+    navigate(`/trade/swap?chain=${chainId}&buyToken=${promo.token_address}&sellToken=${fromToken}`);
   };
 
   const handleView = (promo) => {
