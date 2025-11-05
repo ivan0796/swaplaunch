@@ -441,7 +441,10 @@ const SwapFormV3 = ({ chainId = 1 }) => {
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <button className="flex items-center gap-1.5 px-2 py-1.5 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm">
+              <button 
+                onClick={() => setShowBuyTokenModal(true)}
+                className="flex items-center gap-1.5 px-2 py-1.5 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm"
+              >
                 {buyToken?.logoURI && (
                   <img src={buyToken.logoURI} alt={buyToken.symbol} className="w-5 h-5 rounded-full" />
                 )}
