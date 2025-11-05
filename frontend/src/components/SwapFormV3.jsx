@@ -458,11 +458,14 @@ const SwapFormV3 = ({ chainId = 1 }) => {
               </button>
               <div className="text-right">
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  {sellAmount && sellAmount !== '0' && sellToken && tokenPrices[sellToken.symbol] ? (
-                    <span>≈ ${(parseFloat(sellAmount) * tokenPrices[sellToken.symbol]).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-                  ) : (
-                    <span className="text-gray-400">$--</span>
-                  )}
+                  {(() => {
+                    if (!sellAmount || sellAmount === '0' || !sellToken) return <span className="text-gray-400">$--</span>;
+                    const price = tokenPrices[sellToken.symbol];
+                    if (!price || isNaN(price)) return <span className="text-gray-400">$--</span>;
+                    const usdValue = parseFloat(sellAmount) * price;
+                    if (isNaN(usdValue)) return <span className="text-gray-400">$--</span>;
+                    return <span>≈ ${usdValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>;
+                  })()}
                 </div>
               </div>
             </div>
