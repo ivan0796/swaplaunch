@@ -374,30 +374,30 @@ const SwapFormV3 = ({ chainId = 1 }) => {
         {/* Tab-specific content (TWAP/Limit settings) */}
         {renderTabContent()}
 
-        {/* Slippage Info */}
+        {/* Slippage Info - Kompakter */}
         {activeTab === 'swap' && (
-          <div className="flex items-center justify-between text-sm mb-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+          <div className="flex items-center justify-between text-xs mb-2 p-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
             <span className="text-gray-600 dark:text-gray-400">Slippage Tolerance</span>
             <span className="font-medium dark:text-white">{settings.slippage}%</span>
           </div>
         )}
 
-        {/* Exchange Rate */}
+        {/* Exchange Rate - Kompakter */}
         {exchangeRate && (
-          <div className="flex items-center justify-between text-sm mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <div className="flex items-center justify-between text-xs mb-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
             <div className="flex items-center gap-1">
-              <Info className="w-4 h-4 text-blue-600" />
+              <Info className="w-3 h-3 text-blue-600" />
               <span className="text-gray-600 dark:text-gray-400">Rate</span>
             </div>
-            <span className="font-medium dark:text-white">
-              1 {buyToken?.symbol} ≈ {(1 / exchangeRate).toFixed(8)} {sellToken?.symbol}
+            <span className="font-medium dark:text-white text-xs">
+              1 {buyToken?.symbol} ≈ {(1 / exchangeRate).toFixed(6)} {sellToken?.symbol}
             </span>
           </div>
         )}
 
-        {/* Fee */}
+        {/* Fee - Kompakter */}
         {quote && (
-          <div className="flex items-center justify-between text-sm mb-4">
+          <div className="flex items-center justify-between text-xs mb-3">
             <span className="text-gray-600 dark:text-gray-400">Fee</span>
             <span className="font-medium dark:text-white">
               ~{quote.feePercent || 0.2}% ({getCurrencySymbol()}{quote.feeUsd?.toFixed(2) || '0.00'})
@@ -405,11 +405,11 @@ const SwapFormV3 = ({ chainId = 1 }) => {
           </div>
         )}
 
-        {/* Action Button */}
+        {/* Action Button - Kompakter */}
         <Button
           onClick={handleSwap}
           disabled={!walletAddress || loading || !sellAmount || parseFloat(sellAmount) <= 0}
-          className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+          className="w-full py-3 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
         >
           {!walletAddress ? 'Connect Wallet' : loading ? 'Loading...' : 
             activeTab === 'swap' ? 'Swap' : 
@@ -417,8 +417,8 @@ const SwapFormV3 = ({ chainId = 1 }) => {
             'Place Limit Order'}
         </Button>
 
-        {/* Non-Custodial Notice */}
-        <div className="mt-4 text-xs text-center text-gray-500 dark:text-gray-400">
+        {/* Non-Custodial Notice - Kompakter */}
+        <div className="mt-2 text-xs text-center text-gray-500 dark:text-gray-400">
           🔒 Non-custodial · Your keys, your crypto
         </div>
       </div>
