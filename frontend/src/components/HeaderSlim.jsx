@@ -21,23 +21,23 @@ const HeaderSlim = () => {
 
   const isActive = (path) => location.pathname === path;
 
-  // Primäre Navigation
+  // Primäre Navigation (weniger vollgepackt)
   const primaryNav = [
     { path: '/trade/swap', label: t('nav.swap') },
     { path: '/launch', label: t('nav.launch') },
     { path: '/promote', label: t('nav.promote', 'Promote'), highlight: true },
-    { path: '/staking', label: t('nav.staking', 'Staking') },
-    { path: '/launchpad/token-locker', label: t('nav.lock') },
-    { path: '/bridge', label: t('nav.bridge') }
+    { path: '/launchpad/token-locker', label: t('nav.lock') }
   ];
 
   // "Mehr" Dropdown
   const moreItems = [
+    { path: '/staking', label: t('nav.staking', 'Staking') },
+    { path: '/bridge', label: t('nav.bridge', 'Bridge') },
     { path: '/trending', label: 'Trending' },
     { path: '/advertise', label: 'Advertise' },
     { path: '/terms', label: 'Terms' },
     { path: '/privacy', label: 'Privacy' },
-    { path: '/risk', label: 'Security' }
+    { path: '/security', label: 'Security' }
   ];
 
   // Close dropdown on outside click
