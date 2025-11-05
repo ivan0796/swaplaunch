@@ -28,7 +28,7 @@ const SwapFormV3 = ({ chainId = 1 }) => {
   // UI State
   const [loading, setLoading] = useState(false);
   const [slippage, setSlippage] = useState(0.5);
-  const [showSettings, setShowSettings] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // TWAP specific
   const [twapInterval, setTwapInterval] = useState(5); // minutes
