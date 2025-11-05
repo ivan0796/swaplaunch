@@ -46,6 +46,9 @@ const HeaderSlim = () => {
       if (moreRef.current && !moreRef.current.contains(event.target)) {
         setMoreDropdownOpen(false);
       }
+      if (currencyRef.current && !currencyRef.current.contains(event.target)) {
+        setCurrencyDropdownOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
