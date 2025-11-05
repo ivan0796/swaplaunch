@@ -356,8 +356,15 @@ const ReferralsPage = () => {
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="text-center py-12">
+              <Trophy className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+              <p className="text-gray-500 dark:text-gray-400">
+                No leaderboard data yet. Be the first to earn referral rewards!
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
