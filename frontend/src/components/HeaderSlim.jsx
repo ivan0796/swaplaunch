@@ -6,6 +6,7 @@ import { useAccount } from 'wagmi';
 import WalletButtonWithHistory from './WalletButtonWithHistory';
 import ThemeToggle from './ThemeToggle';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useCurrency } from '../contexts/CurrencyContext';
 
 const HeaderSlim = () => {
   const { t } = useTranslation();
