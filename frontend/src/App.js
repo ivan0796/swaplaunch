@@ -29,14 +29,16 @@ import StakingPage from './pages/StakingPage';
 import PromotePage from './pages/PromotePage';
 import { Toaster } from './components/ui/sonner';
 import { CurrencyProvider } from './contexts/CurrencyContext';
+import { SettingsProvider } from './contexts/SettingsContext';
 
 function App() {
   return (
     <CurrencyProvider>
-      <ThemeProvider>
-      <div className="App">
-        <BrowserRouter>
-          <Routes>
+      <SettingsProvider>
+        <ThemeProvider>
+        <div className="App">
+          <BrowserRouter>
+            <Routes>
             {/* Default Route - Token Launch Funnel */}
             <Route path="/" element={<TokenCreatorPageV2 />} />
             
