@@ -196,6 +196,25 @@ const TokenLockerPage = () => {
                   onChange={(e) => setAmount(e.target.value)}
                   className="dark:bg-gray-700 dark:border-gray-600"
                 />
+                {/* Fiat Preview */}
+                <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  {isFiatLoading ? (
+                    <span className="animate-pulse">Loading fiat value...</span>
+                  ) : (fiatPreview.usd || fiatPreview.eur) ? (
+                    <span className="flex items-center gap-1">
+                      ≈ 
+                      {fiatPreview.eur && (
+                        <span className="font-medium">€{Number(fiatPreview.eur).toLocaleString()}</span>
+                      )}
+                      {fiatPreview.eur && fiatPreview.usd && <span>·</span>}
+                      {fiatPreview.usd && (
+                        <span className="font-medium">${Number(fiatPreview.usd).toLocaleString()}</span>
+                      )}
+                    </span>
+                  ) : amount && tokenAddress ? (
+                    <span className="text-gray-400">Fiat preview not available</span>
+                  ) : null}
+                </div>
               </div>
 
               <div>
