@@ -21,6 +21,7 @@ const HeaderSlim = () => {
   const primaryNav = [
     { path: '/trade/swap', label: t('nav.swap') },
     { path: '/launch', label: t('nav.launch') },
+    { path: '/promote', label: t('nav.promote', 'Promote'), highlight: true },
     { path: '/staking', label: t('nav.staking', 'Staking') },
     { path: '/launchpad/token-locker', label: t('nav.lock') },
     { path: '/bridge', label: t('nav.bridge') }
