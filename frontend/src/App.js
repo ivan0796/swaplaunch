@@ -32,7 +32,8 @@ import { CurrencyProvider } from './contexts/CurrencyContext';
 
 function App() {
   return (
-    <ThemeProvider>
+    <CurrencyProvider>
+      <ThemeProvider>
       <div className="App">
         <BrowserRouter>
           <Routes>
