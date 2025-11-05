@@ -75,7 +75,7 @@ const SwapPageV2 = () => {
                 {selectedChain === 0 ? (
                   <SolanaSwapForm />
                 ) : (
-                  <SwapFormV2
+                  <SwapFormV3
                     chainId={selectedChain}
                     walletAddress={walletAddress}
                   />
