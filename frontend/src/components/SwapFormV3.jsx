@@ -378,7 +378,7 @@ const SwapFormV3 = ({ chainId = 1 }) => {
         {activeTab === 'swap' && (
           <div className="flex items-center justify-between text-sm mb-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
             <span className="text-gray-600 dark:text-gray-400">Slippage Tolerance</span>
-            <span className="font-medium dark:text-white">Auto: {slippage}%</span>
+            <span className="font-medium dark:text-white">{settings.slippage}%</span>
           </div>
         )}
 
