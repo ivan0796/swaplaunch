@@ -523,16 +523,15 @@ const SwapFormV3 = ({ chainId = 1 }) => {
                 <ChevronDown className="w-3 h-3 text-gray-400" />
               </button>
               <div className="text-right">
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  {(() => {
-                    if (!buyAmount || buyAmount === '0' || !buyToken) return <span className="text-gray-400">{getCurrencySymbol()}--</span>;
-                    const price = tokenPrices[buyToken.symbol];
-                    if (!price || isNaN(price)) return <span className="text-gray-400">{getCurrencySymbol()}--</span>;
-                    const value = parseFloat(buyAmount) * price;
-                    if (isNaN(value)) return <span className="text-gray-400">{getCurrencySymbol()}--</span>;
-                    return <span>≈ {formatPrice(value)}</span>;
-                  })()}
-                </div>
+                {buyAmount && buyAmount !== '0' && buyToken && tokenPrices[buyToken.symbol] ? (
+                  <div className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                    ≈ {formatPrice(parseFloat(buyAmount) * tokenPrices[buyToken.symbol])}
+                  </div>
+                ) : (
+                  <div className="text-xs text-gray-400">
+                    {getCurrencySymbol()}--
+                  </div>
+                )}
               </div>
             </div>
           </div>
