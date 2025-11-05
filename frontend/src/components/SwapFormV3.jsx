@@ -51,6 +51,37 @@ const SwapFormV3 = ({ chainId = 1 }) => {
   // Token prices in USD
   const [tokenPrices, setTokenPrices] = useState({});
 
+  // Fetch token prices from CoinGecko via backend
+  useEffect(() => {
+    const fetchTokenPrices = async () => {
+      try {
+        const response = await axios.get(`${API}/api/crypto/prices`);
+        if (response.data) {
+          setTokenPrices(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching token prices:', error);
+        // Fallback prices
+        setTokenPrices({
+          ETH: 3100,
+          WETH: 3100,
+          BNB: 620,
+          SOL: 170,
+          MATIC: 0.60,
+          USDT: 1,
+          USDC: 1,
+          DAI: 1,
+          WBTC: 95000
+        });
+      }
+    };
+    
+    fetchTokenPrices();
+    // Refresh prices every 30 seconds
+    const interval = setInterval(fetchTokenPrices, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   // Load tokens from URL params (for promoted tokens)
   useEffect(() => {
     const buyTokenParam = searchParams.get('buyToken');
