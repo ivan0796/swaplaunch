@@ -11,43 +11,42 @@ from typing import Dict, List, Optional
 from bson import ObjectId
 import requests
 
-# Promotion Packages (USD Prices)
+# Promotion Packages (EUR Prices)
 PROMO_PACKAGES = {
-    "featured_token": {
-        "name": "Featured Token Slot",
-        "description": "Prominent placement on homepage",
-        "prices": {
-            "24h": 16.75,
-            "7d": 94.00,
-            "30d": 377.00
-        }
-    },
     "trending_boost": {
-        "name": "Trending Boost (6h visible)",
-        "description": "🔥 Badge in token feed",
+        "name": "Trending Boost",
+        "description": "Anzeige in der Trending-Sektion mit 'Promoted' Badge",
         "prices": {
-            "24h": 6.15,
-            "7d": 26.00,
-            "30d": 86.00
+            "7d": 29.00
+        },
+        "features": [
+            "Anzeige in der Trending-Sektion",
+            "'Promoted' Badge auf der Token-Seite",
+            "Priorisierte Platzierung in Tokenlisten",
+            "Automatische Aktivierung nach Zahlung",
+            "Automatisches Ablauf-Ende nach 7 Tagen",
+            "Keine manuelle Freigabe notwendig"
+        ],
+        "auto_social_boost": {
+            "price": 12.00,
+            "description": "Automatische Erwähnung im öffentlichen Announcement-Feed"
         }
     },
-    "pinned_card": {
-        "name": "Pinned Token Card",
-        "description": "Fixed position #1 in listings",
+    "featured_banner": {
+        "name": "Featured Banner — Homepage Platzierung",
+        "description": "Sichtbarkeit direkt auf Homepage & Discover-Pages",
         "prices": {
-            "24h": 13.25,
-            "7d": 80.00,
-            "30d": 319.00
-        }
-    },
-    "hero_banner": {
-        "name": "Homepage Hero Banner",
-        "description": "Large hero block on homepage",
-        "prices": {
-            "24h": 25.50,
-            "7d": 153.00,
-            "30d": 489.00
-        }
+            "1d": 9.00,
+            "7d": 39.00,
+            "30d": 119.00
+        },
+        "features": [
+            "Sichtbarkeit direkt auf Homepage & Discover-Pages",
+            "Rotierende Bannerplatzierung (gleiche Sichtbarkeit für alle)",
+            "Live-Dashboard mit Impressions, Klicks & CTR",
+            "Automatische Aktivierung & Ablauf",
+            "Keine manuelle Verwaltung oder Support nötig"
+        ]
     }
 }
 
