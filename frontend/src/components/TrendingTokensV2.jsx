@@ -141,6 +141,7 @@ const TrendingTokensV2 = ({ onTokenSelect }) => {
               const priceChange = token.price_change_24h || 0;
               const isPositive = priceChange >= 0;
               const promoted = token.promoted || isPromoted(token.contract_address || token.address);
+              const pinned = isPinned(token.contract_address || token.address);
               
               return (
                 <div 
@@ -148,6 +149,8 @@ const TrendingTokensV2 = ({ onTokenSelect }) => {
                   className={`relative ${
                     promoted 
                       ? 'ring-2 ring-yellow-400 dark:ring-yellow-500 rounded-xl' 
+                      : pinned
+                      ? 'ring-2 ring-blue-400 dark:ring-blue-500 rounded-xl'
                       : ''
                   }`}
                 >
