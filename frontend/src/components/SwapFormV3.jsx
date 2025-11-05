@@ -283,45 +283,12 @@ const SwapFormV3 = ({ chainId = 1 }) => {
         {/* Settings Button */}
         <div className="flex justify-end mb-4">
           <button
-            onClick={() => setShowSettings(!showSettings)}
+            onClick={() => setShowSettingsModal(true)}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
             <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           </button>
         </div>
-
-        {/* Settings Panel */}
-        {showSettings && (
-          <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-xl">
-            <label className="block text-sm font-medium mb-2 dark:text-gray-300">
-              Slippage Tolerance
-            </label>
-            <div className="flex gap-2">
-              {[0.1, 0.5, 1.0].map(val => (
-                <button
-                  key={val}
-                  onClick={() => setSlippage(val)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    slippage === val
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-                  }`}
-                >
-                  {val}%
-                </button>
-              ))}
-              <input
-                type="number"
-                value={slippage}
-                onChange={(e) => setSlippage(parseFloat(e.target.value) || 0.5)}
-                className="flex-1 px-3 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg text-sm"
-                step="0.1"
-                min="0.1"
-                max="50"
-              />
-            </div>
-          </div>
-        )}
 
         {/* From Token */}
         <div className="mb-3">
