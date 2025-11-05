@@ -61,14 +61,17 @@ const HeaderSlim = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-3">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/q1ccyq6i_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png" 
-                alt="LaunchSwap"
-                className="h-14 w-14 object-contain"
-              />
-              <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                LaunchSwap
+            <Link to="/" className="flex items-center gap-2">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur-md opacity-50"></div>
+                <img 
+                  src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/q1ccyq6i_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png" 
+                  alt="SwapLaunch"
+                  className="relative h-10 w-10 object-contain"
+                />
+              </div>
+              <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hidden sm:block">
+                SwapLaunch
               </span>
             </Link>
 
