@@ -48,8 +48,19 @@ const SwapFormV3 = ({ chainId = 1 }) => {
   const [quote, setQuote] = useState(null);
   const [exchangeRate, setExchangeRate] = useState(null);
   
-  // Token prices in USD
-  const [tokenPrices, setTokenPrices] = useState({});
+  // Token prices in USD - Initialize with fallback immediately
+  const [tokenPrices, setTokenPrices] = useState({
+    ETH: 3100,
+    WETH: 3100,
+    BNB: 620,
+    SOL: 170,
+    MATIC: 0.60,
+    USDT: 1,
+    USDC: 1,
+    DAI: 1,
+    BTC: 95000,
+    WBTC: 95000
+  });
 
   // Fetch token prices from CoinGecko via backend
   useEffect(() => {
