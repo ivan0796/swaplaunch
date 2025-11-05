@@ -1720,7 +1720,7 @@ async def get_crypto_prices():
         # Update cache
         crypto_price_cache["prices"] = (result, current_time)
         
-        logger.info(f"Fetched live crypto prices: ETH={result['ETH']}€, BNB={result['BNB']}€, SOL={result['SOL']}€")
+        logger.info(f"Fetched live crypto prices: ETH=${result['ETH']['usd']}/€{result['ETH']['eur']}, SOL=${result['SOL']['usd']}/€{result['SOL']['eur']}")
         return result
         
     except httpx.HTTPError as e:
