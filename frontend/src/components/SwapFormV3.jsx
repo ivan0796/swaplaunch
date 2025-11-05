@@ -439,8 +439,8 @@ const SwapFormV3 = ({ chainId = 1 }) => {
               </button>
               <div className="text-right">
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  {sellAmount && sellAmount !== '0' ? (
-                    <span>≈ {formatPrice(parseFloat(sellAmount) * 3000)}</span>
+                  {sellAmount && sellAmount !== '0' && sellToken ? (
+                    <span>≈ {formatPrice(parseFloat(sellAmount) * (tokenPrices[sellToken.symbol] || 0))}</span>
                   ) : (
                     <span>$0.00</span>
                   )}
