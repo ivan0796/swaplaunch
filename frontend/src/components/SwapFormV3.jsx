@@ -521,6 +521,29 @@ const SwapFormV3 = ({ chainId = 1 }) => {
         isOpen={showSettingsModal}
         onClose={() => setShowSettingsModal(false)}
       />
+
+      {/* Token Search Modals */}
+      <TokenSearchModal
+        isOpen={showSellTokenModal}
+        onClose={() => setShowSellTokenModal(false)}
+        onSelectToken={(token) => {
+          setSellToken(token);
+          setShowSellTokenModal(false);
+        }}
+        chainId={chainId}
+        excludeToken={buyToken?.address}
+      />
+
+      <TokenSearchModal
+        isOpen={showBuyTokenModal}
+        onClose={() => setShowBuyTokenModal(false)}
+        onSelectToken={(token) => {
+          setBuyToken(token);
+          setShowBuyTokenModal(false);
+        }}
+        chainId={chainId}
+        excludeToken={sellToken?.address}
+      />
     </div>
   );
 };
