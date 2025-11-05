@@ -164,6 +164,15 @@ const TrendingTokensV2 = ({ onTokenSelect }) => {
                     </div>
                   )}
                   
+                  {/* Pinned Badge */}
+                  {!promoted && pinned && (
+                    <div className="absolute -top-2 -left-2 z-10">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-bold shadow-lg">
+                        📌 PINNED
+                      </span>
+                    </div>
+                  )}
+                  
                   <button
                     onClick={() => {
                       if (promoted) {
