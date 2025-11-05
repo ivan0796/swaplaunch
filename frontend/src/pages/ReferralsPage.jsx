@@ -303,16 +303,16 @@ const ReferralsPage = () => {
           </div>
         </div>
 
-        {/* Leaderboard - Always Visible */}
-        {leaderboard.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg">
-            <h3 className="text-xl font-bold mb-4 dark:text-white flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-yellow-500" />
-              Top Referrers Leaderboard
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-              See who's earning the most from referrals. No wallet connection needed to view.
-            </p>
+        {/* Leaderboard - Always Visible (No Wallet Required) */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg">
+          <h3 className="text-xl font-bold mb-4 dark:text-white flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-yellow-500" />
+            Top Referrers Leaderboard
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+            See who's earning the most from referrals. No wallet connection needed to view.
+          </p>
+          {leaderboard.length > 0 ? (
             <div className="space-y-3">
               {leaderboard.map((entry, idx) => (
                 <div 
