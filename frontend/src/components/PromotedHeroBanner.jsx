@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usePromotions } from '../hooks/usePromotions';
 import { Star, TrendingUp, ExternalLink } from 'lucide-react';
 import { Button } from './ui/button';
@@ -8,6 +9,7 @@ import axios from 'axios';
 const API = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
 const PromotedHeroBanner = () => {
+  const navigate = useNavigate();
   const { promotions, loading } = usePromotions('hero_banner');
   const [tokenInfo, setTokenInfo] = useState(null);
 
