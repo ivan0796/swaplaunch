@@ -3,6 +3,7 @@ import { useAccount, useDisconnect } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ChevronDown, History, LogOut, Copy, ExternalLink } from 'lucide-react';
 import SwapHistoryModal from './SwapHistoryModal';
+import ReferralCodeDisplay from './ReferralCodeDisplay';
 
 const WalletButtonWithHistory = () => {
   const { address, isConnected } = useAccount();
