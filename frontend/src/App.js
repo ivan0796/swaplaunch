@@ -90,6 +90,7 @@ function App() {
         <Toaster position="top-right" />
       </div>
     </ThemeProvider>
+    </CurrencyProvider>
   );
 }
 
