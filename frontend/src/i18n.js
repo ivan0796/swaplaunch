@@ -663,6 +663,73 @@ const resources = {
       "projects.allProjects": "所有项目",
       "projects.noProjects": "还没有项目。成为第一个被精选的！"
     }
+  },
+  zh: {
+    translation: {
+      // Navigation
+      "nav.swap": "兑换",
+      "nav.trade": "交易",
+      "nav.launch": "代币发行",
+      "nav.promote": "推广",
+      "nav.staking": "质押",
+      "nav.lock": "锁定流动性",
+      "nav.bridge": "跨链桥",
+      "nav.more": "更多",
+      
+      // Common
+      "common.connect": "连接钱包",
+      "common.disconnect": "断开连接",
+      "common.loading": "加载中...",
+      "common.submit": "提交",
+      "common.cancel": "取消",
+      "common.confirm": "确认",
+      "common.success": "成功",
+      "common.error": "错误",
+      "common.next": "下一步",
+      "common.back": "返回",
+      
+      // Hero
+      "hero.title": "在几分钟内创建并发布您的代币",
+      "hero.subtitle": "非托管、多链支持 - 您始终掌控您的资产",
+      "hero.trustBullet1": "非托管",
+      "hero.trustBullet2": "透明费用",
+      "hero.trustBullet3": "快速部署",
+      
+      // Swap
+      "swap.title": "兑换",
+      "swap.sellToken": "卖出",
+      "swap.buyToken": "买入",
+      "swap.balance": "余额",
+      "swap.max": "最大",
+      "swap.youPay": "您支付",
+      "swap.youReceive": "您接收",
+      "swap.review": "审核兑换",
+      "swap.confirm": "确认兑换",
+      
+      // Promote
+      "promote.title": "推广您的代币",
+      "promote.subtitle": "直接在平台上获得更多曝光。无需注册，无需审批，一切在链上进行。",
+      "promote.selectChain": "选择区块链",
+      "promote.selectPackage": "选择推广套餐",
+      "promote.duration": "时长",
+      "promote.currency": "货币",
+      "promote.summary": "摘要",
+      "promote.payNow": "立即推广",
+      
+      // Staking
+      "staking.title": "质押",
+      "staking.subtitle": "质押您的代币以获得奖励",
+      "staking.stake": "质押",
+      "staking.unstake": "解除质押",
+      "staking.rewards": "奖励",
+      "staking.apy": "年化收益率",
+      
+      // Footer
+      "footer.product": "产品",
+      "footer.company": "公司",
+      "footer.legal": "法律",
+      "footer.community": "社区"
+    }
   }
 };
 
@@ -678,7 +745,8 @@ i18n
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage']
-    }
+    },
+    supportedLngs: ['en', 'de', 'zh']
   });
 
 export default i18n;
