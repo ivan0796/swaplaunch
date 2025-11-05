@@ -2026,6 +2026,14 @@ from referral_system_v2 import (
     get_referral_stats
 )
 
+# Import contract integration
+from contract_integration import (
+    check_referral_on_chain,
+    get_referrer_stats_on_chain,
+    get_all_chain_referrer_stats,
+    prepare_register_referral_tx
+)
+
 # Referral API endpoints
 @api_router.get("/referral/code/{wallet_address}")
 async def get_referral_code(wallet_address: str):
