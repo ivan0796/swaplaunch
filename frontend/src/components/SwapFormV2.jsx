@@ -501,67 +501,6 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
         />
       </div>
 
-      {/* Slippage Settings */}
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-600">Slippage Tolerance</span>
-        <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            variant={autoSlippage ? "default" : "outline"}
-            onClick={() => setAutoSlippage(true)}
-            className="h-8 px-3"
-            data-testid="auto-slippage-button"
-          >
-            <Zap className="w-3 h-3 mr-1" />
-            Auto
-          </Button>
-          <Button
-            size="sm"
-            variant={!autoSlippage ? "default" : "outline"}
-            onClick={() => {
-              setAutoSlippage(false);
-              setShowSlippageSettings(!showSlippageSettings);
-            }}
-            className="h-8 px-3"
-          >
-            <Settings className="w-3 h-3 mr-1" />
-            {formatSlippage(effectiveSlippage.slippage)}
-          </Button>
-        </div>
-      </div>
-
-      {showSlippageSettings && !autoSlippage && (
-        <div className="bg-gray-50 rounded-lg p-3 dark:bg-gray-800">
-          <label className="text-xs text-gray-600 dark:text-gray-400 mb-2 block">Custom Slippage (%)</label>
-          <Input
-            type="number"
-            value={manualSlippage}
-            onChange={(e) => setManualSlippage(parseFloat(e.target.value) || 0.5)}
-            step="0.1"
-            min="0.1"
-            max="50"
-            className="h-8"
-          />
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-            Recommended: 0.1-0.5% for stablecoins, 0.5-1% for major tokens
-          </p>
-        </div>
-      )}
-
-      {/* Auto-Slippage Info (nur sichtbar im Auto-Modus) */}
-      {autoSlippage && effectiveSlippage.reason && (
-        <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
-          <Zap className="w-3 h-3" />
-          <span>Auto: {effectiveSlippage.reason}</span>
-        </div>
-      )}
-
-      {showWarning && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-700 dark:text-yellow-200">
-          {effectiveSlippage.warning}
-        </div>
-      )}
-
       {/* Sell Token */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-gray-700">You Pay</label>
