@@ -94,6 +94,16 @@ const PromotePage = () => {
     return (usdPrice / pricePerCoin).toFixed(6);
   };
 
+  const getCurrencySymbol = () => {
+    const symbols = { usd: '$', eur: '€', gbp: '£' };
+    return symbols[selectedCurrency] || '$';
+  };
+
+  const getCurrencyName = () => {
+    const names = { usd: 'USD', eur: 'EUR', gbp: 'GBP' };
+    return names[selectedCurrency] || 'USD';
+  };
+
   const handlePromote = async () => {
     if (!tokenAddress) {
       toast.error('Please enter token address');
