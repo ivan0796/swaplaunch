@@ -119,11 +119,19 @@ const RouteBreakdown = ({ quote, sellToken, buyToken, chainId }) => {
 
               {/* Platform Fee (Tiered) */}
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   <span className="text-gray-600 dark:text-gray-400">Platform Fee</span>
+                  <div className="group relative">
+                    <Info className="w-3.5 h-3.5 text-gray-400 cursor-help" />
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none w-64 z-10">
+                      <p className="font-semibold mb-1">Why Platform Fee?</p>
+                      <p>We aggregate the best routes, maintain infrastructure, and ensure non-custodial service. Your funds never leave your wallet.</p>
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                    </div>
+                  </div>
                   {quote.feeTier && (
                     <span className="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded text-xs font-semibold">
-                      {quote.feePercent}%
+                      Tier {quote.feeTier} · {quote.feePercent}%
                     </span>
                   )}
                 </div>
