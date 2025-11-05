@@ -61,10 +61,17 @@ export const CurrencyProvider = ({ children }) => {
     return names[currency] || 'USD';
   };
 
-  const formatPrice = (price, showSymbol = true) => {
-    if (!price && price !== 0) return 'N/A';
+  // Exchange rates (updated periodically, USD base)
+  const [exchangeRates, setExchangeRates] = useState({ usd: 1, eur: 0.92, gbp: 0.79 });
+
+  const formatPrice = (priceUSD, showSymbol = true) => {
+    if (!priceUSD && priceUSD !== 0) return 'N/A';
     
-    const formatted = Number(price).toLocaleString(undefined, {
+    // Convert from USD to selected currency
+    const rate = exchangeRates[currency] || 1;
+    const convertedPrice = priceUSD * rate;
+    
+    const formatted = Number(convertedPrice).toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
