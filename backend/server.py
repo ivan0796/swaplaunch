@@ -2016,6 +2016,73 @@ async def mock_activate_promotion(request_id: str):
     
     return {"success": True, "message": "Promotion activated (TEST MODE)"}
 
+# Import referral system V2
+from referral_system_v2 import (
+    get_or_create_referral_code,
+    validate_referral_code,
+    redeem_referral_code,
+    check_free_swap_eligibility,
+    mark_free_swap_used,
+    get_referral_stats
+)
+
+# Referral API endpoints
+@api_router.get("/referral/code/{wallet_address}")
+async def get_referral_code(wallet_address: str):
+    """Get or create referral code for wallet"""
+    try:
+        result = await get_or_create_referral_code(wallet_address)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/referral/validate")
+async def validate_code(request: Dict[str, str]):
+    """Validate a referral code"""
+    code = request.get('code')
+    if not code:
+        raise HTTPException(status_code=400, detail="Code required")
+    
+    result = await validate_referral_code(code)
+    if not result:
+        return {"valid": False}
+    
+    return {"valid": True, "uses": result['uses']}
+
+@api_router.post("/referral/redeem")
+async def redeem_code(request: Dict[str, str]):
+    """Redeem a referral code"""
+    wallet = request.get('wallet')
+    code = request.get('code')
+    
+    if not wallet or not code:
+        raise HTTPException(status_code=400, detail="Wallet and code required")
+    
+    result = await redeem_referral_code(wallet, code)
+    return result
+
+@api_router.get("/referral/eligible/{wallet_address}")
+async def check_eligibility(wallet_address: str):
+    """Check if wallet is eligible for free swap"""
+    result = await check_free_swap_eligibility(wallet_address)
+    return result
+
+@api_router.post("/referral/use-free-swap")
+async def use_free_swap(request: Dict[str, str]):
+    """Mark free swap as used"""
+    wallet = request.get('wallet')
+    if not wallet:
+        raise HTTPException(status_code=400, detail="Wallet required")
+    
+    success = await mark_free_swap_used(wallet)
+    return {"success": success}
+
+@api_router.get("/referral/stats/{wallet_address}")
+async def get_stats(wallet_address: str):
+    """Get referral statistics"""
+    stats = await get_referral_stats(wallet_address)
+    return stats
+
 # Include the routers in the main app
 from ad_management import ad_router
 from referral_system import referral_router
