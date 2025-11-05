@@ -376,12 +376,65 @@ async def check_payment_evm(payment_address: str, expected_amount: float, chain:
 
 async def check_payment_xrp(payment_address: str, expected_amount: float, since_timestamp: str) -> Optional[str]:
     """
-    Check for XRP payment
+    Check for XRP payment via XRPL API
     Returns: tx_hash if found, None otherwise
     """
-    # TODO: Implement XRPL scanning
-    # This is a placeholder
-    return None
+    try:
+        from xrpl.clients import JsonRpcClient
+        from xrpl.models import AccountTx
+        from datetime import datetime
+        
+        # Use HTTP RPC for queries
+        rpc_url = SUPPORTED_CHAINS["xrp"]["rpc_url"]
+        http_rpc = rpc_url.replace("wss://", "https://")
+        
+        client = JsonRpcClient(http_rpc)
+        
+        # Get account transactions
+        request = AccountTx(
+            account=payment_address,
+            ledger_index_min=-1,
+            ledger_index_max=-1,
+            limit=50
+        )
+        
+        response = client.request(request)
+        
+        if not response.is_successful() or 'transactions' not in response.result:
+            return None
+        
+        # Parse since_timestamp
+        since_dt = datetime.fromisoformat(since_timestamp.replace('Z', '+00:00'))
+        
+        # XRP amounts are in "drops" (1 XRP = 1,000,000 drops)
+        expected_drops = int(expected_amount * 1_000_000)
+        tolerance = int(expected_drops * 0.01)  # 1% tolerance
+        
+        # Check each transaction
+        for tx_wrapper in response.result['transactions']:
+            tx = tx_wrapper.get('tx', {})
+            
+            # Check if this is a Payment to our address
+            if tx.get('TransactionType') != 'Payment':
+                continue
+            
+            if tx.get('Destination') != payment_address:
+                continue
+            
+            # Check amount (XRP is in drops)
+            amount = tx.get('Amount')
+            if isinstance(amount, str):  # XRP amount
+                tx_drops = int(amount)
+                if abs(tx_drops - expected_drops) <= tolerance:
+                    tx_hash = tx.get('hash')
+                    print(f"✅ Found XRP payment: {tx_hash}")
+                    return tx_hash
+        
+        return None
+        
+    except Exception as e:
+        print(f"❌ Error checking XRP payment: {e}")
+        return None
 
 
 async def activate_promotion(db, request_id: str, tx_hash: str):
