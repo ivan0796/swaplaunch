@@ -6,6 +6,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import HeaderSlim from '../components/HeaderSlim';
 import Footer from '../components/Footer';
 import SwapFormV2 from '../components/SwapFormV2';
+import SwapFormV3 from '../components/SwapFormV3';
 import SolanaSwapForm from '../components/SolanaSwapForm';
 import TrendingTokensV2 from '../components/TrendingTokensV2';
 import PromotedHeroBanner from '../components/PromotedHeroBanner';
