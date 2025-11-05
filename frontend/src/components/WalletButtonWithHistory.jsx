@@ -93,7 +93,12 @@ const WalletButtonWithHistory = () => {
               </button>
 
               <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+            </div>
 
+            {/* Referral Code Display */}
+            <ReferralCodeDisplay />
+
+            <div className="py-1">
               <button
                 onClick={() => {
                   disconnect();
