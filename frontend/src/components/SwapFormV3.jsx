@@ -47,6 +47,9 @@ const SwapFormV3 = ({ chainId = 1 }) => {
   // Quote data
   const [quote, setQuote] = useState(null);
   const [exchangeRate, setExchangeRate] = useState(null);
+  
+  // Token prices in USD
+  const [tokenPrices, setTokenPrices] = useState({});
 
   // Load tokens from URL params (for promoted tokens)
   useEffect(() => {
