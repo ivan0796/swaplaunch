@@ -33,6 +33,8 @@ const SwapFormV3 = ({ chainId = 1 }) => {
   // UI State
   const [loading, setLoading] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showSellTokenModal, setShowSellTokenModal] = useState(false);
+  const [showBuyTokenModal, setShowBuyTokenModal] = useState(false);
 
   // TWAP specific
   const [twapInterval, setTwapInterval] = useState(5); // minutes
