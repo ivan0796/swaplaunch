@@ -120,6 +120,40 @@ const HeaderSlim = () => {
             {/* Right Side */}
             <div className="flex items-center gap-2">
               <ThemeToggle />
+              
+              {/* Currency Selector */}
+              <div className="relative" ref={currencyRef}>
+                <button
+                  onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
+                  className="flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  title="Select Currency"
+                >
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {getCurrencySymbol()} {currency.toUpperCase()}
+                  </span>
+                  <ChevronDown className="w-3 h-3 text-gray-500" />
+                </button>
+
+                {currencyDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
+                    {['usd', 'eur', 'gbp'].map((curr) => (
+                      <button
+                        key={curr}
+                        onClick={() => {
+                          setCurrency(curr);
+                          setCurrencyDropdownOpen(false);
+                        }}
+                        className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                          currency === curr ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold' : 'text-gray-700 dark:text-gray-300'
+                        }`}
+                      >
+                        {curr === 'usd' ? '$ USD' : curr === 'eur' ? '€ EUR' : '£ GBP'}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
               <LanguageSwitcher />
               <div className="hidden md:block">
                 <WalletButtonWithHistory />
