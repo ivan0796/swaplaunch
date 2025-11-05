@@ -536,6 +536,13 @@ const TokenCreatorPageV2 = () => {
         </section>
       )}
 
+      {/* Featured Tokens Section */}
+      <section className="py-8 px-4 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-900/50">
+        <div className="max-w-6xl mx-auto">
+          <FeaturedTokens />
+        </div>
+      </section>
+
       {/* Main Launch Section */}
       <section id="launch-form" className="py-12 px-4">
         <div className="max-w-7xl mx-auto">
