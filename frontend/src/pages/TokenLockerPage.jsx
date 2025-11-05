@@ -250,37 +250,37 @@ const TokenLockerPage = () => {
             </div>
           </div>
 
-          {/* My Locks */}
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Clock className="w-8 h-8 text-purple-600" />
-              <h2 className="text-2xl font-bold dark:text-white">My Locks</h2>
+          {/* My Locks - Kompakter */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Clock className="w-6 h-6 text-purple-600" />
+              <h2 className="text-xl font-bold dark:text-white">My Locks</h2>
             </div>
 
             {!isConnected ? (
-              <div className="text-center py-12">
-                <Lock className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-                <p className="text-gray-600 dark:text-gray-400">Connect wallet to view your locks</p>
+              <div className="text-center py-8">
+                <Lock className="w-10 h-10 mx-auto mb-2 text-gray-400" />
+                <p className="text-sm text-gray-600 dark:text-gray-400">Connect wallet to view your locks</p>
               </div>
             ) : myLocks.length === 0 ? (
-              <div className="text-center py-12">
-                <Lock className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-                <p className="text-gray-600 dark:text-gray-400">No active locks</p>
+              <div className="text-center py-8">
+                <Lock className="w-10 h-10 mx-auto mb-2 text-gray-400" />
+                <p className="text-sm text-gray-600 dark:text-gray-400">No active locks</p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {myLocks.map((lock) => {
                   const unlockTime = new Date(lock.unlockDate);
                   const isUnlockable = unlockTime <= new Date();
                   
                   return (
-                    <div key={lock.id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-                      <div className="flex justify-between items-start mb-3">
+                    <div key={lock.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+                      <div className="flex justify-between items-start mb-2">
                         <div>
-                          <div className="font-bold text-lg dark:text-white">{lock.amount} {lock.token}</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">Locked until</div>
+                          <div className="font-bold text-base dark:text-white">{lock.amount} {lock.token}</div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400">Locked until</div>
                         </div>
-                        <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        <div className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                           isUnlockable 
                             ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
                             : 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
@@ -289,12 +289,12 @@ const TokenLockerPage = () => {
                         </div>
                       </div>
                       
-                      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
-                        <Calendar className="w-4 h-4" />
+                      <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 mb-2">
+                        <Calendar className="w-3 h-3" />
                         {unlockTime.toLocaleString()}
                       </div>
 
-                      <div className="text-xs text-gray-500 dark:text-gray-500 mb-3">
+                      <div className="text-xs text-gray-500 dark:text-gray-500 mb-2">
                         Beneficiary: {lock.beneficiary.slice(0, 6)}...{lock.beneficiary.slice(-4)}
                       </div>
 
@@ -302,9 +302,9 @@ const TokenLockerPage = () => {
                         <Button
                           onClick={() => handleUnlock(lock.id)}
                           size="sm"
-                          className="w-full bg-green-600 hover:bg-green-700"
+                          className="w-full bg-green-600 hover:bg-green-700 h-8 text-xs"
                         >
-                          <CheckCircle className="w-4 h-4 mr-2" />
+                          <CheckCircle className="w-3 h-3 mr-1" />
                           Unlock Tokens
                         </Button>
                       )}
