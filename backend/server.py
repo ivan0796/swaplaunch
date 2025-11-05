@@ -1651,7 +1651,7 @@ async def get_crypto_prices():
         url = "https://api.coingecko.com/api/v3/simple/price"
         params = {
             "ids": "ethereum,binancecoin,solana,matic-network,avalanche-2",
-            "vs_currencies": "eur"
+            "vs_currencies": "usd,eur"
         }
         
         async with httpx.AsyncClient(timeout=10.0) as client:
@@ -1659,13 +1659,28 @@ async def get_crypto_prices():
             response.raise_for_status()
             data = response.json()
         
-        # Map to our currency symbols
+        # Map to our currency symbols (both USD and EUR)
         result = {
-            "ETH": data.get("ethereum", {}).get("eur", 3000),  # fallback to 3000
-            "BNB": data.get("binancecoin", {}).get("eur", 600),  # fallback to 600
-            "SOL": data.get("solana", {}).get("eur", 170),  # fallback to 170
-            "MATIC": data.get("matic-network", {}).get("eur", 0.60),  # fallback to 0.60
-            "AVAX": data.get("avalanche-2", {}).get("eur", 33),  # fallback to 33
+            "ETH": {
+                "usd": data.get("ethereum", {}).get("usd", 3500),
+                "eur": data.get("ethereum", {}).get("eur", 3000)
+            },
+            "BNB": {
+                "usd": data.get("binancecoin", {}).get("usd", 700),
+                "eur": data.get("binancecoin", {}).get("eur", 600)
+            },
+            "SOL": {
+                "usd": data.get("solana", {}).get("usd", 200),
+                "eur": data.get("solana", {}).get("eur", 170)
+            },
+            "MATIC": {
+                "usd": data.get("matic-network", {}).get("usd", 0.70),
+                "eur": data.get("matic-network", {}).get("eur", 0.60)
+            },
+            "AVAX": {
+                "usd": data.get("avalanche-2", {}).get("usd", 38),
+                "eur": data.get("avalanche-2", {}).get("eur", 33)
+            },
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "cache_ttl_seconds": CRYPTO_PRICE_CACHE_TTL
         }
