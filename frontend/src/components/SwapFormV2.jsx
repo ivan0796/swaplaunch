@@ -172,7 +172,7 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
   }, [sellToken, buyToken, sellAmount, walletAddress]);
 
   const fetchQuote = async () => {
-    if (!sellToken || !buyToken || !sellAmount || parseFloat(sellAmount) <= 0 || !walletAddress) {
+    if (!sellToken || !buyToken || !sellAmount || parseFloat(sellAmount) <= 0) {
       return;
     }
 
@@ -186,11 +186,14 @@ const SwapFormV2 = ({ chainId, walletAddress }) => {
       const chainNames = { 1: 'ethereum', 56: 'bsc', 137: 'polygon' };
       const chainName = chainNames[chainId] || 'ethereum';
 
+      // Use wallet address if connected, otherwise use a dummy address for quote
+      const takerAddr = walletAddress || '0x0000000000000000000000000000000000000000';
+
       const response = await axios.post(`${API}/evm/quote`, {
         sellToken: sellToken.address,
         buyToken: buyToken.address,
         sellAmount: sellAmountInBaseUnits,
-        takerAddress: walletAddress,
+        takerAddress: takerAddr,
         chain: chainName
       });
 
