@@ -16,6 +16,7 @@ const SwapFormV3 = ({ chainId = 1 }) => {
   const { t } = useTranslation();
   const { address: walletAddress } = useAccount();
   const { formatPrice, getCurrencySymbol } = useCurrency();
+  const { settings } = useSettings();
 
   // Tabs State
   const [activeTab, setActiveTab] = useState('swap'); // swap, twap, limit
@@ -28,7 +29,6 @@ const SwapFormV3 = ({ chainId = 1 }) => {
 
   // UI State
   const [loading, setLoading] = useState(false);
-  const [slippage, setSlippage] = useState(0.5);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // TWAP specific
