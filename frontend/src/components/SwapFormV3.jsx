@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
+import { useSearchParams } from 'react-router-dom';
 import { ChevronDown, Settings, ArrowDown, Info } from 'lucide-react';
 import { Button } from './ui/button';
 import { toast } from 'sonner';
@@ -17,6 +18,7 @@ const SwapFormV3 = ({ chainId = 1 }) => {
   const { address: walletAddress } = useAccount();
   const { formatPrice, getCurrencySymbol } = useCurrency();
   const { settings } = useSettings();
+  const [searchParams] = useSearchParams();
 
   // Tabs State
   const [activeTab, setActiveTab] = useState('swap'); // swap, twap, limit
@@ -43,11 +45,93 @@ const SwapFormV3 = ({ chainId = 1 }) => {
   const [quote, setQuote] = useState(null);
   const [exchangeRate, setExchangeRate] = useState(null);
 
+  // Load tokens from URL params (for promoted tokens)
+  useEffect(() => {
+    const buyTokenParam = searchParams.get('buyToken');
+    const sellTokenParam = searchParams.get('sellToken');
+
+    if (buyTokenParam || sellTokenParam) {
+      // Fetch token info and set
+      const loadTokensFromParams = async () => {
+        try {
+          // Load buy token (You Receive)
+          if (buyTokenParam) {
+            const buyResponse = await axios.get(`${API}/api/token/resolve`, {
+              params: { query: buyTokenParam, limit: 1 }
+            });
+            if (buyResponse.data.results && buyResponse.data.results.length > 0) {
+              const token = buyResponse.data.results[0];
+              setBuyToken({
+                address: buyTokenParam,
+                symbol: token.symbol || 'TOKEN',
+                name: token.name || 'Unknown',
+                logoURI: token.logoURI || null,
+                decimals: token.decimals || 18
+              });
+            }
+          }
+
+          // Load sell token (You Pay) - native token
+          if (sellTokenParam) {
+            const nativeTokens = {
+              'ETH': {
+                address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+                symbol: 'ETH',
+                name: 'Ethereum',
+                decimals: 18,
+                logoURI: 'https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png'
+              },
+              'BNB': {
+                address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+                symbol: 'BNB',
+                name: 'BNB',
+                decimals: 18,
+                logoURI: null
+              },
+              'MATIC': {
+                address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+                symbol: 'MATIC',
+                name: 'Polygon',
+                decimals: 18,
+                logoURI: null
+              },
+              'SOL': {
+                address: 'So11111111111111111111111111111111111111112',
+                symbol: 'SOL',
+                name: 'Solana',
+                decimals: 9,
+                logoURI: null
+              },
+              'XRP': {
+                address: 'XRP',
+                symbol: 'XRP',
+                name: 'XRP',
+                decimals: 6,
+                logoURI: null
+              }
+            };
+
+            const nativeToken = nativeTokens[sellTokenParam.toUpperCase()];
+            if (nativeToken) {
+              setSellToken(nativeToken);
+            }
+          }
+        } catch (error) {
+          console.error('Error loading tokens from params:', error);
+        }
+      };
+
+      loadTokensFromParams();
+    }
+  }, [searchParams]);
+
   // Default tokens
   useEffect(() => {
-    // Set default tokens based on chain
-    if (chainId === 1) { // Ethereum
-      setSellToken({
+    // Only set defaults if no URL params
+    if (!searchParams.get('buyToken') && !searchParams.get('sellToken')) {
+      // Set default tokens based on chain
+      if (chainId === 1) { // Ethereum
+        setSellToken({
         address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         symbol: 'ETH',
         name: 'Ethereum',
