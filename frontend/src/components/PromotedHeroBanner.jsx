@@ -99,11 +99,49 @@ const PromotedHeroBanner = () => {
         </p>
 
         <div className="flex gap-3">
-          <Button className="bg-white text-purple-600 hover:bg-gray-100">
+          <Button 
+            className="bg-white text-purple-600 hover:bg-gray-100"
+            onClick={() => {
+              // Get chain ID
+              const chainIdMap = {
+                'ethereum': 1,
+                'eth': 1,
+                'bsc': 56,
+                'binance': 56,
+                'polygon': 137,
+                'matic': 137,
+                'solana': 'solana',
+                'xrp': 'xrp'
+              };
+              const chainId = chainIdMap[promo.chain.toLowerCase()] || 1;
+              
+              // Native tokens
+              const nativeTokens = {
+                'ethereum': 'ETH',
+                'eth': 'ETH',
+                'solana': 'SOL',
+                'bsc': 'BNB',
+                'binance': 'BNB',
+                'polygon': 'MATIC',
+                'matic': 'MATIC',
+                'xrp': 'XRP'
+              };
+              const fromToken = nativeTokens[promo.chain.toLowerCase()] || 'ETH';
+              
+              navigate(`/trade/swap?chain=${chainId}&buyToken=${promo.token_address}&sellToken=${fromToken}`);
+            }}
+          >
             <TrendingUp className="w-4 h-4 mr-2" />
             Trade Now
           </Button>
-          <Button variant="outline" className="border-white text-white hover:bg-white/10">
+          <Button 
+            variant="outline" 
+            className="border-white text-white hover:bg-white/10"
+            onClick={() => {
+              const chain = promo.chain.toLowerCase();
+              navigate(`/token/${chain}/${promo.token_address}`);
+            }}
+          >
             <ExternalLink className="w-4 h-4 mr-2" />
             View Details
           </Button>
