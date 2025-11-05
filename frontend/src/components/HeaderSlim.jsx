@@ -218,16 +218,16 @@ const HeaderSlim = () => {
 
       {/* Mobile Sticky Bottom Bar (nur wenn nicht verbunden) */}
       {!isConnected && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-600 to-purple-600 p-4 shadow-2xl">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-600 to-purple-600 p-3 shadow-2xl">
           <Link
             to="/launch"
-            className="flex items-center justify-center gap-2 w-full bg-white text-blue-600 text-center font-bold py-3 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+            className="flex items-center justify-center gap-2 w-full bg-white text-blue-600 text-center font-bold py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
           >
             {t('cta.startToken')}
             <img 
               src="https://customer-assets.emergentagent.com/job_9c53c1f9-10f1-41e7-a7c4-12afcbaf39e9/artifacts/q1ccyq6i_ChatGPT%20Image%204.%20Nov.%202025%2C%2009_26_52.png"
               alt="Rocket"
-              className="w-7 h-7 object-contain"
+              className="w-6 h-6 object-contain"
             />
           </Link>
         </div>
