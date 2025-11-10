@@ -137,7 +137,7 @@ backend:
   - task: "Referral System Backend API"
     implemented: true
     working: true
-    file: "/app/backend/referral_system.py"
+    file: "/app/backend/referral_system.py, /app/backend/referral_system_v2.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -151,6 +151,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ PHASE 3 VERIFICATION COMPLETE: Referral leaderboard endpoint remains accessible and functional after frontend route changes. Returns proper JSON structure with leaderboard array. No regressions detected from Phase 3 frontend modifications."
+      - working: true
+        agent: "testing"
+        comment: "✅ REFERRAL SYSTEM V2 TESTING COMPLETE: All 5 priority endpoints from review request working perfectly. GET /api/referral/code/{wallet} returns/creates referral codes (8-char alphanumeric). POST /api/referral/validate correctly validates codes. POST /api/referral/redeem links users to referrers with free swap eligibility. GET /api/referral/eligible/{wallet} checks free swap status. GET /api/referral/stats/{wallet} returns comprehensive stats with on-chain integration. Complete test flow executed: Generate code (Wallet A) → Validate code → Redeem with Wallet B → Check eligibility → Get stats. MongoDB collections (referrals, users) working correctly. All V2 endpoints passed (12/12 tests). Both legacy and V2 systems operational."
 
   - task: "Smart Contract: FeeTakingRouterV2 (EVM Chains)"
     implemented: true
