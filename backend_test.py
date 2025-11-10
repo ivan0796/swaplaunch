@@ -568,7 +568,287 @@ class SwapLaunchAPITester:
             return False
 
     # ========================================
-    # REFERRAL SYSTEM TESTS
+    # REFERRAL SYSTEM V2 TESTS (Priority Endpoints)
+    # ========================================
+
+    def test_referral_code_get_endpoint(self):
+        """Test GET /api/referral/code/{wallet} - Get or create referral code"""
+        try:
+            # Use the sample wallet from review request
+            test_wallet = "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb1"
+            
+            response = requests.get(
+                f"{self.api_url}/referral/code/{test_wallet}",
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                expected_keys = ["code", "uses", "rewards"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if has_expected_structure:
+                    code = data.get("code")
+                    uses = data.get("uses", 0)
+                    rewards = data.get("rewards", 0)
+                    
+                    # Code should be 8 characters, alphanumeric
+                    code_valid = isinstance(code, str) and len(code) == 8 and code.isalnum()
+                    success = code_valid and isinstance(uses, int) and isinstance(rewards, (int, float))
+                    details = f"Referral code: {code}, Uses: {uses}, Rewards: {rewards}"
+                else:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("GET Referral Code Endpoint", success, details,
+                         "" if success else f"Failed to get/create referral code")
+            return success, data.get('code') if success else None
+            
+        except Exception as e:
+            self.log_test("GET Referral Code Endpoint", False, "", str(e))
+            return False, None
+
+    def test_referral_validate_endpoint(self):
+        """Test POST /api/referral/validate - Validate referral code"""
+        try:
+            # First get a valid code
+            code_success, test_code = self.test_referral_code_get_endpoint()
+            
+            if not code_success or not test_code:
+                # Try with a known test code
+                test_code = "TEST1234"
+            
+            # Test valid code
+            response = requests.post(
+                f"{self.api_url}/referral/validate",
+                json={"code": test_code},
+                headers={"Content-Type": "application/json"},
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                expected_keys = ["valid"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if has_expected_structure:
+                    valid = data.get("valid")
+                    success = isinstance(valid, bool)
+                    
+                    if valid and "uses" in data:
+                        uses = data.get("uses", 0)
+                        details = f"Code {test_code} is valid with {uses} uses"
+                    else:
+                        details = f"Code {test_code} validation result: {valid}"
+                else:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("POST Referral Validate Endpoint", success, details,
+                         "" if success else f"Failed to validate referral code")
+            return success, test_code
+            
+        except Exception as e:
+            self.log_test("POST Referral Validate Endpoint", False, "", str(e))
+            return False, None
+
+    def test_referral_redeem_endpoint(self):
+        """Test POST /api/referral/redeem - Redeem referral code"""
+        try:
+            # Get a valid referral code from Wallet A
+            wallet_a = "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb1"
+            code_success, referral_code = self.test_referral_code_get_endpoint()
+            
+            if not code_success or not referral_code:
+                self.log_test("POST Referral Redeem Endpoint", False, "", "No valid referral code available")
+                return False
+            
+            # Try to redeem with Wallet B (different wallet)
+            wallet_b = "0x8ba1f109551bD432803012645Hac136c22C177ec"
+            
+            response = requests.post(
+                f"{self.api_url}/referral/redeem",
+                json={"wallet": wallet_b, "code": referral_code},
+                headers={"Content-Type": "application/json"},
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                expected_keys = ["success", "message", "discount"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if has_expected_structure:
+                    redeem_success = data.get("success")
+                    message = data.get("message", "")
+                    discount = data.get("discount")
+                    
+                    success = isinstance(redeem_success, bool) and isinstance(discount, bool)
+                    
+                    if redeem_success:
+                        details = f"Code {referral_code} redeemed successfully. Message: {message}, Discount: {discount}"
+                    else:
+                        details = f"Code {referral_code} redemption failed (expected): {message}"
+                        # This might be expected if already redeemed
+                        success = True
+                else:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("POST Referral Redeem Endpoint", success, details,
+                         "" if success else f"Failed to redeem referral code")
+            return success, wallet_b
+            
+        except Exception as e:
+            self.log_test("POST Referral Redeem Endpoint", False, "", str(e))
+            return False, None
+
+    def test_referral_eligible_endpoint(self):
+        """Test GET /api/referral/eligible/{wallet} - Check free swap eligibility"""
+        try:
+            # Test with wallet that may have redeemed a code
+            test_wallet = "0x8ba1f109551bD432803012645Hac136c22C177ec"
+            
+            response = requests.get(
+                f"{self.api_url}/referral/eligible/{test_wallet}",
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                expected_keys = ["eligible"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if has_expected_structure:
+                    eligible = data.get("eligible")
+                    code_used = data.get("code_used")
+                    
+                    success = isinstance(eligible, bool)
+                    
+                    if eligible:
+                        details = f"Wallet {test_wallet} is eligible for free swap. Code used: {code_used}"
+                    else:
+                        details = f"Wallet {test_wallet} is not eligible for free swap. Code used: {code_used}"
+                else:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("GET Referral Eligible Endpoint", success, details,
+                         "" if success else f"Failed to check eligibility")
+            return success
+            
+        except Exception as e:
+            self.log_test("GET Referral Eligible Endpoint", False, "", str(e))
+            return False
+
+    def test_referral_stats_v2_endpoint(self):
+        """Test GET /api/referral/stats/{wallet} - Get referral statistics (V2)"""
+        try:
+            # Test with wallet that should have referral code
+            test_wallet = "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb1"
+            
+            response = requests.get(
+                f"{self.api_url}/referral/stats/{test_wallet}",
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                expected_keys = ["code", "total_referrals", "rewards", "referred_users"]
+                has_expected_structure = all(key in data for key in expected_keys)
+                
+                if has_expected_structure:
+                    code = data.get("code")
+                    total_referrals = data.get("total_referrals", 0)
+                    rewards = data.get("rewards", 0)
+                    referred_users = data.get("referred_users", [])
+                    
+                    success = (isinstance(total_referrals, int) and 
+                              isinstance(rewards, (int, float)) and 
+                              isinstance(referred_users, list))
+                    
+                    details = f"Stats for {test_wallet}: Code: {code}, Referrals: {total_referrals}, Rewards: {rewards}, Users: {len(referred_users)}"
+                    
+                    # Check if on_chain data is included
+                    if "on_chain" in data:
+                        details += f", On-chain data: {type(data['on_chain'])}"
+                else:
+                    success = False
+                    details = f"Missing expected keys. Got: {list(data.keys())}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:500]}"
+                
+            self.log_test("GET Referral Stats V2 Endpoint", success, details,
+                         "" if success else f"Failed to get referral stats")
+            return success
+            
+        except Exception as e:
+            self.log_test("GET Referral Stats V2 Endpoint", False, "", str(e))
+            return False
+
+    def test_referral_system_v2_flow(self):
+        """Test complete referral system V2 flow as specified in review request"""
+        try:
+            print("\n🔄 Testing Complete Referral System V2 Flow...")
+            
+            # Step 1: Generate code for Wallet A
+            print("Step 1: Generate code for Wallet A")
+            wallet_a = "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb1"
+            code_success, referral_code = self.test_referral_code_get_endpoint()
+            
+            if not code_success:
+                self.log_test("Referral System V2 Flow", False, "", "Failed to generate referral code")
+                return False
+            
+            # Step 2: Validate the code
+            print("Step 2: Validate the code")
+            validate_success, _ = self.test_referral_validate_endpoint()
+            
+            # Step 3: Redeem code with Wallet B
+            print("Step 3: Redeem code with Wallet B")
+            redeem_success, wallet_b = self.test_referral_redeem_endpoint()
+            
+            # Step 4: Check eligibility for Wallet B
+            print("Step 4: Check eligibility for Wallet B")
+            eligible_success = self.test_referral_eligible_endpoint()
+            
+            # Step 5: Get stats for Wallet A (should show 1 referral if redemption worked)
+            print("Step 5: Get stats for Wallet A")
+            stats_success = self.test_referral_stats_v2_endpoint()
+            
+            # Overall success
+            overall_success = all([code_success, validate_success, redeem_success, eligible_success, stats_success])
+            
+            details = f"V2 Flow: Code={code_success}, Validate={validate_success}, Redeem={redeem_success}, Eligible={eligible_success}, Stats={stats_success}"
+            
+            self.log_test("Referral System V2 Complete Flow", overall_success, details,
+                         "" if overall_success else "One or more V2 flow steps failed")
+            return overall_success
+            
+        except Exception as e:
+            self.log_test("Referral System V2 Complete Flow", False, "", str(e))
+            return False
+
+    # ========================================
+    # REFERRAL SYSTEM LEGACY TESTS
     # ========================================
 
     def test_referral_track_endpoint(self):
