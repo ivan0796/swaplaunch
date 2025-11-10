@@ -30,7 +30,7 @@ const resources = {
       
       // Hero
       "hero.title": "Launch your token in minutes",
-      "hero.subtitle": "Create ERC-20, add liquidity & lock - without code",
+      "hero.subtitle": "Create, add liquidity & lock - without code",
       "hero.trustBullet1": "No code required",
       "hero.trustBullet2": "Source verified",
       "hero.trustBullet3": "Transparent fees",
