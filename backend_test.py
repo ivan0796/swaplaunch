@@ -2156,16 +2156,28 @@ class SwapLaunchAPITester:
         print("\n🧪 Testing A/B Testing System for Fee Tier Rollout...")
         self.test_ab_testing_system_flow()
         
-        # Priority Tests: Referral System Backend API
-        print("\n🎯 Testing Referral System Backend API...")
+        # Priority Tests: Referral System V2 Backend API (Review Request Priority)
+        print("\n🎯 Testing Referral System V2 Backend API (Priority Endpoints)...")
+        self.test_referral_code_get_endpoint()
+        self.test_referral_validate_endpoint()
+        self.test_referral_redeem_endpoint()
+        self.test_referral_eligible_endpoint()
+        self.test_referral_stats_v2_endpoint()
+        
+        # Test complete referral V2 flow
+        print("\n🔄 Testing Complete Referral V2 Flow...")
+        self.test_referral_system_v2_flow()
+        
+        # Legacy Referral System Tests
+        print("\n🎯 Testing Legacy Referral System Backend API...")
         self.test_referral_track_endpoint()
         self.test_referral_stats_endpoint()
         self.test_referral_leaderboard_endpoint()
         self.test_referral_reward_endpoint()
         self.test_referral_claim_endpoint()
         
-        # Test complete referral flow
-        print("\n🔄 Testing Complete Referral Flow...")
+        # Test complete legacy referral flow
+        print("\n🔄 Testing Complete Legacy Referral Flow...")
         self.test_referral_system_flow()
         
         # Priority Tests: Community Rating System
